@@ -3,7 +3,7 @@
 namespace Spotify.NetStandard.Requests
 {
     /// <summary>
-    /// Navigate By Request
+    /// Navigate By
     /// </summary>
     public class NavigateBy
     {

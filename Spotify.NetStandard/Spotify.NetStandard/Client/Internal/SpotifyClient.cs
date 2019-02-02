@@ -19,22 +19,28 @@ namespace Spotify.NetStandard.Client.Internal
     /// </summary>
     internal class SpotifyClient : SimpleServiceClient, ISpotifyClient
     {
+        #region Private Members
         private static readonly Uri _hostName;
         private static readonly string _clientVersion;
+
+        private static ISpotifyApi _api;
         private readonly AuthenticationCache _authenticationCache;
+        #endregion Private Members
 
         #region Private Methods
         /// <summary>
         /// Format Request Headers
         /// </summary>
-        /// <param name="authType">Authentication Type</param>
+        /// <param name="tokenType">Authentication Token Type</param>
         /// <returns>Dictionary of Headers</returns>
         private async Task<Dictionary<string, string>> FormatRequestHeadersAsync(
-            AuthType authType = AuthType.Implicit)
+            TokenType tokenType = TokenType.Access)
         {
-            Dictionary<string, string> headersToSend = new Dictionary<string, string>();
-            AccessToken access = await _authenticationCache.CheckAndRenewTokenAsync(
-            authType, new CancellationToken(false));
+            Dictionary<string, string> headersToSend = 
+                new Dictionary<string, string>();
+            AccessToken access = await 
+                _authenticationCache.CheckAndRenewTokenAsync(
+                tokenType, new CancellationToken(false));
             headersToSend.Add("Authorization", "Bearer " + access.Token);
             return headersToSend;
         }
@@ -48,12 +54,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="locale">Locale</param>
         /// <returns>Dictionary of Request Parameters</returns>
         private Dictionary<string, string> FormatRequestParameters(
-            int? limit = null, 
+            int? limit = null,
             int? offset = null,
-            string country = null, 
+            string country = null,
             string locale = null)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            Dictionary<string, string> parameters = 
+                new Dictionary<string, string>();
 
             if (limit != null)
                 parameters.Add("limit", limit.Value.ToString());
@@ -71,21 +78,35 @@ namespace Spotify.NetStandard.Client.Internal
         }
 
         /// <summary>
+        /// Format Ids Parameter
+        /// </summary>
+        /// <param name="itemIds">IDs of the Items</param>
+        /// <returns>Ids as String</returns>
+        private string FormatIdsParameter(List<string> itemIds)
+        {
+            return itemIds.Aggregate(string.Empty,
+                (current, id) => current + 
+                (!string.IsNullOrEmpty(current) ? "," : string.Empty) + id);
+        }
+
+        /// <summary>
         /// Browse
         /// </summary>
         /// <param name="browseCategory">Category</param>
         /// <param name="country">Country</param>
         /// <param name="locale">Locale</param>
         /// <returns>Content Response</returns>
-        private async Task<ContentResponse> BrowseAsync(
-            string browseCategory, 
-            string country, 
-            string locale = null, 
-            Dictionary<string, string> parameters = null, 
+        private async Task<ContentResponse> GetBrowseAsync(
+            string browseCategory,
+            string country,
+            string locale = null,
+            Dictionary<string, string> parameters = null,
             Page page = null)
         {
-            Dictionary<string, string> requestHeaders = await FormatRequestHeadersAsync();
-            Dictionary<string, string> requestParameters = FormatRequestParameters(
+            Dictionary<string, string> requestHeaders = 
+                await FormatRequestHeadersAsync();
+            Dictionary<string, string> requestParameters = 
+                FormatRequestParameters(
                 country: country, locale: locale,
                 offset: page?.Offset, limit: page?.Limit);
             if (parameters != null)
@@ -93,26 +114,29 @@ namespace Spotify.NetStandard.Client.Internal
                 foreach (KeyValuePair<string, string> item in parameters)
                     requestParameters.Add(item.Key, item.Value);
             }
-            return await GetAsync<ContentResponse>(_hostName, $"/v1/browse/{browseCategory}",
-                new CancellationToken(false), requestParameters, requestHeaders);
+            return await GetAsync<ContentResponse>(_hostName, 
+                $"/v1/browse/{browseCategory}",
+                new CancellationToken(false), 
+                requestParameters, requestHeaders);
         }
 
         /// <summary>
-        /// Get
+        /// Get Lookup
         /// </summary>
         /// <param name="itemId">Spotify ID of the Item</param>
         /// <param name="lookupType">Lookup Type</param>
         /// <param name="parameters">Request Parameters</param>
-        /// <param name="authType">Auth Type</param>
+        /// <param name="tokenType">Token Type</param>
         /// <returns>Result of Type</returns>
-        private async Task<T> GetAsync<T>(
+        private async Task<T> GetLookupAsync<T>(
             string itemId = null,
             string lookupType = null,
             Dictionary<string, string> parameters = null,
-            AuthType authType = AuthType.Implicit) 
+            TokenType tokenType = TokenType.Access)
             where T : class
         {
-            Dictionary<string, string> requestHeaders = await FormatRequestHeadersAsync(authType);
+            Dictionary<string, string> headers = 
+                await FormatRequestHeadersAsync(tokenType);
             string[] source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
@@ -121,36 +145,37 @@ namespace Spotify.NetStandard.Client.Internal
                 $"/v1/{lookupType}" :
                 $"/v1/{lookupType}/{itemId}";
             return await GetAsync<T>(_hostName, relativeUri,
-            new CancellationToken(false), parameters, requestHeaders);
+                new CancellationToken(false), parameters, headers);
         }
 
         /// <summary>
-        /// List
+        /// List Lookup
         /// </summary>
         /// <typeparam name="T">Request Type</typeparam>
         /// <param name="itemIds">Spotify IDs of the Items</param>
         /// <param name="lookupType">Lookup Type</param>
         /// <param name="parameters">Request Parameters</param>
-        /// <param name="authType">Auth Type</param>
+        /// <param name="tokenType">Token Type</param>
         /// <returns>Response as Type</returns>
-        private async Task<T> ListAsync<T>(
-            List<string> itemIds, 
+        private async Task<T> ListLookupAsync<T>(
+            List<string> itemIds,
             string lookupType,
             Dictionary<string, string> parameters = null,
-            AuthType authType = AuthType.Implicit) 
+            TokenType tokenType = TokenType.Access)
             where T : class
         {
-            string ids = itemIds.Aggregate(string.Empty,
-            (current, id) => current + (!string.IsNullOrEmpty(current) ? "," : string.Empty) + id);
-            Dictionary<string, string> requestHeaders = await FormatRequestHeadersAsync(authType);
+            string ids = FormatIdsParameter(itemIds);
+            Dictionary<string, string> headers = 
+                await FormatRequestHeadersAsync(tokenType);
             string[] source = new string[] { lookupType };
             parameters.Add("ids", ids);
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
-            string relativeUri = $"/v1/{lookupType}";
-            return await GetAsync<T>(_hostName, relativeUri,
-            new CancellationToken(false), parameters, requestHeaders);
+            return await GetAsync<T>(
+                _hostName, $"/v1/{lookupType}",
+                new CancellationToken(false), 
+                parameters, headers);
         }
 
         /// <summary>
@@ -159,17 +184,25 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemId">Spotify ID of the Item</param>
         /// <param name="lookupType">Lookup Type</param>
         /// <param name="country">Country</param>
-        /// <param name="page">Page</param>
+        /// <param name="page">Page Offset & Limit</param>
         /// <returns>Response of Type</returns>
         private async Task<T> LookupApiAsync<T>(
-            string itemId, 
-            string lookupType = null, 
+            string itemId,
+            string lookupType = null,
             string country = null,
+            string key = null,
+            string value = null,
             Page page = null) where T : class
         {
-            Dictionary<string, string> requestHeaders = await FormatRequestHeadersAsync();
-            Dictionary<string, string> requestParameters = FormatRequestParameters(
-            offset: page?.Offset, limit: page?.Limit, country: country);
+            Dictionary<string, string> headers = 
+                await FormatRequestHeadersAsync();
+            Dictionary<string, string> parameters = 
+                FormatRequestParameters(
+                offset: page?.Offset, limit: page?.Limit, country: country);
+            if (key != null && value != null)
+            {
+                parameters.Add(key, value);
+            }
             string[] source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
@@ -178,7 +211,8 @@ namespace Spotify.NetStandard.Client.Internal
                 $"/v1/{source[0]}/{itemId}" :
                 $"/v1/{source[0]}/{itemId}/{source[1]}";
             return await GetAsync<T>(_hostName, relativeUri,
-            new CancellationToken(false), requestParameters, requestHeaders);
+                new CancellationToken(false), 
+                parameters, headers);
         }
 
         /// <summary>
@@ -187,47 +221,24 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemIds">Spotify IDs of the Items</param>
         /// <param name="lookupType">Lookup Type</param>
         /// <param name="country">Country</param>
-        /// <param name="page">Page</param>
+        /// <param name="page">Page Offset & Limit</param>
         /// <returns>Lookup Response</returns>
         private async Task<LookupResponse> LookupApiAsync(
-            IEnumerable<string> itemIds, 
+            List<string> itemIds,
             string lookupType = null,
-            string country = null, 
+            string country = null,
             Page page = null)
         {
-            string ids = itemIds.Aggregate(string.Empty,
-                (current, id) => current + (!string.IsNullOrEmpty(current) ? "," : string.Empty) + id);
-            Dictionary<string, string> requestHeaders = await FormatRequestHeadersAsync();
-            Dictionary<string, string> requestParameters = FormatRequestParameters(
-            offset: page?.Offset, limit: page?.Limit, country: country);
-            requestParameters.Add("ids", ids);
-            string source = lookupType;
-            return await GetAsync<LookupResponse>(_hostName, $"/v1/{source}/",
-            new CancellationToken(false), requestParameters, requestHeaders);
-        }
-
-        /// <summary>
-        /// Search API
-        /// </summary>
-        /// <param name="query">Search Query</param>
-        /// <param name="searchType">Search Type</param>
-        /// <param name="country">Country</param>
-        /// <param name="continuationToken">Continuation Token</param>
-        /// <returns>Content Rssponse</returns>
-        private async Task<ContentResponse> SearchApiAsync(
-            string query, 
-            SearchType searchType, 
-            string country = null, 
-            Page page = null)
-        {
-            Dictionary<string, string> requestHeaders = await FormatRequestHeadersAsync();
-            Dictionary<string, string> requestParameters = FormatRequestParameters(
-            offset: page?.Offset, limit: page?.Limit, country: country);
-            requestParameters.Add("type", searchType.GetDescription());
-            if (!string.IsNullOrEmpty(query))
-                requestParameters.Add("q", Uri.EscapeDataString(query));
-            return await GetAsync<ContentResponse>(_hostName, $"/v1/search/",
-            new CancellationToken(false), requestParameters, requestHeaders);
+            string ids = FormatIdsParameter(itemIds);
+            Dictionary<string, string> headers = 
+                await FormatRequestHeadersAsync();
+            Dictionary<string, string> parameters = 
+                FormatRequestParameters(
+                    offset: page?.Offset, limit: page?.Limit, country: country);
+            parameters.Add("ids", ids);
+            return await GetAsync<LookupResponse>(
+                _hostName, $"/v1/{lookupType}/",
+                new CancellationToken(false), parameters, headers);
         }
         #endregion Private Methods
 
@@ -250,29 +261,38 @@ namespace Spotify.NetStandard.Client.Internal
         internal SpotifyClient(
             AuthenticationCache authenticationCache)
         {
+            _api = new SpotifyApi(this);
             _authenticationCache = authenticationCache;
         }
         #endregion Constructors
 
-        #region Auth
+        #region Public Properties
         /// <summary>
-        /// Auth
+        /// Spotify API
+        /// </summary>
+        public ISpotifyApi Api => _api;
+        #endregion Public Properties
+
+        #region Public Methods
+        /// <summary>
+        /// Auth User
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
-        /// <param name="scopes">Scopes</param>
+        /// <param name="scope">Scope</param>
         /// <returns>Uri</returns>
-        public Uri Auth(
+        public Uri AuthUser(
             Uri redirectUri, 
             string state, 
-            params ScopeType[] scopes)
+            Scope scope)
         {
-            return _authenticationCache.GetAuth(redirectUri, state, 
-                scopes.AsDelimitedString());
+            return _authenticationCache.GetAuth(
+                redirectUri, state, 
+                scope.Get());
         }
 
         /// <summary>
-        /// Auth
+        /// Auth User
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
@@ -280,28 +300,29 @@ namespace Spotify.NetStandard.Client.Internal
         /// <returns>AccessToken on Success, Null if Not</returns>
         /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
         /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
-        public Task<AccessToken> AuthAsync(
+        public Task<AccessToken> AuthUserAsync(
             Uri responseUri, 
             Uri redirectUri, 
             string state)
         {
-            return _authenticationCache.GetAuth(responseUri, redirectUri, state);
+            return _authenticationCache.GetAuth(
+                responseUri, redirectUri, state);
         }
 
         /// <summary>
         /// Get Access Token
         /// </summary>
         /// <returns>Access Token</returns>
-        public AccessToken GetToken() => _authenticationCache.AccessToken;
+        public AccessToken GetToken() => 
+            _authenticationCache.AccessToken;
 
         /// <summary>
         /// Set Access Token
         /// </summary>
         /// <param name="value">Access Token</param>
-        public void SetToken(AccessToken value) => _authenticationCache.AccessToken = value;
-        #endregion Auth
+        public void SetToken(AccessToken value) => 
+            _authenticationCache.AccessToken = value;
 
-        #region Navigate
         /// <summary>
         /// Navigate 
         /// </summary>
@@ -320,50 +341,96 @@ namespace Spotify.NetStandard.Client.Internal
                     source = new Uri(paging.Href);
                     break;
                 case NavigateType.Previous:
-                    if (paging.Previous != null) source = new Uri(paging.Previous);
+                    if (paging.Previous != null)
+                        source = new Uri(paging.Previous);
                     break;
                 case NavigateType.Next:
-                    if (paging.Next != null) source = new Uri(paging.Next);
+                    if (paging.Next != null)
+                        source = new Uri(paging.Next);
                     break;
             }
             if (source != null)
             {
-                Dictionary<string, string> requestHeaders = await FormatRequestHeadersAsync();
-                Dictionary<string, string> requestParameters = source.Query.QueryStringAsDictionary();
-                return await GetAsync<ContentResponse>(new Uri($"{source.Scheme}://{source.Host}"),
-                    source.AbsolutePath, new CancellationToken(false), requestParameters, requestHeaders);
+                Dictionary<string, string> headers = 
+                    await FormatRequestHeadersAsync();
+                Dictionary<string, string> parameters = 
+                    source.Query.QueryStringAsDictionary();
+                return await GetAsync<ContentResponse>(
+                    new Uri($"{source.Scheme}://{source.Host}"),
+                    source.AbsolutePath, 
+                    new CancellationToken(false), 
+                    parameters, headers);
             }
             return null;
         }
-        #endregion Navigate
 
-        #region Lookup
+        /// <summary>
+        /// Search
+        /// </summary>
+        /// <param name="query">(Required) Search Query</param>
+        /// <param name="searchType">(Required) Search results include hits from all the specified item types.</param>
+        /// <param name="country">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="external">(Optional) Include any relevant audio content that is hosted externally. </param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
+        /// <returns>Content Response</returns>
+        public async Task<ContentResponse> SearchAsync(
+            string query,
+            SearchType searchType,
+            string country = null,
+            bool? external = null,
+            Page page = null)
+        {
+            Dictionary<string, string> headers = 
+                await FormatRequestHeadersAsync();
+            Dictionary<string, string> parameters = 
+                FormatRequestParameters(
+                    offset: page?.Offset, limit: page?.Limit, country: country);
+            if (searchType != null)
+            {
+                parameters.Add("type", searchType.Get()?.AsDelimitedString());
+            }
+            if (!string.IsNullOrEmpty(query))
+                parameters.Add("q", Uri.EscapeDataString(query));
+            if (external == true)
+                parameters.Add("include_external", "audio");
+            return await GetAsync<ContentResponse>(
+                    _hostName, $"/v1/search/",
+                    new CancellationToken(false), 
+                    parameters, headers);
+        }
+
         /// <summary>
         /// Lookup
         /// </summary>
         /// <typeparam name="T">Response Type</typeparam>
-        /// <param name="id">The Spotify ID for the album.</param>
-        /// <param name="lookupType">Item Type</param>
-        /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code</param>
-        /// <param name="page">Page</param>
+        /// <param name="itemId">(Required) The Spotify ID for the album.</param>
+        /// <param name="lookupType">(Required) Item Type</param>
+        /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="key">(Optional) Query Parameter Key</param>
+        /// <param name="value">(Optional) Query Parameter Value</param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
         /// <returns>Lookup Response by Type</returns>
         public Task<T> LookupAsync<T>(
             string itemId,
             LookupType lookupType,
             string market = null,
+            string key = null,
+            string value = null,
             Page page = null)
             where T : class
         {
-            return LookupApiAsync<T>(itemId, lookupType.GetDescription(), market);
+            return LookupApiAsync<T>(
+                itemId, lookupType.GetDescription(), 
+                market, key, value, page);
         }
 
         /// <summary>
         /// Lookup
         /// </summary>
-        /// <param name="itemIds">List of Spotify ID for the items</param>
-        /// <param name="lookupType">Item Type</param>
-        /// <param name="market">ISO 3166-1 alpha-2 country code</param>
-        /// <param name="page">Page</param>
+        /// <param name="itemIds">(Required) List of Spotify ID for the items</param>
+        /// <param name="lookupType">(Required) Lookup Item Type</param>
+        /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
         /// <returns>Lookup Response</returns>
         public Task<LookupResponse> LookupAsync(
             List<string> itemIds,
@@ -371,106 +438,148 @@ namespace Spotify.NetStandard.Client.Internal
             string market = null,
             Page page = null)
         {
-            return LookupApiAsync(itemIds, lookupType.GetDescription(), market, page);
+            return LookupApiAsync(
+                itemIds, lookupType.GetDescription(), 
+                market, page);
         }
-        #endregion Lookup
 
-        #region Browse
         /// <summary>
-        /// Get All Featured Playlists
+        /// Lookup Featured Playlists
         /// </summary>
-        /// <param name="country">A country: an ISO 3166-1 alpha-2 country code. </param>
-        /// <param name="locale">The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
-        /// <param name="timestamp">A timestamp in ISO 8601 format: yyyy-MM-ddTHH:mm:ss</param>
-        /// <param name="page">Page</param>
+        /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
+        /// <param name="locale">(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
+        /// <param name="timestamp">(Optional) Use this parameter to specify the user’s local time to get results tailored for that specific date and time in the day.</param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
         /// <returns>Content Response</returns>
-        public Task<ContentResponse> GetFeaturedPlaylistsAsync(
+        public Task<ContentResponse> LookupFeaturedPlaylistsAsync(
             string country = null,
             string locale = null,
-            string timestamp = null,
+            DateTime? timestamp = null,
             Page page = null)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            Dictionary<string, string> parameters = 
+                new Dictionary<string, string>();
             if (timestamp != null)
-                parameters.Add("timestamp", timestamp);
-            return BrowseAsync("featured-playlists", country, locale, parameters, page);
+            {
+                parameters.Add("timestamp", 
+                    timestamp.Value.ToString("yyyy-MM-ddTHH:mm:ss"));
+            }
+            return GetBrowseAsync(
+                "featured-playlists", country, locale, 
+                parameters, page);
         }
 
         /// <summary>
-        /// Get All New Releases
+        /// Lookup New Releases
         /// </summary>
-        /// <param name="country">A country: an ISO 3166-1 alpha-2 country code. </param>
-        /// <param name="page">Page</param>
+        /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
         /// <returns>Content Response</returns>
-        public Task<ContentResponse> GetNewReleasesAsync(
+        public Task<ContentResponse> LookupNewReleasesAsync(
             string country = null,
             Page page = null)
         {
-            return BrowseAsync("new-releases", country: country, page: page);
+            return GetBrowseAsync(
+                "new-releases", country: country, 
+                page: page);
         }
 
         /// <summary>
-        /// Get an Artist's Top Tracks
+        /// Lookup Artist's Albums
         /// </summary>
-        /// <param name="itemId">The Spotify ID for the artist.</param>
-        /// <param name="country">A country: an ISO 3166-1 alpha-2 country code.</param>
-        /// <returns>Lookup Response</returns>
-        public Task<LookupResponse> GetArtistTopTracksAsync(
-            string itemId, 
-            string country)
-        {
-            return LookupApiAsync<LookupResponse>(itemId, "artists_top-tracks", country: country);
-        }
-
-        /// <summary>
-        /// Get an Artist's Related Artists
-        /// </summary>
-        /// <param name="itemId">The Spotify ID for the artist.</param>
-        /// <returns>Lookup Response</returns>
-        public Task<LookupResponse> GetArtistRelatedArtistsAsync(
-            string itemId)
-        {
-            return LookupApiAsync<LookupResponse>(itemId, "artists_related-artists");
-        }
-
-        /// <summary>
-        /// Get All Categories
-        /// </summary>
-        /// <param name="country">A country: an ISO 3166-1 alpha-2 country code. </param>
-        /// <param name="locale">The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
-        /// <param name="page">Page</param>
-        /// <returns>Content Response</returns>
-        public Task<ContentResponse> GetCategoriesAsync(
-            string country = null,
-            string locale = null,
-            Page page = null)
-        {
-            return BrowseAsync("categories", country: country, locale: locale, page: page);
-        }
-        #endregion Browse
-
-        #region Search
-        /// <summary>
-        /// Search for an Item
-        /// </summary>
-        /// <param name="query">Search query keywords and optional field filters and operators.</param>
-        /// <param name="searchType">A comma-separated list of item types to search across. Valid types are: album , artist, playlist, and track. </param>
-        /// <param name="market">An ISO 3166-1 alpha-2 country code</param>
-        /// <param name="page">Page</param>
-        /// <returns>Content Response</returns>
-        public Task<ContentResponse> SearchAsync(
-            string query,
-            SearchType searchType,
+        /// <param name="id">(Required) The Spotify ID for the artist.</param>
+        /// <param name="includeGroup">(Optional) Filters the response. If not supplied, all album types will be returned</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code</param>
+        /// <param name="page">(Optional) Limit: The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50 - Offset: The index of the first album to return. Default: 0 (i.e., the first album).</param>
+        /// <returns>Paging List of Album</returns>
+        public Task<Paging<Album>> LookupArtistAlbumsAsync(
+            string itemId,
+            IncludeGroup includeGroup = null,
             string market = null,
             Page page = null)
         {
-            return SearchApiAsync(query, searchType, market, page);
+            string key = null;
+            string value = null;
+            if (includeGroup != null)
+            {
+                key = "include_groups";
+                value = includeGroup.Get()?.AsDelimitedString();
+            }
+            return LookupAsync<Paging<Album>>(
+                itemId, LookupType.ArtistAlbums, market, 
+                key, value, page);
         }
-        #endregion Search
 
-        #region Recommendations
         /// <summary>
-        /// Get Recommendations
+        /// Lookup Artist's Top Tracks
+        /// </summary>
+        /// <param name="itemId">(Required) The Spotify ID for the artist.</param>
+        /// <param name="market">(Required) A country: an ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <returns>Lookup Response</returns>
+        public Task<LookupResponse> LookupArtistTopTracksAsync(
+            string itemId, 
+            string market)
+        {
+            return LookupApiAsync<LookupResponse>(
+                itemId, "artists_top-tracks", 
+                country: market);
+        }
+
+        /// <summary>
+        /// Lookup Artist's Related Artists
+        /// </summary>
+        /// <param name="itemId">(Required) The Spotify ID for the artist.</param>
+        /// <returns>Lookup Response</returns>
+        public Task<LookupResponse> LookupArtistRelatedArtistsAsync(
+            string itemId)
+        {
+            return LookupApiAsync<LookupResponse>(
+                itemId, "artists_related-artists");
+        }
+
+        /// <summary>
+        /// Lookup All Categories
+        /// </summary>
+        /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
+        /// <param name="locale">(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
+        /// <param name="page">(Optional) Limit: The maximum number of categories to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
+        /// <returns>Content Response</returns>
+        public Task<ContentResponse> LookupAllCategoriesAsync(
+            string country = null,
+            string locale = null,
+            Page page = null)
+        {
+            return GetBrowseAsync(
+                "categories", country: country, locale: locale, 
+                page: page);
+        }
+
+        /// <summary>
+        /// Lookup Category 
+        /// </summary>
+        /// <param name="categoryId">The Spotify category ID for the category.</param>
+        /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
+        /// <param name="locale">(Optional) The desired language, consisting of an ISO 639-1 language code and an ISO 3166-1 alpha-2 country code, joined by an underscore.</param>
+        /// <returns>Category Object</returns>
+        public Task<Category> LookupCategoryAsync(
+            string categoryId,
+            string country = null,
+            string locale = null)
+        {
+            string key = null;
+            string value = null;
+            if (locale != null)
+            {
+                key = "locale";
+                value = locale;
+            }
+            return LookupAsync<Category>(
+                categoryId, LookupType.Categories, country,
+                key, value);
+        }
+
+        /// <summary>
+        /// Lookup Recommendations
         /// </summary>
         /// <param name="seedArtists">List of Spotify IDs for seed artists</param>
         /// <param name="seedGenres">List of any genres in the set of available genre seeds</param>
@@ -479,57 +588,62 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="market">An ISO 3166-1 alpha-2 country code</param>
         /// <param name="minTuneableTrack">Multiple values. For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided</param>
         /// <param name="maxTuneableTrack">Multiple values. For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided.</param>
-        /// <param name="targetTuneableTrack">Multiple values. For each of the tunable track attributes (below) a target value may be provided.</param>
+        /// <param name="targetTuneableTrack">Multiple values. For each of the tunable track attributes a target value may be provided.</param>
         /// <returns>Recommendation Response Object</returns>
-        public Task<RecommendationsResponse> GetRecommendationsAsync(
-            string[] seedArtists = null,
-            string[] seedGenres = null,
-            string[] seedTracks = null,
+        public Task<RecommendationsResponse> LookupRecommendationsAsync(
+            List<string> seedArtists = null,
+            List<string> seedGenres = null,
+            List<string> seedTracks = null,
             int? limit = null,
             string market = null,
             TuneableTrack minTuneableTrack = null,
             TuneableTrack maxTuneableTrack = null,
             TuneableTrack targetTuneableTrack = null)
         {
-            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            Dictionary<string, string> parameters = 
+                new Dictionary<string, string>();
 
             if (seedArtists != null)
-                parameters.Add("seed_artists", seedArtists.AsDelimitedString());
+                parameters.Add("seed_artists", 
+                    seedArtists.ToArray().AsDelimitedString());
 
             if (seedGenres != null)
-                parameters.Add("seed_genres", seedGenres.AsDelimitedString());
+                parameters.Add("seed_genres", 
+                    seedGenres.ToArray().AsDelimitedString());
 
             if (seedTracks != null)
-                parameters.Add("seed_tracks", seedTracks.AsDelimitedString());
+                parameters.Add("seed_tracks", 
+                    seedTracks.ToArray().AsDelimitedString());
 
             if (limit != null)
-                parameters.Add("limit", limit.Value.ToString());
+                parameters.Add("limit", 
+                    limit.Value.ToString());
 
             if (market != null)
                 parameters.Add("market", market);
 
             if (minTuneableTrack != null)
-                minTuneableTrack.Set(parameters, "min");
+                minTuneableTrack.SetParameter(parameters, "min");
 
             if (maxTuneableTrack != null)
-                maxTuneableTrack.Set(parameters, "max");
+                maxTuneableTrack.SetParameter(parameters, "max");
 
             if (targetTuneableTrack != null)
-                targetTuneableTrack.Set(parameters, "target");
+                targetTuneableTrack.SetParameter(parameters, "target");
 
-            return GetAsync<RecommendationsResponse>(
+            return GetLookupAsync<RecommendationsResponse>(
                 lookupType: "recommendations", parameters: parameters);
         }
 
         /// <summary>
-        /// Get Recommendation Genres
+        /// Lookup Recommendation Genres
         /// </summary>
         /// <returns>Available Genre Seeds Object</returns>
-        public Task<AvailableGenreSeeds> GetRecommendationGenres()
+        public Task<AvailableGenreSeeds> LookupRecommendationGenres()
         {
-            return GetAsync<AvailableGenreSeeds>(
+            return GetLookupAsync<AvailableGenreSeeds>(
                 lookupType: "recommendations/available-genre-seeds");
         }
-        #endregion Recommendations
+        #endregion Public Methods
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spotify.NetStandard.Client;
 using Spotify.NetStandard.Client.Interfaces;
 using Spotify.NetStandard.Enums;
+using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace Spotify.NetStandard.Test
 {
     [TestClass]
-    public class SpotifyNetStandardTest
+    public class SpotifyClientTest
     {
         private ISpotifyClient _client = null;
         private ContentResponse _content = null;
@@ -40,7 +41,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Album_LookupAsync()
+        public async Task Test_Lookup_AlbumAsync()
         {
             Album item = await _client.LookupAsync<Album>(
                 "1ZGxGu4fMROqmZsFSoepeE", LookupType.Albums);
@@ -52,7 +53,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Album_Tracks_LookupAsync()
+        public async Task Test_Lookup_AlbumTracks()
         {
             Paging<Track> list = await _client.LookupAsync<Paging<Track>>(
                 "1ZGxGu4fMROqmZsFSoepeE", LookupType.AlbumTracks);
@@ -65,7 +66,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Albums_LookupAsync()
+        public async Task Test_Lookup_AlbumsAsync()
         {
             List<string> ids = new List<string>
             {
@@ -82,10 +83,10 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Album_SearchAsync()
+        public async Task Test_Search_Album()
         {
             _content = await _client.SearchAsync(
-                "Tubular Bells", SearchType.Album);
+                "Tubular Bells", new SearchType { Album = true });
             Assert.IsNotNull(_content.Albums);
             Assert.IsTrue(_content.Albums.Count > 0);
         }
@@ -97,7 +98,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Artist_LookupAsync()
+        public async Task Test_Lookup_Artist()
         {
             Artist item = await _client.LookupAsync<Artist>(
                 "0OdUWJ0sBjDrqHygGUXeCF", LookupType.Artists);
@@ -109,7 +110,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Artist_Albums_LookupAsync()
+        public async Task Test_Lookup_ArtistAlbums()
         {
             Paging<Album> list = await _client.LookupAsync<Paging<Album>>(
                 "1vCWHaC5f2uS3yhpwWbIA6", LookupType.ArtistAlbums);
@@ -122,9 +123,9 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Artist_TopTracksAsync()
+        public async Task Test_Lookup_ArtistTopTracks()
         {
-            _list = await _client.GetArtistTopTracksAsync(
+            _list = await _client.LookupArtistTopTracksAsync(
                 "43ZHCT0cAZBISjO8DG9PnE", "GB");
             Assert.IsNotNull(_list.Tracks);
             Assert.IsTrue(_list.Tracks.Count > 0);
@@ -135,9 +136,9 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Artist_RelatedArtistsAsync()
+        public async Task Test_Lookup_ArtistRelatedArtists()
         {
-            _list = await _client.GetArtistRelatedArtistsAsync(
+            _list = await _client.LookupArtistRelatedArtistsAsync(
                 "43ZHCT0cAZBISjO8DG9PnE");
             Assert.IsNotNull(_list.Artists);
             Assert.IsTrue(_list.Artists.Count > 0);
@@ -148,11 +149,12 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Artists_LookupAsync()
+        public async Task Test_Lookup_Artists()
         {
             List<string> ids = new List<string>
             {
-                "0oSGxfWSnnOXhD2fKuz2Gy", "3dBVyJ7JuOMt4GE9607Qin"
+                "0oSGxfWSnnOXhD2fKuz2Gy",
+                "3dBVyJ7JuOMt4GE9607Qin"
             };
             _list = await _client.LookupAsync(ids, LookupType.Artists);
             Assert.IsNotNull(_list.Artists);
@@ -164,10 +166,10 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Artist_SearchAsync()
+        public async Task Test_Search_Artist()
         {
             _content = await _client.SearchAsync(
-                "Mike Oldfield", SearchType.Artist);
+                "Mike Oldfield", new SearchType { Artist = true });
             Assert.IsNotNull(_content.Artists);
             Assert.IsTrue(_content.Artists.Count > 0);
         }
@@ -179,7 +181,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Category_LookupAsync()
+        public async Task Test_Lookup_Category()
         {
             Category item = await _client.LookupAsync<Category>(
                 "decades", LookupType.Categories);
@@ -191,7 +193,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Category_Playlists_LookupAsync()
+        public async Task Test_Lookup_CategoryPlaylists()
         {
             _content = await _client.LookupAsync<ContentResponse>(
                 "decades", LookupType.CategoriesPlaylists);
@@ -204,9 +206,9 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_BrowseCategoriesAsync()
+        public async Task Test_Lookup_Categories()
         {
-            _content = await _client.GetCategoriesAsync();
+            _content = await _client.LookupAllCategoriesAsync();
             Assert.IsNotNull(_content.Categories);
             Assert.IsTrue(_content.Categories.Items.Count > 0);
         }
@@ -216,9 +218,9 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Playlists_FeaturedAsync()
+        public async Task Test_Lookup_FeaturedPlaylists()
         {
-            _content = await _client.GetFeaturedPlaylistsAsync();
+            _content = await _client.LookupFeaturedPlaylistsAsync();
             Assert.IsNotNull(_content.Playlists);
             Assert.IsTrue(_content.Playlists.Items.Count > 0);
         }
@@ -228,9 +230,9 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_NewReleasesAsync()
+        public async Task Test_Lookup_NewReleases()
         {
-            _content = await _client.GetNewReleasesAsync();
+            _content = await _client.LookupNewReleasesAsync();
             Assert.IsNotNull(_content.Albums);
             Assert.IsTrue(_content.Albums.Items.Count > 0);
         }
@@ -240,10 +242,10 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_RecommendationAsync()
+        public async Task Test_Lookup_Recommendation()
         {
-            var recommendation = await _client.GetRecommendationsAsync(
-                seedArtists: new string[] { "562Od3CffWedyz2BbeYWVn" });
+            var recommendation = await _client.LookupRecommendationsAsync(
+                seedArtists: new List<string> { "562Od3CffWedyz2BbeYWVn" });
             Assert.IsNotNull(recommendation);
             Assert.IsTrue(recommendation.Tracks.Count > 0);
         }
@@ -253,9 +255,9 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_RecommendationGenreAsync()
+        public async Task Test_Lookup_RecommendationGenres()
         {
-            AvailableGenreSeeds genre = await _client.GetRecommendationGenres();
+            AvailableGenreSeeds genre = await _client.LookupRecommendationGenres();
             Assert.IsNotNull(genre);
             Assert.IsTrue(genre.Genres.Count > 0);
         }
@@ -267,7 +269,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Playlists_Tracks_LookupAsync()
+        public async Task Test_Lookup_PlaylistsTracks()
         {
             Paging<PlaylistTrack> list = await _client.LookupAsync<Paging<PlaylistTrack>>(
                 "37i9dQZF1DXatMjChPKgBk", LookupType.PlaylistTracks);
@@ -280,10 +282,10 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Playlist_SearchAsync()
+        public async Task Test_Search_Playlist()
         {
             _content = await _client.SearchAsync(
-                "Mike Oldfield", SearchType.Playlist);
+                "Mike Oldfield", new SearchType { Playlist = true });
             Assert.IsNotNull(_content.Playlists);
             Assert.IsTrue(_content.Playlists.Count > 0);
         }
@@ -295,7 +297,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Track_AudioFeatures_LookupAsync()
+        public async Task Test_Lookup_Track_AudioFeatures()
         {
             AudioFeatures item = await _client.LookupAsync<AudioFeatures>(
                 "1cTZMwcBJT0Ka3UJPXOeeN", LookupType.AudioFeatures);
@@ -307,10 +309,10 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Track_LookupAsync()
+        public async Task Test_Lookup_Track()
         {
             Track item = await _client.LookupAsync<Track>(
-                "1cTZMwcBJT0Ka3UJPXOeeN", LookupType.Albums);
+                "1cTZMwcBJT0Ka3UJPXOeeN", LookupType.Tracks);
             Assert.IsNotNull(item);
         }
 
@@ -319,7 +321,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Track_AudioAnalysis_LookupAsync()
+        public async Task Test_Lookup_Track_AudioAnalysis()
         {
             AudioAnalysis item = await _client.LookupAsync<AudioAnalysis>(
                 "1cTZMwcBJT0Ka3UJPXOeeN", LookupType.AudioAnalysis);
@@ -331,11 +333,12 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Tracks_AudioFeatures_LookupAsync()
+        public async Task Test_Lookup_Tracks_AudioFeatures()
         {
             List<string> ids = new List<string>
             {
-                "3n3Ppam7vgaVa1iaRUc9Lp", "3twNvmDtFQtAd5gMKedhLD"
+                "3n3Ppam7vgaVa1iaRUc9Lp",
+                "3twNvmDtFQtAd5gMKedhLD"
             };
             _list = await _client.LookupAsync(ids, LookupType.AudioFeatures);
             Assert.IsNotNull(_list.AudioFeatures);
@@ -347,11 +350,12 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Tracks_LookupAsync()
+        public async Task Test_Lookup_Tracks()
         {
             List<string> ids = new List<string>
             {
-                "3n3Ppam7vgaVa1iaRUc9Lp", "3twNvmDtFQtAd5gMKedhLD"
+                "3n3Ppam7vgaVa1iaRUc9Lp",
+                "3twNvmDtFQtAd5gMKedhLD"
             };
             _list = await _client.LookupAsync(ids, LookupType.Tracks);
             Assert.IsNotNull(_list.Tracks);
@@ -363,10 +367,10 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Track_SearchAsync()
+        public async Task Test_Search_Track()
         {
             _content = await _client.SearchAsync(
-                "Moonlight Shadow", SearchType.Track);
+                "Moonlight Shadow", new SearchType() { Track = true });
             Assert.IsNotNull(_content.Tracks);
             Assert.IsTrue(_content.Tracks.Count > 0);
         }

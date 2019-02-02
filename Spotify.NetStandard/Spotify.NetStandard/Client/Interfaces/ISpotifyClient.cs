@@ -1,4 +1,5 @@
 ﻿using Spotify.NetStandard.Client.Authentication;
+using Spotify.NetStandard.Client.Internal;
 using Spotify.NetStandard.Enums;
 using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
@@ -13,21 +14,28 @@ namespace Spotify.NetStandard.Client.Interfaces
     /// </summary>
     public interface ISpotifyClient : IDisposable
     {
-        #region Auth
+        #region Properties
         /// <summary>
-        /// Auth
+        /// Spotify API
+        /// </summary>
+        ISpotifyApi Api { get; }
+        #endregion Properties
+
+        #region Public Methods
+        /// <summary>
+        /// Auth User
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
-        /// <param name="scopes">Scopes</param>
+        /// <param name="scope">Scope</param>
         /// <returns>Uri</returns>
-        Uri Auth(
+        Uri AuthUser(
             Uri redirectUri,
             string state,
-            params ScopeType[] scopes);
+            Scope scope);
 
         /// <summary>
-        /// Auth
+        /// Auth User
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
@@ -35,7 +43,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <returns>AccessToken on Success, Null if Not</returns>
         /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
         /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
-        Task<AccessToken> AuthAsync(
+        Task<AccessToken> AuthUserAsync(
             Uri responseUri,
             Uri redirectUri,
             string state);
@@ -51,9 +59,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// </summary>
         /// <param name="value">Access Token</param>
         void SetToken(AccessToken value);
-        #endregion Auth
 
-        #region Navigate
         /// <summary>
         /// Navigate 
         /// </summary>
@@ -64,115 +70,139 @@ namespace Spotify.NetStandard.Client.Interfaces
         Task<ContentResponse> NavigateAsync<T>(
             Paging<T> paging,
             NavigateBy navigateby);
-        #endregion Navigate
 
-        #region Lookup
+        /// <summary>
+        /// Search
+        /// </summary>
+        /// <param name="query">(Required) Search Query</param>
+        /// <param name="searchType">(Required) Search results include hits from all the specified item types.</param>
+        /// <param name="country">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="external">(Optional) Include any relevant audio content that is hosted externally. </param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
+        /// <returns>Content Response</returns>
+        Task<ContentResponse> SearchAsync(
+            string query,
+            SearchType searchType,
+            string market = null,
+            bool? external = null,
+            Page page = null);
+
         /// <summary>
         /// Lookup
         /// </summary>
         /// <typeparam name="T">Response Type</typeparam>
-        /// <param name="id">The Spotify ID for the album.</param>
-        /// <param name="lookupType">Item Type</param>
-        /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code</param>
-        /// <param name="page">Page</param>
+        /// <param name="itemId">(Required) The Spotify ID for the album.</param>
+        /// <param name="lookupType">(Required) Item Type</param>
+        /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="key">(Optional) Query Parameter Key</param>
+        /// <param name="value">(Optional) Query Parameter Value</param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
         /// <returns>Lookup Response by Type</returns>
         Task<T> LookupAsync<T>(
             string itemId,
-            LookupType lookupType,          
+            LookupType lookupType,
             string market = null,
+            string key = null,
+            string value = null,
             Page page = null)
             where T : class;
 
         /// <summary>
         /// Lookup
         /// </summary>
-        /// <param name="itemIds">List of Spotify ID for the items</param>
-        /// <param name="lookupType">Item Type</param>
-        /// <param name="market">ISO 3166-1 alpha-2 country code</param>
-        /// <param name="page">Page</param>
+        /// <param name="itemIds">(Required) List of Spotify ID for the items</param>
+        /// <param name="lookupType">(Required) Lookup Item Type</param>
+        /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
         /// <returns>Lookup Response</returns>
         Task<LookupResponse> LookupAsync(
             List<string> itemIds,
             LookupType lookupType,
             string market = null,
             Page page = null);
-        #endregion Lookup
 
-        #region Browse
         /// <summary>
-        /// Get All Featured Playlists
+        /// Lookup Featured Playlists
         /// </summary>
-        /// <param name="country">A country: an ISO 3166-1 alpha-2 country code. </param>
-        /// <param name="locale">The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
-        /// <param name="timestamp">A timestamp in ISO 8601 format: yyyy-MM-ddTHH:mm:ss</param>
-        /// <param name="page">Page</param>
+        /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
+        /// <param name="locale">(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
+        /// <param name="timestamp">(Optional) Use this parameter to specify the user’s local time to get results tailored for that specific date and time in the day.</param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
         /// <returns>Content Response</returns>
-        Task<ContentResponse> GetFeaturedPlaylistsAsync(
-            string country = null, 
-            string locale = null, 
-            string timestamp = null,
+        Task<ContentResponse> LookupFeaturedPlaylistsAsync(
+            string country = null,
+            string locale = null,
+            DateTime? timestamp = null,
             Page page = null);
 
         /// <summary>
-        /// Get All New Releases
+        /// Lookup New Releases
         /// </summary>
-        /// <param name="country">A country: an ISO 3166-1 alpha-2 country code. </param>
-        /// <param name="page">Page</param>
+        /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
         /// <returns>Content Response</returns>
-        Task<ContentResponse> GetNewReleasesAsync(
+        Task<ContentResponse> LookupNewReleasesAsync(
             string country = null,
             Page page = null);
 
         /// <summary>
-        /// Get an Artist's Top Tracks
+        /// Lookup Artist's Albums
         /// </summary>
-        /// <param name="itemId">The Spotify ID for the artist.</param>
-        /// <param name="country">A country: an ISO 3166-1 alpha-2 country code.</param>
-        /// <returns>Lookup Response</returns>
-        Task<LookupResponse> GetArtistTopTracksAsync(
+        /// <param name="id">(Required) The Spotify ID for the artist.</param>
+        /// <param name="includeGroup">(Optional) Filters the response. If not supplied, all album types will be returned</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code</param>
+        /// <param name="page">(Optional) Limit: The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50 - Offset: The index of the first album to return. Default: 0 (i.e., the first album).</param>
+        /// <returns>Paging List of Album</returns>
+        Task<Paging<Album>> LookupArtistAlbumsAsync(
             string itemId,
-            string country);
+            IncludeGroup includeGroup = null,
+            string market = null,
+            Page page = null);
 
         /// <summary>
-        /// Get an Artist's Related Artists
+        /// Lookup Artist's Top Tracks
         /// </summary>
-        /// <param name="itemId">The Spotify ID for the artist.</param>
+        /// <param name="itemId">(Required) The Spotify ID for the artist.</param>
+        /// <param name="market">(Required) A country: an ISO 3166-1 alpha-2 country code or if null uses from_token.</param>
         /// <returns>Lookup Response</returns>
-        Task<LookupResponse> GetArtistRelatedArtistsAsync(
+        Task<LookupResponse> LookupArtistTopTracksAsync(
+            string itemId,
+            string market);
+
+        /// <summary>
+        /// Lookup Artist's Related Artists
+        /// </summary>
+        /// <param name="itemId">(Required) The Spotify ID for the artist.</param>
+        /// <returns>Lookup Response</returns>
+        Task<LookupResponse> LookupArtistRelatedArtistsAsync(
             string itemId);
 
         /// <summary>
-        /// Get All Categories
+        /// Lookup All Categories
         /// </summary>
-        /// <param name="country">A country: an ISO 3166-1 alpha-2 country code. </param>
-        /// <param name="locale">The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
-        /// <param name="page">Page</param>
+        /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
+        /// <param name="locale">(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
+        /// <param name="page">(Optional) Limit: The maximum number of categories to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
         /// <returns>Content Response</returns>
-        Task<ContentResponse> GetCategoriesAsync(
+        Task<ContentResponse> LookupAllCategoriesAsync(
             string country = null,
             string locale = null,
             Page page = null);
-        #endregion Browse
 
-        #region Search
         /// <summary>
-        /// Search for an Item
+        /// Lookup Category 
         /// </summary>
-        /// <param name="query">Search query keywords and optional field filters and operators.</param>
-        /// <param name="searchType">A comma-separated list of item types to search across. Valid types are: album , artist, playlist, and track. </param>
-        /// <param name="market">An ISO 3166-1 alpha-2 country code</param>
-        /// <param name="page">Page</param>
-        /// <returns>Content Response</returns>
-        Task<ContentResponse> SearchAsync(
-            string query,
-            SearchType searchType,
-            string market = null,
-            Page page = null);
-        #endregion Search
+        /// <param name="categoryId">The Spotify category ID for the category.</param>
+        /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
+        /// <param name="locale">(Optional) The desired language, consisting of an ISO 639-1 language code and an ISO 3166-1 alpha-2 country code, joined by an underscore.</param>
+        /// <returns>Category Object</returns>
+        Task<Category> LookupCategoryAsync(
+           string categoryId,
+           string country = null,
+           string locale = null);
 
-        #region Recommendations
         /// <summary>
-        /// Get Recommendations
+        /// Lookup Recommendations
         /// </summary>
         /// <param name="seedArtists">List of Spotify IDs for seed artists</param>
         /// <param name="seedGenres">List of any genres in the set of available genre seeds</param>
@@ -181,12 +211,12 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="market">An ISO 3166-1 alpha-2 country code</param>
         /// <param name="minTuneableTrack">Multiple values. For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided</param>
         /// <param name="maxTuneableTrack">Multiple values. For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided.</param>
-        /// <param name="targetTuneableTrack">Multiple values. For each of the tunable track attributes (below) a target value may be provided.</param>
+        /// <param name="targetTuneableTrack">Multiple values. For each of the tunable track attributes a target value may be provided.</param>
         /// <returns>Recommendation Response Object</returns>
-        Task<RecommendationsResponse> GetRecommendationsAsync(
-            string[] seedArtists = null,
-            string[] seedGenres = null,
-            string[] seedTracks = null,
+        Task<RecommendationsResponse> LookupRecommendationsAsync(
+            List<string> seedArtists = null,
+            List<string> seedGenres = null,
+            List<string> seedTracks = null,
             int? limit = null, 
             string market = null,
             TuneableTrack minTuneableTrack = null,
@@ -194,10 +224,10 @@ namespace Spotify.NetStandard.Client.Interfaces
             TuneableTrack targetTuneableTrack = null);
 
         /// <summary>
-        /// Get Recommendation Genres
+        /// Lookup Recommendation Genres
         /// </summary>
         /// <returns>Available Genre Seeds Object</returns>
-        Task<AvailableGenreSeeds> GetRecommendationGenres();
+        Task<AvailableGenreSeeds> LookupRecommendationGenres();
         #endregion Recommendations
     }
 }

@@ -3,9 +3,9 @@
     /// <summary>
     /// Authentication Type
     /// </summary>
-    public enum AuthType : byte
+    public enum TokenType : byte
     {
-        Implicit,
-        Explicit
+        Access,
+        User
     }
 }

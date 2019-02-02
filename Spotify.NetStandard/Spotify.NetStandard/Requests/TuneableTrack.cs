@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Spotify.NetStandard.Responses
+namespace Spotify.NetStandard.Requests
 {
     /// <summary>
     /// Tuneable Track Object

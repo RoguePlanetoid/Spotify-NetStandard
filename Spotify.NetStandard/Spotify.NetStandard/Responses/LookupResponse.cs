@@ -25,7 +25,7 @@ namespace Spotify.NetStandard.Responses
         /// List of Track Object
         /// </summary>
         [DataMember(Name = "tracks")]
-        public List<Artist> Tracks { get; set; }
+        public List<Track> Tracks { get; set; }
 
         /// <summary>
         /// List of Audio Feature Object

@@ -1,5 +1,4 @@
-﻿using Spotify.NetStandard.Enums;
-using Spotify.NetStandard.Responses;
+﻿using Spotify.NetStandard.Requests;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -15,6 +14,49 @@ namespace Spotify.NetStandard.Client.Internal
     /// </summary>
     internal static class Extensions
     {
+        #region Private Methods
+        /// <summary>
+        /// Get Property Description
+        /// </summary>
+        /// <param name="PropertyInfo">Info</param>
+        /// <returns>Description as String</returns>
+        private static string GetPropertyDescription(
+            this PropertyInfo info)
+        {
+            return info.GetCustomAttributes(typeof(DescriptionAttribute), false)
+            .Cast<DescriptionAttribute>().Select(x => x.Description).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// From Bools
+        /// </summary>
+        /// <typeparam name="T">Source Type</typeparam>
+        /// <param name="source">Type</param>
+        /// <returns>String Array</returns>
+        private static string[] FromBools<T>(
+            T source)
+        {
+            List<string> results = null;
+            if (source != null)
+            {
+                foreach (PropertyInfo info in typeof(T).GetProperties())
+                {
+                    if (info.CanRead)
+                    {
+                        object value = info.GetValue(source, null);
+                        if (value != null && (bool)value)
+                        {
+                            if (results == null) results = new List<string>();
+                            results.Add(info.GetPropertyDescription());
+                        }
+                    }
+                }
+            }
+            return results?.ToArray();
+        }
+        #endregion Private Methods
+
+        #region Public Methods
         /// <summary>
         /// Get Dictionary Value or Default
         /// </summary>
@@ -39,7 +81,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <typeparam name="T">Value Type</typeparam>
         /// <param name="value">Value</param>
         /// <returns>Description as String</returns>
-        public static string GetDescription<T>(this T value)
+        public static string GetDescription<T>(
+            this T value)
         {
             FieldInfo field = typeof(T).GetField(value.ToString());
             return field.GetCustomAttributes(typeof(DescriptionAttribute), false)
@@ -57,37 +100,59 @@ namespace Spotify.NetStandard.Client.Internal
         }
 
         /// <summary>
-        /// Get Scopes from Enum As Delimited String
-        /// </summary>
-        /// <param name="scopes">ScopeType Array</param>
-        /// <returns>Comma delimited Scope values</returns>
-        public static string AsDelimitedString(this ScopeType[] scopes)
-        {
-            if (scopes == null) return string.Empty;
-            string[] results = scopes.Select(f => f.GetDescription()).ToArray();
-            return results.AsDelimitedString();
-        }
-
-        /// <summary>
         /// Get QueryString As Dictionary
         /// </summary>
         /// <param name="querystring">Source QueryString</param>
         /// <returns>Dictionary of Key Values from QueryString</returns>
-        public static Dictionary<string, string> QueryStringAsDictionary(this string querystring)
+        public static Dictionary<string, string> QueryStringAsDictionary(
+            this string querystring)
         {
             NameValueCollection nvc = HttpUtility.ParseQueryString(querystring);
             return nvc.AllKeys.ToDictionary(k => k, k => nvc[k]);
         }
 
         /// <summary>
-        /// Set Tuneable Track
+        /// Get Scope
         /// </summary>
-        /// <param name="results">Results</param>
+        /// <param name="scope">Scope</param>
+        /// <returns>Results</returns>
+        public static string Get(
+            this Scope scope)
+        {
+            return FromBools(scope)?.AsDelimitedString();
+        }
+
+        /// <summary>
+        /// Get Include Group
+        /// </summary>
+        /// <param name="includeGroup">Include Group Object</param>
+        /// <returns>Results</returns>
+        public static string[] Get(
+            this IncludeGroup includeGroup)
+        {
+            return FromBools(includeGroup)?.ToArray();
+        }
+
+        /// <summary>
+        /// Get Search Type
+        /// </summary>
+        /// <param name="searchType">Search Type Object</param>
+        /// <returns>Results</returns>
+        public static string[] Get(
+            this SearchType searchType)
+        {
+            return FromBools(searchType)?.ToArray();
+        }
+
+        /// <summary>
+        /// Set Parameter
+        /// </summary>
+        /// <param name="parameters">Parameters</param>
         /// <param name="prefix">Prefix</param>
         /// <param name="tuneableTrack">Tuneable Track Object</param>
-        public static void Set(
+        public static void SetParameter(
             this TuneableTrack tuneableTrack,
-            Dictionary<string, string> results,
+            Dictionary<string, string> parameters,
             string prefix)
         {
             if (tuneableTrack != null)
@@ -99,12 +164,13 @@ namespace Spotify.NetStandard.Client.Internal
                         object value = info.GetValue(tuneableTrack, null);
                         if (value != null)
                         {
-                            results.Add($"{prefix}_{GetDescription(value)}",
+                            parameters.Add($"{prefix}_{info.GetDescription()}",
                             value.ToString());
                         }
                     }
                 }
             }
         }
+        #endregion Public Methods
     }
 }

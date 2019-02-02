@@ -23,9 +23,9 @@ namespace Spotify.NetStandard.Client.Authentication
         public DateTime Expiration { get; set; }
 
         /// <summary>
-        /// Token Auth Type
+        /// Token Type
         /// </summary>
         [DataMember(Name = "type")]
-        public AuthType AuthType { get; set; }
+        public TokenType TokenType { get; set; }
     }
 }
