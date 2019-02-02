@@ -328,14 +328,14 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <typeparam name="T">Response Type</typeparam>
         /// <param name="paging">Paging Object</param>
-        /// <param name="navigateby">Navigate By</param>
+        /// <param name="navigateType">Navigate Type</param>
         /// <returns>Content Response</returns>
         public async Task<ContentResponse> NavigateAsync<T>(
             Paging<T> paging, 
-            NavigateBy navigateby)
+            NavigateType navigateType)
         {
             Uri source = null;
-            switch (navigateby.Direction)
+            switch (navigateType)
             {
                 case NavigateType.None:
                     source = new Uri(paging.Href);

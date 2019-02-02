@@ -65,11 +65,11 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// </summary>
         /// <typeparam name="T">Response Type</typeparam>
         /// <param name="paging">Paging Object</param>
-        /// <param name="navigateby">Navigate By</param>
+        /// <param name="navigateType">Navigate Type</param>
         /// <returns>Content Response</returns>
         Task<ContentResponse> NavigateAsync<T>(
             Paging<T> paging,
-            NavigateBy navigateby);
+            NavigateType navigateType);
 
         /// <summary>
         /// Search
