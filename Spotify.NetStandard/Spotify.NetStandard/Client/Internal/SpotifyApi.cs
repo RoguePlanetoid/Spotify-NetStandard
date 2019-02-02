@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 namespace Spotify.NetStandard.Client.Internal
 {
     /// <summary>
-    /// Spotify API Helper
+    /// Spotify API
     /// </summary>
     internal class SpotifyApi : ISpotifyApi
     {
+        #region Private Members
         private readonly ISpotifyClient _client;
+        #endregion Private Members
 
         #region Constructor
         /// <summary>

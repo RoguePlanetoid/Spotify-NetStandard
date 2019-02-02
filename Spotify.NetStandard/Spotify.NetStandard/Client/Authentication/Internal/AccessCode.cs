@@ -42,18 +42,21 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// </summary>
         /// <param name="responseUri">An authorization Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="queryDict">QueryString Dictionary</param>
-        public AccessCode(Uri responseUri, Uri redirectUri, Dictionary<string, string> queryDict)
+        /// <param name="dictionary">QueryString Dictionary</param>
+        public AccessCode(
+            Uri responseUri, 
+            Uri redirectUri, 
+            Dictionary<string, string> dictionary)
         {
             try
             {
                 ResponseUri = responseUri;
                 RedirectUri = redirectUri;
-                if (queryDict != null)
+                if (dictionary != null)
                 {
-                    if (queryDict.ContainsKey(code)) Code = queryDict[code];
-                    if (queryDict.ContainsKey(state)) State = queryDict[state];
-                    if (queryDict.ContainsKey(error)) Error = queryDict[error];
+                    if (dictionary.ContainsKey(code)) Code = dictionary[code];
+                    if (dictionary.ContainsKey(state)) State = dictionary[state];
+                    if (dictionary.ContainsKey(error)) Error = dictionary[error];
                 }
             }
             finally { }

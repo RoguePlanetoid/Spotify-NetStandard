@@ -42,7 +42,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="timeout">TimeSpan</param>
         /// <param name="extraHeaders">Extra HTTP Headers</param>
         /// <returns></returns>
-        private static HttpClient CreateClient(TimeSpan timeout,
+        private static HttpClient CreateClient(
+            TimeSpan timeout,
             IEnumerable<KeyValuePair<string, string>> extraHeaders = null)
         {
             HttpClient client = new HttpClient(new HttpClientHandler
@@ -71,7 +72,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="stream">Memory Stream</param>
         /// <returns>HttpContent</returns>
         private HttpContent CreateHttpContent<TRequest>(
-            TRequest requestPayload, StreamWriter writer, MemoryStream stream)
+            TRequest requestPayload, 
+            StreamWriter writer, 
+            MemoryStream stream)
         {
             _jsonSerializer.Serialize(writer, requestPayload, typeof(TRequest));
             writer.Flush();
@@ -90,7 +93,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="extraHeaders">Extra Http Headers</param>
         /// <returns>HttpRequestMessage</returns>
         private HttpRequestMessage CreateHttpRequest(
-            HttpMethod method, Uri uri, HttpContent content,
+            HttpMethod method, 
+            Uri uri, 
+            HttpContent content,
             Dictionary<string, string> extraHeaders)
         {
             HttpRequestMessage message = new HttpRequestMessage(method, uri);
@@ -116,7 +121,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="message">HttpResponseMessage</param>
         /// <returns>SimpleServiceResponse of Result, Error Result</returns>
         private async Task<SimpleServiceResult<TResult, TErrorResult>>
-            ParseResponseAsync<TResult, TErrorResult>(HttpResponseMessage message)
+            ParseResponseAsync<TResult, TErrorResult>(
+            HttpResponseMessage message)
             where TResult : class
             where TErrorResult : class
         {
@@ -149,7 +155,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// Set Client Headers
         /// </summary>
         /// <param name="headers">Http Headers</param>
-        private void SetClientHeaders(Dictionary<string, string> headers)
+        private void SetClientHeaders(
+            Dictionary<string, string> headers)
         {
             _httpClient.Value.DefaultRequestHeaders.Clear();
             foreach(KeyValuePair<string, string> header in headers)
@@ -176,7 +183,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="requestParameters">Optional query string parameters</param>
         /// <returns>Uri</returns>
         public Uri GetUri(
-            Uri hostname, string relativeUri,
+            Uri hostname, 
+            string relativeUri,
             Dictionary<string, string> requestParameters = null)
         {
             string relUri = requestParameters == null ? relativeUri : requestParameters.Aggregate(relativeUri,
@@ -195,7 +203,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="requestParameters">Optional query string parameters</param>
         /// <param name="extraHeaders">Optional HTTP headers</param>
         public async Task<SimpleServiceResult<TResult, TErrorResult>> GetAsync<TResult, TErrorResult>(
-            Uri hostname, string relativeUri,
+            Uri hostname, 
+            string relativeUri,
             CancellationToken cancellationToken,
             Dictionary<string, string> requestParameters = null,
             Dictionary<string, string> extraHeaders = null)
@@ -221,7 +230,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="extraHeaders"></param>
         /// <returns></returns>
         public async Task<TResult> GetAsync<TResult>(
-            Uri hostname, string relativeUri,
+            Uri hostname, 
+            string relativeUri,
             CancellationToken cancellationToken,
             Dictionary<string, string> requestParameters = null,
             Dictionary<string, string> extraHeaders = null)
@@ -245,7 +255,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="requestParameters">Optional query string parameters</param>
         /// <param name="extraHeaders">Optional HTTP headers</param>
         public async Task<SimpleServiceResult<TResult, TErrorResult>> PostAsync<TResult, TErrorResult, TRequest>(
-            Uri hostname, string relativeUri,
+            Uri hostname, 
+            string relativeUri,
             TRequest requestPayload,
             CancellationToken cancellationToken,
             Dictionary<string, string> bodyParameters = null,

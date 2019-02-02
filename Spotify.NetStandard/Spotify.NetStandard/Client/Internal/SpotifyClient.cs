@@ -192,7 +192,8 @@ namespace Spotify.NetStandard.Client.Internal
             string country = null,
             string key = null,
             string value = null,
-            Page page = null) where T : class
+            Page page = null) 
+            where T : class
         {
             Dictionary<string, string> headers = 
                 await FormatRequestHeadersAsync();

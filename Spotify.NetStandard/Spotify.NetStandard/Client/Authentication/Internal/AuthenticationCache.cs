@@ -23,8 +23,10 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="client">Authentication Client</param>
         /// <param name="clientId">Client Id</param>
         /// <param name="clientSecret">Client Secret</param>
-        public AuthenticationCache(AuthenticationClient client,
-        string clientId, string clientSecret)
+        public AuthenticationCache(
+            AuthenticationClient client,
+            string clientId, 
+            string clientSecret)
         {
             _client = client;
             this._clientId = clientId;
@@ -42,10 +44,10 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             TokenType tokenType, 
             CancellationToken cancellationToken)
         {
-            bool requiresUserAuth = tokenType == TokenType.User;
+            bool requiresUserToken = (tokenType == TokenType.User);
             if (AccessToken == null || AccessToken.Expiration < DateTime.UtcNow)
             {
-                if(requiresUserAuth)
+                if(requiresUserToken)
                 {
                     throw new AuthTokenRequiredException();
                 }
@@ -53,8 +55,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             }
             else
             {
-                bool isUserAuth = AccessToken.TokenType == TokenType.User;
-                if(requiresUserAuth && !isUserAuth)
+                bool isUserToken = (AccessToken.TokenType == TokenType.User);
+                if(requiresUserToken && !isUserToken)
                 {
                     throw new AuthTokenRequiredException();
                 }
@@ -70,9 +72,9 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         public async Task<AccessToken> RenewAccessTokenAsync(
             CancellationToken cancellationToken)
         {
-            AuthenticationResponse authenticationResponse =
+            var authenticationResponse =
             await _client.AuthenticateAsync(
-            _clientId, _clientSecret, cancellationToken);
+                _clientId, _clientSecret, cancellationToken);
             if (authenticationResponse != null)
             {
                 AccessToken = new AccessToken
@@ -97,9 +99,9 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             AccessCode accessCode, 
             CancellationToken cancellationToken)
         {
-            AuthenticationResponse authenticationResponse =
+            var authenticationResponse =
             await _client.AuthenticateAsync(
-            _clientId, _clientSecret, accessCode, 
+                _clientId, _clientSecret, accessCode, 
             cancellationToken);
             if (authenticationResponse != null)
             {

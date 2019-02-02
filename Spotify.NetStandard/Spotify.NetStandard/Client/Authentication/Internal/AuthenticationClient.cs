@@ -40,8 +40,9 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <returns>Authentication Response</returns>
         public Task<AuthenticationResponse> AuthenticateAsync(
-        string clientId, string clientSecret, 
-        CancellationToken cancellationToken)
+            string clientId, 
+            string clientSecret, 
+            CancellationToken cancellationToken)
         {
             string auth = Convert.ToBase64String(
             Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
@@ -53,8 +54,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             {
                 { auth_header, $"{auth_basic} {auth}"}
             };
-            return PostAsync<AuthenticationResponse, Dictionary<string, string>>(host_name,
-                token_uri, null, cancellationToken, request, null, headers);
+            return PostAsync<AuthenticationResponse, Dictionary<string, string>>(
+                host_name, token_uri, null, cancellationToken, request, null, headers);
         }
 
         /// <summary>
@@ -64,11 +65,12 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="clientSecret">Client Secret</param>
         /// <param name="accessCode">Access Code</param>
         /// <param name="cancellationToken">Cancellation Token</param>
-        /// <returns></returns>
+        /// <returns>Authentication Response</returns>
         public async Task<AuthenticationResponse> AuthenticateAsync(
-        string clientId, string clientSecret, 
-        AccessCode accessCode, 
-        CancellationToken cancellationToken)
+            string clientId, 
+            string clientSecret, 
+            AccessCode accessCode, 
+            CancellationToken cancellationToken)
         {
             string auth = Convert.ToBase64String(
             Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
@@ -95,8 +97,10 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="redirectUrl">Redirect Url</param>
         /// <returns>Url</returns>
         public Uri Authenticate(
-        string clientId, string scopes, 
-        string state, string redirectUrl)
+            string clientId, 
+            string scopes, 
+            string state, 
+            string redirectUrl)
         {
             Dictionary<string, string> request = new Dictionary<string, string>()
             {
