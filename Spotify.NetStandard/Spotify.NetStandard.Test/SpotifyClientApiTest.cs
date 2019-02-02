@@ -78,7 +78,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_GetCategoryPlaylistsAsync()
+        public async Task Test_GetCategoryPlaylists()
         {
             var result = await _client.Api.GetCategoryPlaylistsAsync(
                 "decades");

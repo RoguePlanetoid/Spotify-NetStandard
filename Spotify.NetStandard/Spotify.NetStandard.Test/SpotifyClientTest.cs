@@ -41,7 +41,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Lookup_AlbumAsync()
+        public async Task Test_Lookup_Album()
         {
             Album item = await _client.LookupAsync<Album>(
                 "1ZGxGu4fMROqmZsFSoepeE", LookupType.Albums);
@@ -66,7 +66,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_Lookup_AlbumsAsync()
+        public async Task Test_Lookup_Albums()
         {
             List<string> ids = new List<string>
             {
