@@ -80,7 +80,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_AuthFollowArtistAsync()
         {
             // "Ariana Grande"
-            var result = await _client.AuthFollow(
+            var result = await _client.AuthFollowAsync(
                 new List<string> { "66CXWjxzNUsdJxJ2JdwvnR" },
                 Enums.FollowType.Artist);
             Assert.IsTrue(result.Success);

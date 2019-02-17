@@ -1,4 +1,5 @@
-﻿using Spotify.NetStandard.Requests;
+﻿using Spotify.NetStandard.Enums;
+using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
 using System;
 using System.Collections.Generic;
@@ -116,13 +117,114 @@ namespace Spotify.NetStandard.Client.Interfaces
             Page page = null);
         #endregion Browse API
 
+        #region Follow API
+        /// <summary>
+        /// Get Following State for Artists/Users
+        /// </summary>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs to check.</param>
+        /// <param name="followType">Type: either artist or user.</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<List<bool>> GetFollowingStateForArtistsOrUsersAsync(
+            List<string> ids,
+            FollowType followType);
+
+        /// <summary>
+        /// Check if Users Follow a Playlist
+        /// </summary>
+        /// <param name="ids">(Required) List of Spotify User IDs ; the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.</param>
+        /// <param name="playlistId">The Spotify ID of the playlist.</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<List<bool>> CheckUsersFollowingPlaylistAsync(
+            List<string> ids,
+            string playlistId);
+
+        /// <summary>
+        /// Follow Artists or Users
+        /// </summary>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
+        /// <param name="followType">Either artist or user</param>
+        /// <returns>True on Success, False if Not</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<bool> FollowArtistsOrUsersAsync(
+            List<string> ids,
+            FollowType followType);
+
+        /// <summary>
+        /// Follow a Playlist
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private status, as long as you know its playlist ID.</param>
+        /// <param name="isPublic">(Optional) Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope.</param>
+        /// <returns>True on Success, False if Not</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<bool> FollowPlaylistAsync(
+            string playlistId,
+            bool isPublic = true);
+
+        /// <summary>
+        /// Get User's Followed Artists
+        /// </summary>
+        /// <param name="cursor">(Optional) Cursor</param>
+        /// <returns>ContentCursorResponse Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<ContentCursorResponse> GetUsersFollowedArtistsAsync(
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Unfollow Artists or Users
+        /// </summary>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
+        /// <param name="followType">Either artist or user</param>
+        /// <returns>True on Success, False if Not</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<bool> UnfollowArtistsOrUsersAsync(
+            List<string> ids,
+            FollowType followType);
+
+        /// <summary>
+        /// Unfollow Playlist
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID of the playlist that is to be no longer followed.</param>
+        /// <returns>True on Success, False if Not</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<bool> UnfollowPlaylistAsync(
+            string playlistId);
+        #endregion Follow API
+
         #region Playlists API
+        /// <summary>
+        /// Add Tracks to a Playlist
+        /// </summary>
+        /// <param name="playlistId">The Spotify ID for the playlist.</param>
+        /// <param name="uris">(Optional) List of Spotify track URIs to add.</param>
+        /// <param name="position">(Optional) The position to insert the tracks, a zero-based index.</param>
+        /// <returns>Snapshot Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Snapshot> AddTracksToPlaylistAsync(
+            string playlistId,
+            List<string> uris = null,
+            int? position = null);
+
         /// <summary>
         /// Get a Playlist
         /// </summary>
-        /// <param name="id">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
         /// <returns>Playlist Object</returns>
-        Task<Playlist> GetPlaylistAsync(string id);
+        Task<Playlist> GetPlaylistAsync(string playlistId);
+
+        /// <summary>
+        /// Remove Tracks from a Playlist
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="tracks">(Required) List of Spotify URIs of the tracks to remove</param>
+        /// <param name="snapshotId">(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
+        /// <returns>Snapshot Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Snapshot> RemoveTracksFromPlaylistAsync(
+            string playlistId,
+            List<string> tracks,
+            string snapshotId = null);
 
         /// <summary>
         /// Get a Playlist's Tracks
@@ -135,7 +237,125 @@ namespace Spotify.NetStandard.Client.Interfaces
             string id,
             string market = null,
             Page page = null);
+
+        /// <summary>
+        /// Get a Playlist Cover Image
+        /// </summary>
+        /// <param name="playlistId">(Require) The Spotify ID for the playlist.</param>
+        /// <returns>Image Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Image> GetPlaylistCoverImageAsync(
+            string playlistId);
+
+        /// <summary>
+        /// Upload a Custom Playlist Cover Image
+        /// </summary>
+        /// <param name="playlistId">The Spotify ID for the playlist.</param>
+        /// <param name="file">JPEG File Bytes</param>
+        /// <returns>Status Object</returns>
+        Task<Status> UploadCustomPlaylistCoverImageAsync(
+            string playlistId,
+            byte[] file);
+
+        /// <summary>
+        /// Get a List of Current User's Playlists
+        /// </summary>
+        /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
+        /// <returns>CursorPaging of Playlist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<CursorPaging<Playlist>> GetUserPlaylistsAsync(
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Change a Playlist's Details
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="name">(Optional) The new name for the playlist, for example "My New Playlist Title"</param>
+        /// <param name="isPublic">(Optional) If true the playlist will be public, if false it will be private.</param>
+        /// <param name="isCollaborative">(Optional) If true , the playlist will become collaborative and other users will be able to modify the playlist in their Spotify client. Note: You can only set collaborative to true on non-public playlists.</param>
+        /// <param name="description">(Optional) Value for playlist description as displayed in Spotify Clients and in the Web API.</param>
+        /// <returns>True on Success, False if Not</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<bool> ChangePlaylistDetailsAsync(
+            string playlistId,
+            string name = null,
+            bool? isPublic = null,
+            bool? isCollaborative = null,
+            string description = null);
+
+        /// <summary>
+        /// Get a List of a User's Playlists
+        /// </summary>
+        /// <param name="userId">(Required) The user’s Spotify user ID.</param>
+        /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
+        /// <returns>CursorPaging of Playlist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<CursorPaging<Playlist>> GetUserPlaylistsAsync(
+            string userId,
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Replace a Playlist's Tracks
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="uris">(Optional) List of Spotify track URIs.</param>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> ReplacePlaylistTracksAsync(
+            string playlistId,
+            List<string> uris);
+
+        /// <summary>
+        /// Create a Playlist
+        /// </summary>
+        /// <param name="userId">(Required) The user’s Spotify user ID.</param>
+        /// <param name="name">(Required) The name for the new playlist, for example "Your Coolest Playlist" . This name does not need to be unique; a user may have several playlists with the same name.</param>
+        /// <param name="isPublic">(Optional) Defaults to true . If true the playlist will be public, if false it will be private. To be able to create private playlists, the user must have granted the playlist-modify-private scope</param>
+        /// <param name="isCollaborative">(Optional) Defaults to false . If true the playlist will be collaborative. Note that to create a collaborative playlist you must also set public to false . To create collaborative playlists you must have granted playlist-modify-private and playlist-modify-public scopes.</param>
+        /// <param name="description">(Optional) Value for playlist description as displayed in Spotify Clients and in the Web API.</param>
+        /// <returns>Playlist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Playlist> CreatePlaylistAsync(
+            string userId,
+            string name,
+            bool? isPublic = null,
+            bool? isCollaborative = null,
+            string description = null);
+
+        /// <summary>
+        /// Reorder a Playlist's Tracks
+        /// </summary>
+        /// <param name="playlistId">The Spotify ID for the playlist.</param>
+        /// <param name="rangeStart">(Required) The position of the first track to be reordered.</param>
+        /// <param name="insertBefore">(Required) The position where the tracks should be inserted. To reorder the tracks to the end of the playlist, simply set insert_before to the position after the last track.</param>
+        /// <param name="rangeLength">(Optional) The amount of tracks to be reordered. Defaults to 1 if not set. The range of tracks to be reordered begins from the range_start position, and includes the range_length subsequent tracks.</param>
+        /// <param name="snapshotId">The playlist’s snapshot ID against which you want to make the changes.</param>
+        /// <returns>Snapshot Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Snapshot> ReorderPlaylistTracksAsync(
+            string playlistId,
+            int rangeStart,
+            int insertBefore,
+            int? rangeLength,
+            string snapshotId = null);
         #endregion Playlists API
+
+        #region User Profile API
+        /// <summary>
+        /// Get a User's Profile
+        /// </summary>
+        /// <param name="userId">The user’s Spotify user ID.</param>
+        /// <returns>Public User Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<PublicUser> GetUserProfileAsync(
+            string userId);
+
+        /// <summary>
+        /// Get Current User's Profile
+        /// </summary>
+        /// <returns>Private User Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<PrivateUser> GetUserProfileAsync();
+        #endregion User Profile API
 
         #region Artists API
         /// <summary>

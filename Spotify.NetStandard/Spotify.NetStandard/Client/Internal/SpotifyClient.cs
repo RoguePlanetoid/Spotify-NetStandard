@@ -957,7 +957,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="followType">Either artist or user</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public Task<Status> AuthFollow(
+        public Task<Status> AuthFollowAsync(
             List<string> itemIds, 
             FollowType followType)
         {
@@ -974,17 +974,17 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// Follow a Playlist
         /// </summary>
-        /// <param name="itemId">(Required) The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private status, as long as you know its playlist ID.</param>
+        /// <param name="playlistId">(Required) The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private status, as long as you know its playlist ID.</param>
         /// <param name="isPublic">(Optional) Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
         public Task<Status> AuthFollowPlaylistAsync(
-            string itemId,
+            string playlistId,
             bool isPublic = true)
         {
             var request = new PublicRequest() { IsPublic = isPublic };
             return PutApiAsync<PublicRequest, Status>(null,
-                $"playlists/{itemId}/followers", 
+                $"playlists/{playlistId}/followers", 
                 request, null, null, TokenType.User, 200);
         }
 

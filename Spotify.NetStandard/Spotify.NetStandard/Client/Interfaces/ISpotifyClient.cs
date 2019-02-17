@@ -261,7 +261,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="followType">Either artist or user</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        Task<Status> AuthFollow(
+        Task<Status> AuthFollowAsync(
             List<string> itemIds,
             FollowType followType);
 
