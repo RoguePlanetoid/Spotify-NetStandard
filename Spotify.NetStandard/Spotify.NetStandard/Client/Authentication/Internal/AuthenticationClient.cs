@@ -54,8 +54,9 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             {
                 { auth_header, $"{auth_basic} {auth}"}
             };
-            return PostAsync<AuthenticationResponse, Dictionary<string, string>>(
-                host_name, token_uri, null, cancellationToken, request, null, headers);
+
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(host_name,
+                token_uri, null, cancellationToken, request, null, headers, true);
         }
 
         /// <summary>
@@ -84,8 +85,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             {
                 { auth_header, $"{auth_basic} {auth}"}
             };
-            return await PostAsync<AuthenticationResponse, Dictionary<string, string>>(host_name,
-                token_uri, null, cancellationToken, request, null, headers);
+            return await PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(host_name,
+                token_uri, null, cancellationToken, request, null, headers, true);
         }
 
         /// <summary>

@@ -21,6 +21,8 @@ namespace Spotify.NetStandard.Enums
         AlbumTracks,
         [Description("artists_albums")]
         ArtistAlbums,
+        [Description("playlists")]
+        Playlist,
         [Description("playlists_tracks")]
         PlaylistTracks,
         [Description("audio-features")]

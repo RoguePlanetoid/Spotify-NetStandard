@@ -265,6 +265,18 @@ namespace Spotify.NetStandard.Test
 
         #region Playlists
         /// <summary>
+        /// Get a Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_Lookup_Playlist()
+        {
+            Playlist playlist = await _client.LookupAsync<Playlist>(
+                "37i9dQZF1DXatMjChPKgBk", LookupType.Playlist);
+            Assert.IsNotNull(playlist);
+        }
+
+        /// <summary>
         /// Get a playlist tracks
         /// </summary>
         /// <returns></returns>

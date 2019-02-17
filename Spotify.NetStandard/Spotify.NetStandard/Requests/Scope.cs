@@ -152,6 +152,12 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("user-read-private")]
         public bool? UserReadPrivate { get; set; }
+
+        /// <summary>
+        /// User Generated Content Image Upload
+        /// </summary>
+        [Description("ugc-image-upload")]
+        public bool? UserGeneratedContentImageUpload { get; set; }
         #endregion Users
 
         #region Follow

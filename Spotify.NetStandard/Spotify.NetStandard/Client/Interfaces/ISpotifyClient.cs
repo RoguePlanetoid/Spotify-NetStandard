@@ -1,5 +1,4 @@
 ﻿using Spotify.NetStandard.Client.Authentication;
-using Spotify.NetStandard.Client.Internal;
 using Spotify.NetStandard.Enums;
 using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
@@ -22,32 +21,6 @@ namespace Spotify.NetStandard.Client.Interfaces
         #endregion Properties
 
         #region Public Methods
-        /// <summary>
-        /// Auth User
-        /// </summary>
-        /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
-        /// <param name="scope">Scope</param>
-        /// <returns>Uri</returns>
-        Uri AuthUser(
-            Uri redirectUri,
-            string state,
-            Scope scope);
-
-        /// <summary>
-        /// Auth User
-        /// </summary>
-        /// <param name="responseUri">Response Uri</param>
-        /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
-        /// <returns>AccessToken on Success, Null if Not</returns>
-        /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
-        /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
-        Task<AccessToken> AuthUserAsync(
-            Uri responseUri,
-            Uri redirectUri,
-            string state);
-
         /// <summary>
         /// Get Access Token
         /// </summary>
@@ -229,5 +202,234 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <returns>Available Genre Seeds Object</returns>
         Task<AvailableGenreSeeds> LookupRecommendationGenres();
         #endregion Recommendations
+
+        #region Authenticate
+        /// <summary>
+        /// Auth User
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <returns>Uri</returns>
+        Uri AuthUser(
+            Uri redirectUri,
+            string state,
+            Scope scope);
+
+        /// <summary>
+        /// Auth User
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+        Task<AccessToken> AuthUserAsync(
+            Uri responseUri,
+            Uri redirectUri,
+            string state);
+        #endregion Authenticate
+
+        #region Authenticated Follow API
+        /// <summary>
+        /// Get Following State for Artists/Users
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs to check.</param>
+        /// <param name="followType">Type: either artist or user.</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<List<bool>> AuthLookupFollowingStateAsync(
+            List<string> itemIds,
+            FollowType followType);
+
+        /// <summary>
+        /// Check if Users Follow a Playlist
+        /// </summary>
+        /// <param name="itemIds">(Required) List of Spotify User IDs ; the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.</param>
+        /// <param name="playlistId">The Spotify ID of the playlist.</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<List<bool>> AuthLookupUserFollowingPlaylistAsync(
+            List<string> itemIds,
+            string playlistId);
+
+        /// <summary>
+        /// Follow Artists or Users
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs.</param>
+        /// <param name="followType">Either artist or user</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthFollow(
+            List<string> itemIds,
+            FollowType followType);
+
+        /// <summary>
+        /// Follow a Playlist
+        /// </summary>
+        /// <param name="itemId">(Required) The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private status, as long as you know its playlist ID.</param>
+        /// <param name="isPublic">(Optional) Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthFollowPlaylistAsync(
+            string itemId,
+            bool isPublic = true);
+
+        /// <summary>
+        /// Get User's Followed Artists
+        /// </summary>
+        /// <param name="cursor">(Optional) Cursor</param>
+        /// <returns>ContentCursorResponse Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<ContentCursorResponse> AuthLookupFollowedArtistsAsync(
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Unfollow Artists or Users
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs.</param>
+        /// <param name="followType">Either artist or user</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUnfollowAsync(
+            List<string> itemIds,
+            FollowType followType);
+
+        /// <summary>
+        /// Unfollow Playlist
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID of the playlist that is to be no longer followed.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUnfollowPlaylistAsync(
+            string playlistId);
+        #endregion Authenticated Follow API
+
+        #region Authenticated Playlists API
+        /// <summary>
+        /// Add Tracks to a Playlist
+        /// </summary>
+        /// <param name="playlistId">The Spotify ID for the playlist.</param>
+        /// <param name="uris">(Optional) List of Spotify track URIs to add.</param>
+        /// <param name="position">(Optional) The position to insert the tracks, a zero-based index.</param>
+        /// <returns>Snapshot Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Snapshot> AuthAddTracksToPlaylistAsync(
+            string playlistId,
+            UriListRequest uris = null,
+            int? position = null);
+
+        /// <summary>
+        /// Remove Tracks from a Playlist
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="request">(Optional) Tracks: An array of objects containing Spotify URIs of the tracks to remove. Snapshot ID : The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
+        /// <returns>Snapshot Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Snapshot> AuthRemoveTracksFromPlaylistAsync(
+            string playlistId,
+            PlaylistTracksRequest request = null);
+
+        /// <summary>
+        /// Get a Playlist Cover Image
+        /// </summary>
+        /// <param name="playlistId">(Require) The Spotify ID for the playlist.</param>
+        /// <returns>Image Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Image> AuthGetPlaylistCoverImageAsync(
+            string playlistId);
+
+        /// <summary>
+        /// Upload a Custom Playlist Cover Image
+        /// </summary>
+        /// <param name="playlistId">The Spotify ID for the playlist.</param>
+        /// <param name="file">JPEG File Bytes</param>
+        /// <returns>Status Object</returns>
+        Task<Status> AuthUploadCustomPlaylistImageAsync(
+            string playlistId,
+            byte[] file);
+
+        /// <summary>
+        /// Get a List of Current User's Playlists
+        /// </summary>
+        /// <param name="cursor">(Optional) Cursor</param>
+        /// <returns>CursorPaging of Playlist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<CursorPaging<Playlist>> AuthLookupUserPlaylistsAsync(
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Change a Playlist's Details
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="request">(Optional) Playlist Request Object</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthChangePlaylistDetailsAsync(
+            string playlistId,
+            PlaylistRequest request);
+
+        /// <summary>
+        /// Get a List of a User's Playlists
+        /// </summary>
+        /// <param name="userId">(Required) The user’s Spotify user ID.</param>
+        /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
+        /// <returns>CursorPaging of Playlist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<CursorPaging<Playlist>> AuthLookupUserPlaylistsAsync(
+            string userId,
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Replace a Playlist's Tracks
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="uris">(Optional) Uri List Request.</param>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthReplacePlaylistTracksAsync(
+            string playlistId,
+            UriListRequest uris);
+
+        /// <summary>
+        /// Create a Playlist
+        /// </summary>
+        /// <param name="userId">(Required) The user’s Spotify user ID.</param>
+        /// <param name="request">(Required) Playlist Request</param>
+        /// <returns>Playlist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Playlist> AuthCreatePlaylistAsync(
+            string userId,
+            PlaylistRequest request);
+
+        /// <summary>
+        /// Reorder a Playlist's Tracks
+        /// </summary>
+        /// <param name="playlistId">The Spotify ID for the playlist.</param>
+        /// <param name="request">(Required) Playlist Reorder Request</param>
+        /// <returns>Snapshot Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Snapshot> AuthReorderPlaylistTracksAsync(
+            string playlistId,
+            PlaylistReorderRequest request);
+        #endregion Authenticated Playlists API 
+
+        #region Authenticated User Profile API
+        /// <summary>
+        /// Get a User's Profile
+        /// </summary>
+        /// <param name="userId">The user’s Spotify user ID.</param>
+        /// <returns>Public User Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<PublicUser> AuthLookupUserProfileAsync(
+            string userId);
+
+        /// <summary>
+        /// Get Current User's Profile
+        /// </summary>
+        /// <returns>Private User Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<PrivateUser> AuthLookupUserProfileAsync();
+        #endregion Authenticated User Profile API
     }
 }

@@ -153,6 +153,31 @@ namespace Spotify.NetStandard.Client.Internal
                     country, locale, timeStamp, page))?.Playlists;
         #endregion Browse API
 
+        #region Playlists API
+        /// <summary>
+        /// Get a Playlist
+        /// </summary>
+        /// <param name="id">(Required) The Spotify ID for the playlist.</param>
+        /// <returns>Playlist Object</returns>
+        public async Task<Playlist> GetPlaylistAsync(string id) => 
+            await _client.LookupAsync<Playlist>(
+               id, LookupType.Playlist);
+
+        /// <summary>
+        /// Get a Playlist's Tracks
+        /// </summary>
+        /// <param name="id">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0</param>
+        /// <returns>Paging List of Track Object</returns>
+        public Task<Paging<Track>> GetPlaylistTracksAsync(
+            string id,
+            string market = null,
+            Page page = null) =>
+                _client.LookupAsync<Paging<Track>>(
+                    id, LookupType.PlaylistTracks, market, page: page);
+        #endregion Playlists API
+
         #region Artists API
         /// <summary>
         /// Get Multiple Artists

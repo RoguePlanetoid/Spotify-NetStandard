@@ -205,6 +205,34 @@ namespace Spotify.NetStandard.Test
         }
         #endregion Artists API
 
+        #region Playlists API
+        /// <summary>
+        /// Get a Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetPlaylist()
+        {
+            var result = await _client.Api.GetPlaylistAsync(
+                "37i9dQZF1DXatMjChPKgBk");
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Get a Playlist's Tracks
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetPlaylistTracks()
+        {
+            var result = await _client.Api.GetPlaylistTracksAsync(
+                "37i9dQZF1DXatMjChPKgBk");
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        #endregion Playlists API
+
         #region Albums API
         /// <summary>
         /// Get Multiple Albums
