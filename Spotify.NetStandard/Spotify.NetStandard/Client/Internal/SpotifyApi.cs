@@ -188,34 +188,32 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="followType">Either artist or user</param>
         /// <returns>True on Success, False if Not</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public async Task<bool> FollowArtistsOrUsersAsync(
+        public Task<Status> FollowArtistsOrUsersAsync(
             List<string> ids,
             FollowType followType) => 
-            (await _client.AuthFollowAsync(
-                ids, followType))
-                .Success;
+            _client.AuthFollowAsync(
+                ids, followType);
 
         /// <summary>
         /// Follow a Playlist
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private status, as long as you know its playlist ID.</param>
         /// <param name="isPublic">(Optional) Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope.</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public async Task<bool> FollowPlaylistAsync(
+        public Task<Status> FollowPlaylistAsync(
             string playlistId,
             bool isPublic = true) =>
-            (await _client.AuthFollowPlaylistAsync(
-                playlistId, isPublic))
-                .Success;
+            _client.AuthFollowPlaylistAsync(
+                playlistId, isPublic);
 
         /// <summary>
         /// Get User's Followed Artists
         /// </summary>
         /// <param name="cursor">(Optional) Cursor</param>
-        /// <returns>ContentCursorResponse Object</returns>
+        /// <returns>Cursor Paging of Artist Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public Task<ContentCursorResponse> GetUsersFollowedArtistsAsync(
+        public Task<CursorPaging<Artist>> GetUsersFollowedArtistsAsync(
             Cursor cursor = null) => 
                 _client.AuthLookupFollowedArtistsAsync(
                 cursor);
@@ -225,24 +223,24 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
         /// <param name="followType">Either artist or user</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public async Task<bool> UnfollowArtistsOrUsersAsync(
+        public Task<Status> UnfollowArtistsOrUsersAsync(
             List<string> ids,
             FollowType followType) =>
-            (await _client.AuthUnfollowAsync(
-                ids, followType)).Success;
+            _client.AuthUnfollowAsync(
+                ids, followType);
 
         /// <summary>
         /// Unfollow Playlist
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID of the playlist that is to be no longer followed.</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public async Task<bool> UnfollowPlaylistAsync(
+        public Task<Status> UnfollowPlaylistAsync(
             string playlistId) => 
-            (await _client.AuthUnfollowPlaylistAsync(
-                playlistId)).Success;
+            _client.AuthUnfollowPlaylistAsync(
+                playlistId);
         #endregion Follow API
 
         #region Playlists API
@@ -358,9 +356,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="isPublic">(Optional) If true the playlist will be public, if false it will be private.</param>
         /// <param name="isCollaborative">(Optional) If true , the playlist will become collaborative and other users will be able to modify the playlist in their Spotify client. Note: You can only set collaborative to true on non-public playlists.</param>
         /// <param name="description">(Optional) Value for playlist description as displayed in Spotify Clients and in the Web API.</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public async Task<bool> ChangePlaylistDetailsAsync(
+        public async Task<Status> ChangePlaylistDetailsAsync(
             string playlistId,
             string name = null,
             bool? isPublic = null,
@@ -374,8 +372,8 @@ namespace Spotify.NetStandard.Client.Internal
                 IsCollaborative = isCollaborative,
                 Description = description
             };
-            return (await _client.AuthChangePlaylistDetailsAsync(
-                playlistId, request)).Success;
+            return await _client.AuthChangePlaylistDetailsAsync(
+                playlistId, request);
         }
 
         /// <summary>

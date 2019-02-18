@@ -17,7 +17,6 @@ namespace Spotify.NetStandard.Test
     {
         private ISpotifyClient _client = null;
         
-
         /// <summary>
         /// Initialise Unit Test and Configuration
         /// </summary>
@@ -41,7 +40,7 @@ namespace Spotify.NetStandard.Test
                 TokenType = (TokenType)Enum.Parse(typeof(TokenType), config["type"])
             };
             var expired = DateTime.UtcNow > accessToken.Expiration;
-            //Assert.IsFalse(expired);
+            Assert.IsFalse(expired);
             _client.SetToken(accessToken);
         }
 
@@ -106,7 +105,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_AuthLookupFollowedArtists()
         {
             var result = await _client.AuthLookupFollowedArtistsAsync();
-            Assert.IsNotNull(result.Artists);
+            Assert.IsNotNull(result.Items);
         }
 
         /// <summary>
@@ -291,7 +290,8 @@ namespace Spotify.NetStandard.Test
         public async Task Test_AuthReorderPlaylistTracks()
         {
             var result = await _client.AuthReorderPlaylistTracksAsync(
-            "1L6ECMsEDXmrp1qfH5htHZ", new PlaylistReorderRequest()
+            "1L6ECMsEDXmrp1qfH5htHZ", 
+            new PlaylistReorderRequest()
             {
                 RangeStart = 2,
                 RangeLength = 1,
@@ -310,7 +310,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_AuthLookupUserProfile()
         {
             var result = await _client.AuthLookupUserProfileAsync(
-                "doa31nixtl3kmy7uf8ov88sy0");
+                "jmperezperez");
             Assert.IsNotNull(result);
         }
 

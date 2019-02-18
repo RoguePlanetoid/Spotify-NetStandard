@@ -145,9 +145,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// </summary>
         /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
         /// <param name="followType">Either artist or user</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        Task<bool> FollowArtistsOrUsersAsync(
+        Task<Status> FollowArtistsOrUsersAsync(
             List<string> ids,
             FollowType followType);
 
@@ -156,9 +156,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private status, as long as you know its playlist ID.</param>
         /// <param name="isPublic">(Optional) Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope.</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        Task<bool> FollowPlaylistAsync(
+        Task<Status> FollowPlaylistAsync(
             string playlistId,
             bool isPublic = true);
 
@@ -166,9 +166,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// Get User's Followed Artists
         /// </summary>
         /// <param name="cursor">(Optional) Cursor</param>
-        /// <returns>ContentCursorResponse Object</returns>
+        /// <returns>Cursor Paging of Artist Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        Task<ContentCursorResponse> GetUsersFollowedArtistsAsync(
+        Task<CursorPaging<Artist>> GetUsersFollowedArtistsAsync(
             Cursor cursor = null);
 
         /// <summary>
@@ -176,9 +176,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// </summary>
         /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
         /// <param name="followType">Either artist or user</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        Task<bool> UnfollowArtistsOrUsersAsync(
+        Task<Status> UnfollowArtistsOrUsersAsync(
             List<string> ids,
             FollowType followType);
 
@@ -186,9 +186,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// Unfollow Playlist
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID of the playlist that is to be no longer followed.</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        Task<bool> UnfollowPlaylistAsync(
+        Task<Status> UnfollowPlaylistAsync(
             string playlistId);
         #endregion Follow API
 
@@ -274,9 +274,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="isPublic">(Optional) If true the playlist will be public, if false it will be private.</param>
         /// <param name="isCollaborative">(Optional) If true , the playlist will become collaborative and other users will be able to modify the playlist in their Spotify client. Note: You can only set collaborative to true on non-public playlists.</param>
         /// <param name="description">(Optional) Value for playlist description as displayed in Spotify Clients and in the Web API.</param>
-        /// <returns>True on Success, False if Not</returns>
+        /// <returns>Status Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        Task<bool> ChangePlaylistDetailsAsync(
+        Task<Status> ChangePlaylistDetailsAsync(
             string playlistId,
             string name = null,
             bool? isPublic = null,

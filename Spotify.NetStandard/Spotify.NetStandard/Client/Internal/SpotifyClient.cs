@@ -992,14 +992,14 @@ namespace Spotify.NetStandard.Client.Internal
         /// Get User's Followed Artists
         /// </summary>
         /// <param name="cursor">(Optional) Cursor</param>
-        /// <returns>ContentCursorResponse Object</returns>
+        /// <returns>CursorPaging of Artist Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public Task<ContentCursorResponse> AuthLookupFollowedArtistsAsync(
+        public async Task<CursorPaging<Artist>> AuthLookupFollowedArtistsAsync(
             Cursor cursor = null)
         {
-            return LookupCursorApiAsync<ContentCursorResponse>(
+            return (await LookupCursorApiAsync<ContentCursorResponse>(
                 $"me/following", 
-                "type", "artist", cursor, TokenType.User);
+                "type", "artist", cursor, TokenType.User)).Artists;
         }
 
         /// <summary>

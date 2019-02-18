@@ -280,9 +280,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// Get User's Followed Artists
         /// </summary>
         /// <param name="cursor">(Optional) Cursor</param>
-        /// <returns>ContentCursorResponse Object</returns>
+        /// <returns>CursorPaging of Artist Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        Task<ContentCursorResponse> AuthLookupFollowedArtistsAsync(
+        Task<CursorPaging<Artist>> AuthLookupFollowedArtistsAsync(
             Cursor cursor = null);
 
         /// <summary>
