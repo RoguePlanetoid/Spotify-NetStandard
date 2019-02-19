@@ -17,6 +17,12 @@ namespace Spotify.NetStandard.Client.Authentication
         public string Token { get; set; }
 
         /// <summary>
+        /// Refresh
+        /// </summary>
+        [DataMember(Name = "refresh")]
+        public string Refresh { get; set; }
+
+        /// <summary>
         /// Token Expiration Date
         /// </summary>
         [DataMember(Name = "expires")]

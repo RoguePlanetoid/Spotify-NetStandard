@@ -15,6 +15,9 @@ namespace Spotify.NetStandard.Test
     [TestClass]
     public class SpotifyClientAuthTest
     {
+        private readonly Uri redirect_url = new Uri("https://www.example.org/spotify");
+        private const string state = "spotify.state";
+
         private ISpotifyClient _client = null;
         
         /// <summary>
@@ -43,6 +46,27 @@ namespace Spotify.NetStandard.Test
             Assert.IsFalse(expired);
             _client.SetToken(accessToken);
         }
+
+        #region Auth
+        /// <summary>
+        /// Authenticate User
+        /// </summary>
+        [TestMethod]
+        public void Test_AuthUserUri()
+        {
+            var uri = _client.AuthUser(redirect_url, state,
+            new Scope
+            {
+                UserReadPrivate = true,
+                FollowRead = true,
+                FollowModify = true,
+                PlaylistModifyPublic = true,
+                PlaylistModifyPrivate = true,
+                UserGeneratedContentImageUpload = true
+            });
+            Assert.IsNotNull(uri);
+        }
+        #endregion Auth
 
         #region Follow
         /// <summary>
@@ -300,6 +324,34 @@ namespace Spotify.NetStandard.Test
             Assert.IsTrue(result.Success);
         }
         #endregion Playlist
+
+        #region Personalisation
+        /// <summary>
+        /// Get a User's Top Artists
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthLookupUserTopArtists()
+        {
+            var result = await _client.AuthLookupUserTopArtistsAsync();
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Get a User's Top Tracks
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthLookupUserTopTracks()
+        {
+            var result = await _client.AuthLookupUserTopTracksAsync();
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+        #endregion Personalisation
 
         #region User Profile
         /// <summary>

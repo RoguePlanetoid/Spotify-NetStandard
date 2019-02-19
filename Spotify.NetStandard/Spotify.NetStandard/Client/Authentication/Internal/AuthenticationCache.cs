@@ -45,13 +45,19 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             CancellationToken cancellationToken)
         {
             bool requiresUserToken = (tokenType == TokenType.User);
-            if (AccessToken == null || AccessToken.Expiration < DateTime.UtcNow)
+            if (AccessToken == null)
             {
                 if(requiresUserToken)
                 {
                     throw new AuthTokenRequiredException();
                 }
-                AccessToken = await RenewAccessTokenAsync(cancellationToken);
+                AccessToken = await RenewAccessTokenAsync(
+                    cancellationToken);
+            }
+            else if(AccessToken.Expiration < DateTime.UtcNow)
+            {
+                AccessToken = await RenewRefreshTokenAsync(
+                    AccessToken.Refresh, cancellationToken);
             }
             else
             {
@@ -65,6 +71,34 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
+        /// Renew Refresh Token
+        /// </summary>
+        /// <param name="refreshToken">Refresh Token</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Access Token</returns>
+        public async Task<AccessToken> RenewRefreshTokenAsync(
+            string refreshToken,
+            CancellationToken cancellationToken)
+        {
+            var authenticationResponse =
+            await _client.AuthenticateAsync(
+                _clientId, _clientSecret, 
+                refreshToken, cancellationToken);
+            if (authenticationResponse != null)
+            {
+                AccessToken = new AccessToken
+                {
+                    TokenType = TokenType.Access,
+                    Token = authenticationResponse.AccessToken,
+                    Expiration = DateTime.UtcNow.Add(
+                    TimeSpan.FromSeconds(Convert.ToDouble(
+                    authenticationResponse.ExpiresIn)))
+                };
+            }
+            return AccessToken;
+        }
+
+        /// <summary>
         /// Renew Access Token
         /// </summary>
         /// <param name="cancellationToken"></param>
@@ -72,7 +106,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         public async Task<AccessToken> RenewAccessTokenAsync(
             CancellationToken cancellationToken)
         {
-            var authenticationResponse =
+            var authenticationResponse =  
             await _client.AuthenticateAsync(
                 _clientId, _clientSecret, cancellationToken);
             if (authenticationResponse != null)
@@ -109,6 +143,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 {
                     TokenType = TokenType.User,
                     Token = authenticationResponse.AccessToken,
+                    Refresh = authenticationResponse.RefreshToken,
                     Expiration = DateTime.UtcNow.Add(
                     TimeSpan.FromSeconds(Convert.ToDouble(
                     authenticationResponse.ExpiresIn)))

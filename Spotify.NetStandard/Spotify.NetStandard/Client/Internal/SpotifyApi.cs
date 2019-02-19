@@ -464,6 +464,30 @@ namespace Spotify.NetStandard.Client.Internal
         }
         #endregion Playlists API
 
+        #region Personalisation API
+        /// <summary>
+        /// Get a User's Top Artists
+        /// </summary>
+        /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
+        /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
+        /// <returns>Cursor Paging of Artist Object</returns>
+        public Task<CursorPaging<Artist>> GetUserTopArtistsAsync(
+            TimeRangeType? timeRange = null,
+            Cursor cursor = null) => 
+            _client.AuthLookupUserTopArtistsAsync(timeRange, cursor);
+
+        /// <summary>
+        /// Get a User's Top Tracks
+        /// </summary>
+        /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
+        /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
+        /// <returns>Cursor Paging of Track Object</returns>
+        public Task<CursorPaging<Track>> GetUserTopTracksAsync(
+            TimeRangeType? timeRange = null,
+            Cursor cursor = null) => 
+            _client.AuthLookupUserTopTracksAsync(timeRange, cursor);
+        #endregion Personalization API
+
         #region User Profile API
         /// <summary>
         /// Get a User's Profile

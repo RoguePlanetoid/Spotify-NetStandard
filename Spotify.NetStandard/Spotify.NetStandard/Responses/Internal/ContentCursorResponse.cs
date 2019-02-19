@@ -1,11 +1,11 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Spotify.NetStandard.Responses
+namespace Spotify.NetStandard.Responses.Internal
 {
     /// <summary>
     /// Content Cursor Response
     /// </summary>
-    public class ContentCursorResponse
+    internal class ContentCursorResponse
     {
         /// <summary>
         /// Cursor Paging Object of Artist

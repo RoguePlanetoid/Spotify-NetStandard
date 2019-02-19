@@ -5,6 +5,7 @@ using Spotify.NetStandard.Client.Interfaces;
 using Spotify.NetStandard.Enums;
 using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
+using Spotify.NetStandard.Responses.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1198,6 +1199,52 @@ namespace Spotify.NetStandard.Client.Internal
                 request, null, null, TokenType.User, 200);
         }
         #endregion Authenticated Playlists API 
+
+        #region Authenticated Personalisation API
+        /// <summary>
+        /// Get a User's Top Artists
+        /// </summary>
+        /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
+        /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
+        /// <returns>Cursor Paging of Artist Object</returns>
+        public Task<CursorPaging<Artist>> AuthLookupUserTopArtistsAsync(
+            TimeRangeType? timeRange = null,
+            Cursor cursor = null)
+        {
+            string key = null;
+            string value = null;
+            if(timeRange != null)
+            {
+                key = "time_range";
+                value = timeRange.GetDescription();
+            }
+            return LookupCursorApiAsync<CursorPaging<Artist>>(
+                "me/top/artists",
+                key, value, cursor, TokenType.User);
+        }
+
+        /// <summary>
+        /// Get a User's Top Tracks
+        /// </summary>
+        /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
+        /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
+        /// <returns>Cursor Paging of Track Object</returns>
+        public Task<CursorPaging<Track>> AuthLookupUserTopTracksAsync(
+            TimeRangeType? timeRange = null,
+            Cursor cursor = null)
+        {
+            string key = null;
+            string value = null;
+            if (timeRange != null)
+            {
+                key = "time_range";
+                value = timeRange.GetDescription();
+            }
+            return LookupCursorApiAsync<CursorPaging<Track>>(
+                "me/top/tracks",
+                key, value, cursor, TokenType.User);
+        }
+        #endregion Authenticated Personalisation API
 
         #region Authenticated User Profile API
         /// <summary>
