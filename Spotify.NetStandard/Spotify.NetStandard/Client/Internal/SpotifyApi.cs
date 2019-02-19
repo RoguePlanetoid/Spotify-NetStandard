@@ -471,6 +471,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
         /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
         /// <returns>Cursor Paging of Artist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
         public Task<CursorPaging<Artist>> GetUserTopArtistsAsync(
             TimeRangeType? timeRange = null,
             Cursor cursor = null) => 
@@ -482,6 +483,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
         /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
         /// <returns>Cursor Paging of Track Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
         public Task<CursorPaging<Track>> GetUserTopTracksAsync(
             TimeRangeType? timeRange = null,
             Cursor cursor = null) => 

@@ -414,6 +414,84 @@ namespace Spotify.NetStandard.Client.Interfaces
             PlaylistReorderRequest request);
         #endregion Authenticated Playlists API 
 
+        #region Authenticated Library API
+        /// <summary>
+        /// Check User's Saved Albums
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<List<bool>> AuthLookupCheckUserSavedAlbumsAsync(
+            List<string> itemIds);
+
+        /// <summary>
+        /// Save Tracks for User
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthSaveUserTracksAsync(
+             List<string> itemIds);
+
+        /// <summary>
+        /// Remove Albums for Current User
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthRemoveUserAlbumsAsync(
+             List<string> itemIds);
+
+        /// <summary>
+        /// Save Albums for Current User
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthSaveUserAlbumsAsync(
+             List<string> itemIds);
+
+        /// <summary>
+        /// Remove User's Saved Tracks
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthRemoveUserTracksAsync(
+             List<string> itemIds);
+
+        /// <summary>
+        /// Get User's Saved Albums
+        /// </summary>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+        /// <returns>Cursor Paging of Album Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<CursorPaging<SavedAlbum>> AuthLookupUserSavedAlbumsAsync(
+            string market = null,
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Get User's Saved Tracks
+        /// </summary>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+        /// <returns>Cursor Paging of Saved Track Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<CursorPaging<SavedTrack>> AuthLookupUserSavedTracksAsync(
+            string market = null,
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Check User's Saved Tracks
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<List<bool>> AuthLookupCheckUserSavedTracksAsync(
+            List<string> itemIds);
+        #endregion Authenticated Library API
+
         #region Authenticated Personalisation API
         /// <summary>
         /// Get a User's Top Artists
@@ -421,6 +499,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
         /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
         /// <returns>Cursor Paging of Artist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
         Task<CursorPaging<Artist>> AuthLookupUserTopArtistsAsync(
             TimeRangeType? timeRange = null,
             Cursor cursor = null);
@@ -431,6 +510,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
         /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
         /// <returns>Cursor Paging of Track Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
         Task<CursorPaging<Track>> AuthLookupUserTopTracksAsync(
             TimeRangeType? timeRange = null,
             Cursor cursor = null);

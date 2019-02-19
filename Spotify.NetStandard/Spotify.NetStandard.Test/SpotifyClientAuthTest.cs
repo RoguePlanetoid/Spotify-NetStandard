@@ -19,7 +19,7 @@ namespace Spotify.NetStandard.Test
         private const string state = "spotify.state";
 
         private ISpotifyClient _client = null;
-        
+
         /// <summary>
         /// Initialise Unit Test and Configuration
         /// </summary>
@@ -78,7 +78,7 @@ namespace Spotify.NetStandard.Test
         {
             // "Ariana Grande"
             var result = await _client.AuthLookupFollowingStateAsync(
-                new List<string> { "66CXWjxzNUsdJxJ2JdwvnR" }, 
+                new List<string> { "66CXWjxzNUsdJxJ2JdwvnR" },
                 Enums.FollowType.Artist);
             Assert.IsNotNull(result);
         }
@@ -171,7 +171,7 @@ namespace Spotify.NetStandard.Test
                 "7D4Epnvxhc8l6NpooJqYXk",
                 new UriListRequest()
                 {
-                  Uris = new List<string>
+                    Uris = new List<string>
                   {
                       "spotify:track:2zzdnRWE3z6QP3FoVlnWHO"
                   }
@@ -249,12 +249,12 @@ namespace Spotify.NetStandard.Test
         public async Task Test_AuthChangePlaylistDetails()
         {
             var result = await _client.AuthChangePlaylistDetailsAsync(
-                "7D4Epnvxhc8l6NpooJqYXk", 
+                "7D4Epnvxhc8l6NpooJqYXk",
                 new PlaylistRequest()
-            {
-                Name = "Spotify.NetStandard",
-                Description = "Spotify Client Auth Test"
-            });
+                {
+                    Name = "Spotify.NetStandard",
+                    Description = "Spotify Client Auth Test"
+                });
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_AuthReorderPlaylistTracks()
         {
             var result = await _client.AuthReorderPlaylistTracksAsync(
-            "1L6ECMsEDXmrp1qfH5htHZ", 
+            "1L6ECMsEDXmrp1qfH5htHZ",
             new PlaylistReorderRequest()
             {
                 RangeStart = 2,
@@ -324,6 +324,114 @@ namespace Spotify.NetStandard.Test
             Assert.IsTrue(result.Success);
         }
         #endregion Playlist
+
+        #region Library
+        /// <summary>
+        /// Check User's Saved Albums
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthLookupCheckUserSavedAlbums()
+        {
+            var result = await _client.AuthLookupCheckUserSavedAlbumsAsync(
+                new List<string>
+                {
+                    "01w0dp5OVOgviPw2HHXB3M"
+                });
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Save Tracks for User
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthUserSaveTracks()
+        {
+            var result = await _client.AuthSaveUserTracksAsync(
+            new List<string>
+            {
+                "2XWjPtKdi5sucFYtVav07d"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Remove Albums for Current User
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthRemoveUserAlbums()
+        {
+            var result = await _client.AuthRemoveUserAlbumsAsync(new List<string>
+            {
+                "2C5HYffMBumERQlNfceyrO"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Save Albums for Current User
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthSaveUserAlbums()
+        {
+            var result = await _client.AuthSaveUserAlbumsAsync(new List<string>
+            {
+                "2C5HYffMBumERQlNfceyrO"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Remove User's Saved Tracks
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthUserRemoveTracks()
+        {
+            var result = await _client.AuthRemoveUserTracksAsync(
+            new List<string>
+            {
+                "2XWjPtKdi5sucFYtVav07d"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get User's Saved Albums
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthLookupUserSavedAlbums()
+        {
+            var result = await _client.AuthLookupUserSavedAlbumsAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Get User's Saved Albums
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthLookupUserSavedTracks()
+        {
+            var result = await _client.AuthLookupUserSavedTracksAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Check User's Saved Tracks
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthLookupCheckUserSavedTracks()
+        {
+            var result = await _client.AuthLookupCheckUserSavedTracksAsync(
+                new List<string>
+                {
+                    "1gWFMuLlQDN18GJDtSy049"
+                });
+            Assert.IsNotNull(result);
+        }
+        #endregion Library
 
         #region Personalisation
         /// <summary>
@@ -347,7 +455,6 @@ namespace Spotify.NetStandard.Test
         public async Task Test_AuthLookupUserTopTracks()
         {
             var result = await _client.AuthLookupUserTopTracksAsync();
-            Assert.IsNotNull(result);
             Assert.IsNotNull(result?.Items);
             Assert.IsTrue(result.Items.Count > 0);
         }

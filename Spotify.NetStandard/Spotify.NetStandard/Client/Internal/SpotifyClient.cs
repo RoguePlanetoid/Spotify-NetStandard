@@ -37,13 +37,12 @@ namespace Spotify.NetStandard.Client.Internal
         private async Task<Dictionary<string, string>> FormatRequestHeadersAsync(
             TokenType tokenType = TokenType.Access)
         {
-            Dictionary<string, string> headersToSend = 
-                new Dictionary<string, string>();
-            AccessToken access = await 
+            var headers = new Dictionary<string, string>();
+            var access = await 
                 _authenticationCache.CheckAndRenewTokenAsync(
                 tokenType, new CancellationToken(false));
-            headersToSend.Add("Authorization", "Bearer " + access.Token);
-            return headersToSend;
+            headers.Add("Authorization", "Bearer " + access.Token);
+            return headers;
         }
 
         /// <summary>
@@ -60,8 +59,7 @@ namespace Spotify.NetStandard.Client.Internal
             string country = null,
             string locale = null)
         {
-            Dictionary<string, string> parameters = 
-                new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>();
 
             if (limit != null)
                 parameters.Add("limit", limit.Value.ToString());
@@ -100,8 +98,7 @@ namespace Spotify.NetStandard.Client.Internal
             int? limit = null,
             string after = null)
         {
-            Dictionary<string, string> parameters =
-                            new Dictionary<string, string>();
+            var parameters = new Dictionary<string, string>();
 
             if (limit != null)
                 parameters.Add("limit", limit.Value.ToString());
@@ -125,7 +122,7 @@ namespace Spotify.NetStandard.Client.Internal
             int successCode)
             where TResponse : Status
         {
-            bool success = code == successCode;
+            var success = code == successCode;
             if (response == null)
                 response = (TResponse)new Status();
             response.Code = code;
@@ -147,10 +144,8 @@ namespace Spotify.NetStandard.Client.Internal
             Dictionary<string, string> parameters = null,
             Page page = null)
         {
-            Dictionary<string, string> requestHeaders = 
-                await FormatRequestHeadersAsync();
-            Dictionary<string, string> requestParameters = 
-                FormatRequestParameters(
+            var headers = await FormatRequestHeadersAsync();
+            var requestParameters = FormatRequestParameters(
                 country: country, locale: locale,
                 offset: page?.Offset, limit: page?.Limit);
             if (parameters != null)
@@ -161,7 +156,7 @@ namespace Spotify.NetStandard.Client.Internal
             return await GetRequestAsync<ContentResponse>(_hostName, 
                 $"/v1/browse/{browseCategory}",
                 new CancellationToken(false), 
-                requestParameters, requestHeaders);
+                requestParameters, headers);
         }
 
         /// <summary>
@@ -184,20 +179,18 @@ namespace Spotify.NetStandard.Client.Internal
             Page page = null) 
             where TResult : class
         {
-            Dictionary<string, string> headers = 
-                await FormatRequestHeadersAsync();
-            Dictionary<string, string> parameters = 
-                FormatRequestParameters(
+            var headers = await FormatRequestHeadersAsync();
+            var parameters = FormatRequestParameters(
                 offset: page?.Offset, limit: page?.Limit, country: country);
             if (key != null && value != null)
             {
                 parameters.Add(key, value);
             }
-            string[] source = new string[] { lookupType };
+            var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
-            string relativeUri = (source.Length == 1) ?
+            var relativeUri = (source.Length == 1) ?
                 $"/v1/{source[0]}/{itemId}" :
                 $"/v1/{source[0]}/{itemId}/{source[1]}";
             return await GetRequestAsync<TResult>(_hostName, relativeUri,
@@ -219,12 +212,11 @@ namespace Spotify.NetStandard.Client.Internal
             string country = null,
             Page page = null)
         {
-            string ids = FormatIdsParameter(itemIds);
-            Dictionary<string, string> headers = 
-                await FormatRequestHeadersAsync();
-            Dictionary<string, string> parameters = 
+            var headers = await FormatRequestHeadersAsync();
+            var parameters = 
                 FormatRequestParameters(
                     offset: page?.Offset, limit: page?.Limit, country: country);
+            var ids = FormatIdsParameter(itemIds);
             parameters.Add("ids", ids);
             return await GetRequestAsync<LookupResponse>(
                 _hostName, $"/v1/{lookupType}/",
@@ -249,20 +241,19 @@ namespace Spotify.NetStandard.Client.Internal
             TokenType tokenType = TokenType.Access)
             where TResult : class
         {
-            Dictionary<string, string> headers =
-                await FormatRequestHeadersAsync(tokenType);
-            Dictionary<string, string> parameters =
+            var headers = await FormatRequestHeadersAsync(tokenType);
+            var parameters =
                 FormatCursorParameters(
                 limit: cursor?.Limit, after: cursor?.After);
             if (key != null && value != null)
             {
                 parameters.Add(key, value);
             }
-            string[] source = new string[] { lookupType };
+            var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
-            string relativeUri = (source.Length == 1) ?
+            var relativeUri = (source.Length == 1) ?
                 $"/v1/{source[0]}/" :
                 $"/v1/{source[0]}/{source[1]}";
             return await GetRequestAsync<TResult>(_hostName, relativeUri,
@@ -286,13 +277,12 @@ namespace Spotify.NetStandard.Client.Internal
             TokenType tokenType = TokenType.Access)
             where TResponse : class
         {
-            Dictionary<string, string> headers =
-                await FormatRequestHeadersAsync(tokenType);
-            string[] source = new string[] { lookupType };
+            var headers = await FormatRequestHeadersAsync(tokenType);
+            var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
-            string relativeUri = (itemId == null) ?
+            var relativeUri = (itemId == null) ?
                 $"/v1/{lookupType}" :
                 $"/v1/{lookupType}/{itemId}";
             return await GetRequestAsync<TResponse>(_hostName, relativeUri,
@@ -315,13 +305,14 @@ namespace Spotify.NetStandard.Client.Internal
             TokenType tokenType = TokenType.Access)
             where TResponse : class
         {
-            string ids = FormatIdsParameter(itemIds);
-            Dictionary<string, string> headers =
-                await FormatRequestHeadersAsync(tokenType);
-            string[] source = new string[] { lookupType };
-            if (parameters == null)
-                parameters = new Dictionary<string, string>();
-            parameters.Add("ids", ids);
+            var headers = await FormatRequestHeadersAsync(tokenType);
+            if (itemIds != null)
+            {
+                if (parameters == null)
+                    parameters = new Dictionary<string, string>();
+                parameters.Add("ids", FormatIdsParameter(itemIds));
+            }
+            var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
@@ -355,15 +346,18 @@ namespace Spotify.NetStandard.Client.Internal
             where TRequest : class
             where TResponse : Status
         {
-            Dictionary<string, string> headers =
-                await FormatRequestHeadersAsync(tokenType);
-            string[] source = new string[] { lookupType };
-            if(itemIds != null)
+            var headers = await FormatRequestHeadersAsync(tokenType);
+            var source = new string[] { lookupType };
+            if (itemIds != null)
+            {
+                if (parameters == null)
+                    parameters = new Dictionary<string, string>();
                 parameters.Add("ids", FormatIdsParameter(itemIds));
+            }
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
-            string relativeUri = $"/v1/{lookupType}";
+            var relativeUri = $"/v1/{lookupType}";
             var (response, statusCode) =
                 await PostRequestAsync<TRequest, TResponse>(
                 _hostName,
@@ -398,15 +392,18 @@ namespace Spotify.NetStandard.Client.Internal
             where TRequest : class
             where TResponse : class
         {
-            Dictionary<string, string> headers =
-                await FormatRequestHeadersAsync(tokenType);
-            string[] source = new string[] { lookupType };
+            var headers = await FormatRequestHeadersAsync(tokenType);
             if (itemIds != null)
+            {
+                if (parameters == null)
+                    parameters = new Dictionary<string, string>();
                 parameters.Add("ids", FormatIdsParameter(itemIds));
+            }
+            var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
-            string relativeUri = $"/v1/{lookupType}";
+            var relativeUri = $"/v1/{lookupType}";
             var (response, statusCode) =
                 await PostRequestAsync<TRequest, TResponse>(
                 _hostName,
@@ -443,15 +440,18 @@ namespace Spotify.NetStandard.Client.Internal
             where TRequest : class
             where TResponse : Status
         {
-            Dictionary<string, string> headers = 
-                await FormatRequestHeadersAsync(tokenType);
-            string[] source = new string[] { lookupType };
-            if(itemIds != null)
+            var headers = await FormatRequestHeadersAsync(tokenType);
+            if (itemIds != null)
+            {
+                if (parameters == null)
+                    parameters = new Dictionary<string, string>();
                 parameters.Add("ids", FormatIdsParameter(itemIds));
+            }
+            var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
-            string relativeUri = $"/v1/{lookupType}";
+            var relativeUri = $"/v1/{lookupType}";
             var (response, statusCode) =
                 await PutRequestAsync<TRequest, TResponse>(
                 _hostName,
@@ -486,15 +486,18 @@ namespace Spotify.NetStandard.Client.Internal
             where TRequest : class
             where TResponse : Status
         {
-            Dictionary<string, string> headers =
-                await FormatRequestHeadersAsync(tokenType);
-            string[] source = new string[] { lookupType };
-            if(itemIds != null)
+            var headers = await FormatRequestHeadersAsync(tokenType);
+            if (itemIds != null)
+            {
+                if (parameters == null)
+                    parameters = new Dictionary<string, string>();
                 parameters.Add("ids", FormatIdsParameter(itemIds));
+            }
+            var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
                 source;
-            string relativeUri = $"/v1/{lookupType}";
+            var relativeUri = $"/v1/{lookupType}";
             var (response, statusCode) =
                 await DeleteRequestAsync<TRequest, TResponse>(
                 _hostName,
@@ -1200,6 +1203,130 @@ namespace Spotify.NetStandard.Client.Internal
         }
         #endregion Authenticated Playlists API 
 
+        #region Authenticated Library API
+        /// <summary>
+        /// Check User's Saved Albums
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        public Task<List<bool>> AuthLookupCheckUserSavedAlbumsAsync(
+            List<string> itemIds)
+        {
+            return GetApiAsync<List<bool>>(itemIds,
+             "me/albums/contains",
+             null, TokenType.User);
+        }
+
+        /// <summary>
+        /// Save Tracks for User
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        public Task<Status> AuthSaveUserTracksAsync(
+             List<string> itemIds)
+        {
+            return PutApiAsync<Status,Status>(itemIds,
+            "me/tracks",
+            null, null, null, TokenType.User, 200);
+        }
+
+        /// <summary>
+        /// Remove Albums for Current User
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        public Task<Status> AuthRemoveUserAlbumsAsync(
+             List<string> itemIds)
+        {
+            return DeleteApiAsync<Status, Status>(itemIds,
+            "me/albums",
+             null, null, TokenType.User, 200);
+        }
+
+        /// <summary>
+        /// Save Albums for Current User
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        public Task<Status> AuthSaveUserAlbumsAsync(
+             List<string> itemIds)
+        {
+            return PutApiAsync<Status, Status>(itemIds,
+            "me/albums",
+            null, null, null, TokenType.User, 200);
+        }
+
+        /// <summary>
+        /// Remove User's Saved Tracks
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        public Task<Status> AuthRemoveUserTracksAsync(
+             List<string> itemIds)
+        {
+            return DeleteApiAsync<Status, Status>(itemIds,
+            "me/tracks",
+            null, null, TokenType.User, 200);
+        }
+
+        /// <summary>
+        /// Get User's Saved Albums
+        /// </summary>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+        /// <returns>Cursor Paging of Saved Album Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        public Task<CursorPaging<SavedAlbum>> AuthLookupUserSavedAlbumsAsync(
+            string market = null,
+            Cursor cursor = null)
+        {
+            var parameters = new Dictionary<string, string>();
+            if(market != null)
+                parameters.Add("market", market);
+            return GetApiAsync<CursorPaging<SavedAlbum>>((string)null,
+             "me/albums",
+             null, TokenType.User);
+        }
+
+        /// <summary>
+        /// Get User's Saved Tracks
+        /// </summary>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+        /// <returns>Cursor Paging of Saved Track Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        public Task<CursorPaging<SavedTrack>> AuthLookupUserSavedTracksAsync(
+            string market = null,
+            Cursor cursor = null)
+        {
+            var parameters = new Dictionary<string, string>();
+            if (market != null)
+                parameters.Add("market", market);
+            return GetApiAsync<CursorPaging<SavedTrack>>((string)null,
+             "me/tracks",
+             null, TokenType.User);
+        }
+
+        /// <summary>
+        /// Check User's Saved Tracks
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        public Task<List<bool>> AuthLookupCheckUserSavedTracksAsync(
+            List<string> itemIds)
+        {
+            return GetApiAsync<List<bool>>(itemIds,
+             "me/tracks/contains",
+             null, TokenType.User);
+        }
+        #endregion Authenticated Library API
+
         #region Authenticated Personalisation API
         /// <summary>
         /// Get a User's Top Artists
@@ -1207,6 +1334,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
         /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
         /// <returns>Cursor Paging of Artist Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
         public Task<CursorPaging<Artist>> AuthLookupUserTopArtistsAsync(
             TimeRangeType? timeRange = null,
             Cursor cursor = null)
@@ -1229,6 +1357,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="timeRange">(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks</param>
         /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
         /// <returns>Cursor Paging of Track Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
         public Task<CursorPaging<Track>> AuthLookupUserTopTracksAsync(
             TimeRangeType? timeRange = null,
             Cursor cursor = null)
