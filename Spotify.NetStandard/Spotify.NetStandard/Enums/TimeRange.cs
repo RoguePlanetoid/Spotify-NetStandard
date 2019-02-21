@@ -3,9 +3,9 @@
 namespace Spotify.NetStandard.Enums
 {
     /// <summary>
-    /// Follow Type
+    /// Time Range
     /// </summary>
-    public enum TimeRangeType : byte
+    public enum TimeRange : byte
     {
         [Description("long_term")]
         LongTerm,

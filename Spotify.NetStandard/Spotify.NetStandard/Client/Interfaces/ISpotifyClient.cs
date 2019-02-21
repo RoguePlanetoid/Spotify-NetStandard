@@ -492,6 +492,134 @@ namespace Spotify.NetStandard.Client.Interfaces
             List<string> itemIds);
         #endregion Authenticated Library API
 
+        #region Authenticated Player API
+        /// <summary>
+        /// Skip User’s Playback To Next Track
+        /// </summary>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackNextTrackAsync(
+            string deviceId = null);
+
+        /// <summary>
+        /// Seek To Position In Currently Playing Track
+        /// </summary>
+        /// <param name="position">(Required) The position in milliseconds to seek to. Must be a positive number. Passing in a position that is greater than the length of the track will cause the player to start playing the next song.</param>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackSeekTrackAsync(
+             int position,
+             string deviceId = null);
+
+        /// <summary>
+        /// Get a User's Available Devices
+        /// </summary>
+        /// <returns>Devices Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Devices> AuthLookupUserPlaybackDevicesAsync();
+
+        /// <summary>
+        /// Toggle Shuffle For User’s Playback
+        /// </summary>
+        /// <param name="state">(Required) true : Shuffle user’s playback, false : Do not shuffle user’s playback</param>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackToggleShuffleAsync(
+             bool state,
+             string deviceId = null);
+
+        /// <summary>
+        /// Transfer a User's Playback
+        /// </summary>
+        /// <param name="deviceId">(Required) the ID of the device on which playback should be started/transferred.  Note: Although an array is accepted, only a single deviceId is currently supported.</param>
+        /// <param name="play">(Optional) true: ensure playback happens on new device, false or not provided: keep the current playback state</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackTransferAsync(
+             DevicesRequest request);
+
+        /// <summary>
+        /// Get Current User's Recently Played Tracks
+        /// </summary>
+        /// <param name="cursor">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - After: A Unix timestamp in milliseconds. Returns all items after (but not including) this cursor position. If after is specified, before must not be specified. Before - (Optional) A Unix timestamp in milliseconds. Returns all items before (but not including) this cursor position. If before is specified, after must not be specified.</param>
+        /// <returns>Cursor Paging of Play History Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<CursorPaging<PlayHistory>> AuthLookupUserRecentlyPlayedTracksAsync(
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Start/Resume a User's Playback
+        /// </summary>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <param name="request">Playback Request Object</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackStartResumeAsync(
+             string deviceId = null,
+             PlaybackRequest request = null);
+
+        /// <summary>
+        /// Set Repeat Mode On User’s Playback
+        /// </summary>
+        /// <param name="state">(Required) track, context or off. track will repeat the current track. context will repeat the current context. off will turn repeat off.</param>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackSetRepeatModeAsync(
+            RepeatState state,
+            string deviceId = null);
+
+        /// <summary>
+        /// Pause a User's Playback
+        /// </summary>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackPauseAsync(
+            string deviceId = null);
+
+        /// <summary>
+        /// Skip User’s Playback To Previous Track
+        /// </summary>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackPreviousTrackAsync(
+            string deviceId = null);
+
+        /// <summary>
+        /// Get Information About The User's Current Playback
+        /// </summary>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <returns>Currently Playing Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<CurrentlyPlaying> AuthLookupUserPlaybackCurrentAsync(
+            string market = null);
+
+        /// <summary>
+        /// Get the User's Currently Playing Track
+        /// </summary>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <returns>Simplified Currently Playing Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<SimplifiedCurrentlyPlaying> AuthLookupUserPlaybackCurrentTrackAsync(
+            string market = null);
+
+        /// <summary>
+        /// Set Volume For User's Playback
+        /// </summary>
+        /// <param name="percent">(Required) The volume to set. Must be a value from 0 to 100 inclusive.</param>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackSetVolumeAsync(
+             int percent,
+             string deviceId = null);
+        #endregion Authenticated Player API
+
         #region Authenticated Personalisation API
         /// <summary>
         /// Get a User's Top Artists
@@ -501,7 +629,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <returns>Cursor Paging of Artist Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
         Task<CursorPaging<Artist>> AuthLookupUserTopArtistsAsync(
-            TimeRangeType? timeRange = null,
+            TimeRange? timeRange = null,
             Cursor cursor = null);
 
         /// <summary>
@@ -512,7 +640,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <returns>Cursor Paging of Track Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
         Task<CursorPaging<Track>> AuthLookupUserTopTracksAsync(
-            TimeRangeType? timeRange = null,
+            TimeRange? timeRange = null,
             Cursor cursor = null);
         #endregion Authenticated Personalisation API
 

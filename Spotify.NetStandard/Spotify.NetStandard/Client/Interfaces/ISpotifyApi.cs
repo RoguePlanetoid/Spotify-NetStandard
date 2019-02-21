@@ -348,7 +348,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <returns>Cursor Paging of Artist Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
         Task<CursorPaging<Artist>> GetUserTopArtistsAsync(
-            TimeRangeType? timeRange = null,
+            TimeRange? timeRange = null,
             Cursor cursor = null);
 
         /// <summary>
@@ -359,7 +359,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <returns>Cursor Paging of Track Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
         Task<CursorPaging<Track>> GetUserTopTracksAsync(
-            TimeRangeType? timeRange = null,
+            TimeRange? timeRange = null,
             Cursor cursor = null);
         #endregion Personalization API
 

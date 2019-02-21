@@ -433,6 +433,173 @@ namespace Spotify.NetStandard.Test
         }
         #endregion Library
 
+        #region Player
+        /// <summary>
+        /// Skip User’s Playback To Next Track
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackNextTrack()
+        {
+            var result = await _client.AuthUserPlaybackNextTrackAsync();
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Seek To Position In Currently Playing Track
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackSeekTrack()
+        {
+            var timespan = TimeSpan.FromSeconds(5);
+            var result = await _client.AuthUserPlaybackSeekTrackAsync(
+                (int)timespan.TotalMilliseconds);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get a User's Available Devices
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthLookupUserPlaybackDevices()
+        {
+            var result = await _client.AuthLookupUserPlaybackDevicesAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Toggle Shuffle For User’s Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackToggleShuffle()
+        {
+            var result = await _client.AuthUserPlaybackToggleShuffleAsync(
+                false);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Transfer a User's Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackTransfer()
+        {
+            var result = await _client.AuthUserPlaybackTransferAsync(
+                new DevicesRequest()
+            {
+                DeviceIds = new List<string>
+                {
+                    "52d83639998abe14a8e2f63d4d309a24345a0f7b"
+                },
+                Play = true
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get Current User's Recently Played Tracks
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthLookupUserRecentlyPlayedTracks()
+        {
+            var result = await _client.AuthLookupUserRecentlyPlayedTracksAsync();
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Start/Resume a User's Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackStartResume()
+        {
+            var result = await _client.AuthUserPlaybackStartResumeAsync(
+                null,
+                new PlaybackRequest()
+                {
+                    ContextUri = "spotify:album:3lwu4qs7RJEBRfsDL7aUwu",
+                    Offset = new PositionRequest()
+                    {
+                        Position = 3
+                    },
+                    Position = 0
+                });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Set Repeat Mode On User’s Playback
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackSetRepeatMode()
+        {
+            var result = await _client.AuthUserPlaybackSetRepeatModeAsync(
+                Enums.RepeatState.Track);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Pause a User's Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackPause()
+        {
+            var result = await _client.AuthUserPlaybackPauseAsync();
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Skip User’s Playback To Previous Track
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackPreviousTrack()
+        {
+            var result = await _client.AuthUserPlaybackPreviousTrackAsync();
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get Information About The User's Current Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthLookupUserPlaybackCurrent()
+        {
+            var result = await _client.AuthLookupUserPlaybackCurrentAsync();
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Get the User's Currently Playing Track
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthLookupUserPlaybackCurrentTrack()
+        {
+            var result = await _client.AuthLookupUserPlaybackCurrentTrackAsync();
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Set Volume For User's Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthUserPlaybackSetVolume()
+        {
+            var result = await _client.AuthUserPlaybackSetVolumeAsync(50);
+            Assert.IsTrue(result.Success);
+        }
+        #endregion Player
+
         #region Personalisation
         /// <summary>
         /// Get a User's Top Artists

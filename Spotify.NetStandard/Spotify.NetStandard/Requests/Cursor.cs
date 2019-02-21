@@ -15,6 +15,12 @@ namespace Spotify.NetStandard.Requests
         public string After { get; set; }
 
         /// <summary>
+        /// The cursor to use as key to find the previous page of items.
+        /// </summary>
+        [DataMember(Name = "before")]
+        public string Before { get; set; }
+
+        /// <summary>
         /// The maximum number of items in the response (as set in the query or by default).
         /// </summary>
         [DataMember(Name = "limit")]

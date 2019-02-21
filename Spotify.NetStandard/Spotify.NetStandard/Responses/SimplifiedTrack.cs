@@ -31,7 +31,7 @@ namespace Spotify.NetStandard.Responses
         /// The track length in milliseconds.
         /// </summary>
         [DataMember(Name = "duration_ms")]
-        public int Duration { get; set; }
+        public long Duration { get; set; }
 
         /// <summary>
         /// Whether or not the track has explicit lyrics ( true = yes it does; false = no it does not OR unknown).
