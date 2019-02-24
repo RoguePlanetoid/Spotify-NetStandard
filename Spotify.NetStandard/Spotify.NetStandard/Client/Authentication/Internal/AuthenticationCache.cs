@@ -17,6 +17,30 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         private readonly AuthenticationClient _client;
         private AccessCode _accessCode = null;
 
+        #region Private Methods
+        /// <summary>
+        /// Map
+        /// </summary>
+        /// <param name="tokenType">TokenType</param>
+        /// <param name="response">AuthenticationResponse</param>
+        /// <returns>Access Token</returns>
+        private AccessToken Map(TokenType tokenType,
+            AuthenticationResponse response)
+        {
+            return new AccessToken
+            {
+                TokenType = tokenType,
+                Token = response.AccessToken,
+                Refresh = response.RefreshToken,
+                Expiration = DateTime.UtcNow.Add(
+                TimeSpan.FromSeconds(Convert.ToDouble(
+                response.ExpiresIn))),
+                Scopes = response.Scope             
+            };
+        }
+        #endregion Private Methods
+
+        #region Public Methods
         /// <summary>
         /// Constructor
         /// </summary>
@@ -39,80 +63,119 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="tokenType">Token Type</param>
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <returns>Access Token</returns>
-        /// <exception cref="AuthTokenRequiredException">AuthTokenRequiredException</exception>
+        /// <exception cref="AuthAccessTokenRequiredException">AuthAccessTokenRequiredException</exception>
+        /// <exception cref="AuthUserTokenRequiredException">AuthUserTokenRequiredException</exception>
         public async Task<AccessToken> CheckAndRenewTokenAsync(
             TokenType tokenType, 
             CancellationToken cancellationToken)
         {
             bool requiresUserToken = (tokenType == TokenType.User);
-            if (AccessToken == null || AccessToken.Expiration < DateTime.UtcNow)
+            if (AccessToken?.Token == null)
             {
                 if(requiresUserToken)
                 {
-                    throw new AuthTokenRequiredException();
+                    throw new AuthUserTokenRequiredException();
                 }
-                AccessToken = await RenewAccessTokenAsync(cancellationToken);
+                AccessToken = await GetAccessTokenAsync(
+                    cancellationToken);
+            }
+            else if(AccessToken.Expiration < DateTime.UtcNow)
+            {
+                AccessToken = await RefreshTokenAsync(
+                    AccessToken.Refresh, 
+                    AccessToken.TokenType, 
+                    cancellationToken);
             }
             else
             {
                 bool isUserToken = (AccessToken.TokenType == TokenType.User);
                 if(requiresUserToken && !isUserToken)
                 {
-                    throw new AuthTokenRequiredException();
+                    throw new AuthUserTokenRequiredException();
+                }
+            }
+            if(AccessToken?.Token == null || 
+                AccessToken.Expiration < DateTime.UtcNow)
+            {
+                if (requiresUserToken)
+                {
+                    throw new AuthUserTokenRequiredException();
+                }
+                else
+                {
+                    throw new AuthAccessTokenRequiredException();
                 }
             }
             return AccessToken;
         }
 
         /// <summary>
-        /// Renew Access Token
+        /// Refresh Token
         /// </summary>
-        /// <param name="cancellationToken"></param>
+        /// <param name="refreshToken">Refresh Token</param>
+        /// <param name="tokenType">Token Type</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
         /// <returns>Access Token</returns>
-        public async Task<AccessToken> RenewAccessTokenAsync(
+        public async Task<AccessToken> RefreshTokenAsync(
+            string refreshToken,
+            TokenType tokenType,
             CancellationToken cancellationToken)
         {
             var authenticationResponse =
             await _client.AuthenticateAsync(
-                _clientId, _clientSecret, cancellationToken);
+                _clientId, 
+                _clientSecret, 
+                refreshToken, 
+                cancellationToken);
             if (authenticationResponse != null)
             {
-                AccessToken = new AccessToken
-                {
-                    TokenType = TokenType.Access,
-                    Token = authenticationResponse.AccessToken,
-                    Expiration = DateTime.UtcNow.Add(
-                    TimeSpan.FromSeconds(Convert.ToDouble(
-                    authenticationResponse.ExpiresIn)))
-                };
+                AccessToken = Map(tokenType, 
+                    authenticationResponse);
             }
             return AccessToken;
         }
 
         /// <summary>
-        /// Renew User Token
+        /// Get Access Token
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>Access Token</returns>
+        public async Task<AccessToken> GetAccessTokenAsync(
+            CancellationToken cancellationToken)
+        {
+            var authenticationResponse =  
+            await _client.AuthenticateAsync(
+                _clientId, 
+                _clientSecret, 
+                cancellationToken);
+            if (authenticationResponse != null)
+            {
+                AccessToken = Map(TokenType.Access,
+                    authenticationResponse);
+            }
+            return AccessToken;
+        }
+
+        /// <summary>
+        /// Get User Token
         /// </summary>
         /// <param name="accessCode">Access Code</param>
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <returns></returns>
-        public async Task<AccessToken> RenewUserTokenAsync(
+        public async Task<AccessToken> GetUserTokenAsync(
             AccessCode accessCode, 
             CancellationToken cancellationToken)
         {
             var authenticationResponse =
             await _client.AuthenticateAsync(
-                _clientId, _clientSecret, accessCode, 
-            cancellationToken);
+                _clientId, 
+                _clientSecret, 
+                accessCode, 
+                cancellationToken);
             if (authenticationResponse != null)
             {
-                AccessToken = new AccessToken
-                {
-                    TokenType = TokenType.User,
-                    Token = authenticationResponse.AccessToken,
-                    Expiration = DateTime.UtcNow.Add(
-                    TimeSpan.FromSeconds(Convert.ToDouble(
-                    authenticationResponse.ExpiresIn)))
-                };
+                AccessToken = Map(TokenType.User,
+                    authenticationResponse);
             }
             return AccessToken;
         }
@@ -125,13 +188,11 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="scopes">Scope</param>
         /// <returns>Authentication Uri</returns>
         public Uri GetAuth(
-            Uri redirectUri, 
-            string state, 
-            string scopes)
-        {
-            return _client.Authenticate(_clientId, scopes, 
+            Uri redirectUri,
+            string state,
+            string scopes) => 
+            _client.Authenticate(_clientId, scopes,
                 state, redirectUri.ToString());
-        }
 
         /// <summary>
         /// Get Auth
@@ -140,8 +201,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State Value</param>
         /// <returns>Access Token</returns>
-        /// <exception cref="AuthValueException">AuthCodeValueException</exception>
-        /// <exception cref="AuthStateException">AuthCodeStateException</exception>
+        /// <exception cref="AuthCodeValueException">AuthAccessCodeException</exception>
+        /// <exception cref="AuthCodeStateException">AuthStateException</exception>
         public async Task<AccessToken> GetAuth(
             Uri responseUri, 
             Uri redirectUri, 
@@ -160,24 +221,25 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                         {
                             if (string.IsNullOrEmpty(_accessCode.Code))
                             {
-                                throw new AuthValueException();
+                                throw new AuthCodeValueException();
                             }
                             else
                             {
-                                return await RenewUserTokenAsync(
+                                return await GetUserTokenAsync(
                                     _accessCode, 
                                     new CancellationToken(false));
                             }
                         }
                         else
                         {
-                            throw new AuthStateException();
+                            throw new AuthCodeStateException();
                         }
                     }
                 }
             }
             return null;
         }
+        #endregion Public Methods
 
         /// <summary>
         /// Access Token

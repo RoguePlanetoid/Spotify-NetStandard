@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spotify.NetStandard.Client;
+using Spotify.NetStandard.Client.Authentication;
+using Spotify.NetStandard.Client.Authentication.Enums;
 using Spotify.NetStandard.Client.Interfaces;
 using Spotify.NetStandard.Requests;
 using System;
@@ -31,6 +33,16 @@ namespace Spotify.NetStandard.Test
             _client = SpotifyClientFactory.CreateSpotifyClient(
                 config["client_id"], config["client_secret"]);
             Assert.IsNotNull(_client);
+            // Spotify Client Token
+            var accessToken = new AccessToken()
+            {
+                Token = config["token"],
+                Expiration = DateTime.Parse(config["expires"]),
+                TokenType = (TokenType)Enum.Parse(typeof(TokenType), config["type"])
+            };
+            var expired = DateTime.UtcNow > accessToken.Expiration;
+            Assert.IsFalse(expired);
+            _client.SetToken(accessToken);
         }
 
         #region Search API
@@ -136,6 +148,352 @@ namespace Spotify.NetStandard.Test
         }
         #endregion Browse API
 
+        #region Follow API
+        /// <summary>
+        /// Get Following State for Artists/Users
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetFollowingStateForArtistsOrUsers()
+        {
+            // "Ariana Grande"
+            var result = await _client.Api.GetFollowingStateForArtistsOrUsersAsync(
+                new List<string> { "66CXWjxzNUsdJxJ2JdwvnR" },
+                Enums.FollowType.Artist);
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Check if Users Follow a Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_CheckUsersFollowingPlaylist()
+        {
+            var result = await _client.Api.CheckUsersFollowingPlaylistAsync(
+                new List<string> { "jmperezperez" }, "3cEYpjA9oz9GiPac4AsH4n");
+            Assert.IsTrue(result.TrueForAll(t => t));
+        }
+
+        /// <summary>
+        /// Follow Artists or Users
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_FollowArtistsOrUsersAsync()
+        {
+            // "Ariana Grande"
+            var result = await _client.Api.FollowArtistsOrUsersAsync(
+                new List<string> { "66CXWjxzNUsdJxJ2JdwvnR" },
+                Enums.FollowType.Artist);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Follow a Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_FollowPlaylist()
+        {
+            var result = await _client.Api.FollowPlaylistAsync(
+                "37i9dQZF1DWUS3jbm4YExP");
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get User's Followed Artists
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUsersFollowedArtists()
+        {
+            var result = await _client.Api.GetUsersFollowedArtistsAsync();
+            Assert.IsNotNull(result.Items);
+        }
+
+        /// <summary>
+        /// Unfollow Artists or Users
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UnfollowArtist()
+        {
+            // "Ariana Grande"
+            var result = await _client.Api.UnfollowArtistsOrUsersAsync(
+                new List<string> { "66CXWjxzNUsdJxJ2JdwvnR" },
+                Enums.FollowType.Artist);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Unfollow Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UnfollowPlaylist()
+        {
+            var result = await _client.Api.UnfollowPlaylistAsync(
+                "37i9dQZF1DWUS3jbm4YExP");
+            Assert.IsTrue(result.Success);
+        }
+        #endregion Follow API
+
+        #region Playlists API
+        /// <summary>
+        /// Add Tracks to a Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AddTracksToPlaylist()
+        {
+            var result = await _client.Api.AddTracksToPlaylistAsync(
+            "7D4Epnvxhc8l6NpooJqYXk",
+            new List<string>
+            {
+                "spotify:track:2zzdnRWE3z6QP3FoVlnWHO"
+            }, 
+            0);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Remove Tracks from a Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_RemoveTracksFromPlaylist()
+        {
+            var result = await _client.Api.RemoveTracksFromPlaylistAsync(
+            "7D4Epnvxhc8l6NpooJqYXk",
+            new List<string>()
+            {
+                "spotify:track:2zzdnRWE3z6QP3FoVlnWHO"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get a Playlist Cover Image
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetPlaylistCoverImage()
+        {
+            var result = await _client.Api.GetPlaylistCoverImageAsync(
+                "3cEYpjA9oz9GiPac4AsH4n");
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        /// <summary>
+        /// Upload a Custom Playlist Cover Image
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UploadCustomPlaylistCoverImage()
+        {
+            string filename = @"C:\Test\PlaylistCover.jpg";
+            var file = File.ReadAllBytes(filename);
+            var result = await _client.Api.UploadCustomPlaylistCoverImageAsync(
+                "1L6ECMsEDXmrp1qfH5htHZ",
+                file);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get a List of Current User's Playlists 
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserPlaylistsAsync()
+        {
+            var result = await _client.Api.GetUserPlaylistsAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Change a Playlist's Details
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_ChangePlaylistDetails()
+        {
+            var result = await _client.Api.ChangePlaylistDetailsAsync(
+            "7D4Epnvxhc8l6NpooJqYXk",
+            name: "Spotify.NetStandard",
+            description: "Spotify Client Auth Test");
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get a List of a User's Playlists
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserPlaylists()
+        {
+            var result = await _client.Api.GetUserPlaylistsAsync(
+                "Spotify");
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Replace a Playlist's Tracks
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_ReplacePlaylistTracks()
+        {
+            var result = await _client.Api.ReplacePlaylistTracksAsync(
+            "7D4Epnvxhc8l6NpooJqYXk",
+            new List<string>
+            {
+                "spotify:track:2RlgNHKcydI9sayD2Df2xp"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Create a Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_CreatePlaylist()
+        {
+            var result = await _client.Api.CreatePlaylistAsync(
+            "doa31nixtl3kmy7uf8ov88sy0",
+             name: "Spotify.Created",
+             description: "Spotify Client Auth Test");
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Reorder a Playlist's Tracks
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_ReorderPlaylistTracks()
+        {
+            var result = await _client.Api.ReorderPlaylistTracksAsync(
+            "1L6ECMsEDXmrp1qfH5htHZ",
+            rangeStart: 2,
+            rangeLength: 1,
+            insertBefore: 0);
+            Assert.IsTrue(result.Success);
+        }
+        #endregion Playlists API
+
+        #region Library API
+        /// <summary>
+        /// Check User's Saved Albums
+        /// </summary>
+        [TestMethod]
+        public async Task Test_CheckUserSavedAlbums()
+        {
+            var result = await _client.Api.CheckUserSavedAlbumsAsync(
+                new List<string>
+                {
+                    "01w0dp5OVOgviPw2HHXB3M"
+                });
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Save Tracks for User
+        /// </summary>
+        [TestMethod]
+        public async Task Test_SaveUserTracks()
+        {
+            var result = await _client.Api.SaveUserTracksAsync(
+            new List<string>
+            {
+                "2XWjPtKdi5sucFYtVav07d"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Remove Albums for Current User
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_RemoveUserAlbums()
+        {
+            var result = await _client.Api.RemoveUserAlbumsAsync(new List<string>
+            {
+                "2C5HYffMBumERQlNfceyrO"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Save Albums for Current User
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_SaveUserAlbums()
+        {
+            var result = await _client.Api.SaveUserAlbumsAsync(new List<string>
+            {
+                "2C5HYffMBumERQlNfceyrO"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Remove User's Saved Tracks
+        /// </summary>
+        [TestMethod]
+        public async Task Test_RemoveUserTracks()
+        {
+            var result = await _client.Api.RemoveUserTracksAsync(
+            new List<string>
+            {
+                "2XWjPtKdi5sucFYtVav07d"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get User's Saved Albums
+        /// </summary>
+        [TestMethod]
+        public async Task Test_GetUserSavedAlbums()
+        {
+            var result = await _client.Api.GetUserSavedAlbumsAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Get User's Saved Albums
+        /// </summary>
+        [TestMethod]
+        public async Task Test_GetUserSavedTracks()
+        {
+            var result = await _client.Api.GetUserSavedTracksAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Check User's Saved Tracks
+        /// </summary>
+        [TestMethod]
+        public async Task Test_CheckUserSavedTracks()
+        {
+            var result = await _client.Api.CheckUserSavedTracksAsync(
+                new List<string>
+                {
+                    "1gWFMuLlQDN18GJDtSy049"
+                });
+            Assert.IsNotNull(result);
+        }
+        #endregion Library API
+
         #region Artists API
         /// <summary>
         /// Get Multiple Artists
@@ -204,6 +562,215 @@ namespace Spotify.NetStandard.Test
             Assert.IsTrue(result.Count > 0);
         }
         #endregion Artists API
+
+        #region Player API
+        /// <summary>
+        /// Skip User’s Playback To Next Track
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackNextTrack()
+        {
+            var result = await _client.Api.UserPlaybackNextTrackAsync();
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Seek To Position In Currently Playing Track
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackSeekTrack()
+        {
+            var timespan = TimeSpan.FromSeconds(5);
+            var result = await _client.Api.UserPlaybackSeekTrackAsync(
+                (int)timespan.TotalMilliseconds);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get a User's Available Devices
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserPlaybackDevices()
+        {
+            var result = await _client.Api.GetUserPlaybackDevicesAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Toggle Shuffle For User’s Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackToggleShuffle()
+        {
+            var result = await _client.Api.UserPlaybackToggleShuffleAsync(
+                false);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Transfer a User's Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackTransfer()
+        {
+            var result = await _client.Api.UserPlaybackTransferAsync(
+                new List<string>
+                {
+                    "52d83639998abe14a8e2f63d4d309a24345a0f7b"
+                },
+                true);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get Current User's Recently Played Tracks
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserRecentlyPlayedTracks()
+        {
+            var result = await _client.Api.GetUserRecentlyPlayedTracksAsync();
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Start/Resume a User's Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackStartResume()
+        {
+            var result = await _client.Api.UserPlaybackStartResumeAsync(
+                contextUri: "spotify:album:3lwu4qs7RJEBRfsDL7aUwu",
+                offsetPosition: 3,
+                position: 0);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Set Repeat Mode On User’s Playback
+        /// </summary>
+        [TestMethod]
+        public async Task Test_UserPlaybackSetRepeatMode()
+        {
+            var result = await _client.Api.UserPlaybackSetRepeatModeAsync(
+                Enums.RepeatState.Track);
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Pause a User's Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackPause()
+        {
+            var result = await _client.Api.UserPlaybackPauseAsync();
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Skip User’s Playback To Previous Track
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackPreviousTrack()
+        {
+            var result = await _client.Api.UserPlaybackPreviousTrackAsync();
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Get Information About The User's Current Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserPlaybackCurrent()
+        {
+            var result = await _client.Api.GetUserPlaybackCurrentAsync();
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Get the User's Currently Playing Track
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserPlaybackCurrentTrack()
+        {
+            var result = await _client.Api.GetUserPlaybackCurrentTrackAsync();
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Set Volume For User's Playback
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackSetVolume()
+        {
+            var result = await _client.Api.UserPlaybackSetVolumeAsync(50);
+            Assert.IsTrue(result.Success);
+        }
+        #endregion Player API
+
+        #region Personalisation API
+        /// <summary>
+        /// Get a User's Top Artists
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserTopArtists()
+        {
+            var result = await _client.Api.GetUserTopArtistsAsync();
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Get a User's Top Tracks
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserTopTracks()
+        {
+            var result = await _client.Api.GetUserTopTracksAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+        #endregion Personalisation API
+
+        #region User Profile API
+        /// <summary>
+        /// Get a User's Profile
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_LookupUserProfile()
+        {
+            var result = await _client.Api.GetUserProfileAsync(
+                "jmperezperez");
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Get Current User's Profile
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetUserProfile()
+        {
+            var result = await _client.Api.GetUserProfileAsync();
+            Assert.IsNotNull(result);
+        }
+        #endregion User Profile API
 
         #region Albums API
         /// <summary>

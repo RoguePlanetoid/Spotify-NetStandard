@@ -29,9 +29,32 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         private const string auth_uri = "/authorize";
         // Url Auth
         private const string authorization_code = "authorization_code";
+        private const string refresh_token = "refresh_token";
         // Endpoint
         private readonly Uri host_name = new Uri("https://accounts.spotify.com");
 
+        #region Private Methods
+        /// <summary>
+        /// Get Headers
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="clientSecret">Client Secret</param>
+        /// <returns>Dictionary Of String, String</returns>
+        private Dictionary<string, string> GetHeaders(
+            string clientId,
+            string clientSecret)
+        {
+            string auth = Convert.ToBase64String(
+            Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
+            Dictionary<string, string> headers = new Dictionary<string, string>()
+            {
+                { auth_header, $"{auth_basic} {auth}"}
+            };
+            return headers;
+        }
+        #endregion Private Methods
+
+        #region Public Methods
         /// <summary>
         /// Authenticate
         /// </summary>
@@ -44,18 +67,13 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             string clientSecret, 
             CancellationToken cancellationToken)
         {
-            string auth = Convert.ToBase64String(
-            Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
-            Dictionary<string, string> request = new Dictionary<string, string>()
+            var headers = GetHeaders(clientId, clientSecret);
+            var request = new Dictionary<string, string>()
             {
                 { grant_type, client_credentials }
             };
-            Dictionary<string, string> headers = new Dictionary<string, string>()
-            {
-                { auth_header, $"{auth_basic} {auth}"}
-            };
-            return PostAsync<AuthenticationResponse, Dictionary<string, string>>(
-                host_name, token_uri, null, cancellationToken, request, null, headers);
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(host_name,
+                token_uri, null, cancellationToken, request, null, headers, true);
         }
 
         /// <summary>
@@ -66,26 +84,45 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="accessCode">Access Code</param>
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <returns>Authentication Response</returns>
-        public async Task<AuthenticationResponse> AuthenticateAsync(
+        public Task<AuthenticationResponse> AuthenticateAsync(
             string clientId, 
             string clientSecret, 
             AccessCode accessCode, 
             CancellationToken cancellationToken)
         {
-            string auth = Convert.ToBase64String(
-            Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
-            Dictionary<string, string> request = new Dictionary<string, string>()
+            var headers = GetHeaders(clientId, clientSecret);
+            var request = new Dictionary<string, string>()
             {
                 { grant_type, authorization_code },
                 { code_value, accessCode.Code },
                 { redirect_uri, accessCode.RedirectUri.ToString() }
             };
-            Dictionary<string, string> headers = new Dictionary<string, string>()
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(host_name,
+                token_uri, null, cancellationToken, request, null, headers, true);
+        }
+
+        /// <summary>
+        /// Authenticate
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="clientSecret">Client Secret</param>
+        /// <param name="refreshToken">Refresh Token</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>Authentication Response</returns>
+        public Task<AuthenticationResponse> AuthenticateAsync(
+            string clientId,
+            string clientSecret,
+            string refreshToken,
+            CancellationToken cancellationToken)
+        {
+            var headers = GetHeaders(clientId, clientSecret);
+            var request = new Dictionary<string, string>()
             {
-                { auth_header, $"{auth_basic} {auth}"}
+                { grant_type, refresh_token },
+                { refresh_token, refreshToken },
             };
-            return await PostAsync<AuthenticationResponse, Dictionary<string, string>>(host_name,
-                token_uri, null, cancellationToken, request, null, headers);
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(host_name,
+                token_uri, null, cancellationToken, request, null, headers, true);
         }
 
         /// <summary>
@@ -102,7 +139,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             string state, 
             string redirectUrl)
         {
-            Dictionary<string, string> request = new Dictionary<string, string>()
+            var request = new Dictionary<string, string>()
             {
                 { response_type, code_value },
                 { client_id, clientId },
@@ -112,5 +149,6 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             };
             return GetUri(host_name, auth_uri, request);
         }
+        #endregion Public Methods
     }
 }

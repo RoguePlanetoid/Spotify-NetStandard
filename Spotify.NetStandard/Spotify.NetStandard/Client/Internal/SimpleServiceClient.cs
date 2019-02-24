@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +16,8 @@ namespace Spotify.NetStandard.Client.Internal
     internal class SimpleServiceClient : IDisposable
     {
         private const string accept = "Accept";
-        private const string accept_header = "application/json";
+        private const string type_json = "application/json";
+        private const string type_jpeg = "image/jpeg";
 
         private static readonly AssemblyName AssemblyName = new AssemblyName(
             typeof(SimpleServiceClient).GetTypeInfo().Assembly.FullName);
@@ -29,11 +31,13 @@ namespace Spotify.NetStandard.Client.Internal
         private readonly Lazy<HttpClient> _httpClient = new Lazy<HttpClient>(
             () => CreateClient(_defaultTimeout), LazyThreadSafetyMode.PublicationOnly);
 
+        #region Public Properties
         public TimeSpan Timeout
         {
             get { return _httpClient.Value.Timeout; }
             set { _httpClient.Value.Timeout = value; }
         }
+        #endregion Public Properties
 
         #region Private Methods
         /// <summary>
@@ -50,7 +54,7 @@ namespace Spotify.NetStandard.Client.Internal
             {
                 AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
             });
-            client.DefaultRequestHeaders.Add(accept, accept_header);
+            client.DefaultRequestHeaders.Add(accept, type_json);
             client.DefaultRequestHeaders.UserAgent.Add(UserAgent);
             client.Timeout = timeout;
             if (extraHeaders != null)
@@ -64,24 +68,52 @@ namespace Spotify.NetStandard.Client.Internal
         }
 
         /// <summary>
-        /// Create Http Content
+        /// Get Json Content
         /// </summary>
         /// <typeparam name="TRequest">Request Type</typeparam>
         /// <param name="requestPayload">Request Payload</param>
-        /// <param name="writer">Stream Writer</param>
-        /// <param name="stream">Memory Stream</param>
         /// <returns>HttpContent</returns>
-        private HttpContent CreateHttpContent<TRequest>(
-            TRequest requestPayload, 
-            StreamWriter writer, 
-            MemoryStream stream)
+        private HttpContent GetJsonContent<TRequest>(
+            TRequest requestPayload)
         {
-            _jsonSerializer.Serialize(writer, requestPayload, typeof(TRequest));
-            writer.Flush();
-            stream.Seek(0, SeekOrigin.Begin);
-            HttpContent content = new StreamContent(stream);
-            content.Headers.Add("Content-Type", "application/json");
-            return content;
+            if (requestPayload == null) return null;
+            return new StringContent(
+                JsonConvert.SerializeObject(requestPayload,
+                Formatting.None,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                }), 
+                Encoding.UTF8, type_json);
+        }
+
+        /// <summary>
+        /// Get Json Content
+        /// </summary>
+        /// <param name="requestBody">Dictionary of String, String</param>
+        /// <returns>HttpContent</returns>
+        private HttpContent GetJsonContent(
+            Dictionary<string, string> requestBody)
+        {
+            if (requestBody == null) return null;
+            return new StringContent(
+                JsonConvert.SerializeObject(
+                    requestBody.ToDictionary(
+                    item => item.Key.ToString(), 
+                    item => item.Value.ToString())), 
+                Encoding.UTF8, type_json);
+        }
+
+        /// <summary>
+        /// Get Jpeg Content
+        /// </summary>
+        /// <param name="fileBytes">File Bytes</param>
+        /// <returns>Http Content</returns>
+        private HttpContent GetJpegContent(
+            byte[] fileBytes)
+        {
+            return new StringContent(Convert.ToBase64String(fileBytes), 
+                Encoding.UTF8, type_jpeg);
         }
 
         /// <summary>
@@ -93,8 +125,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="extraHeaders">Extra Http Headers</param>
         /// <returns>HttpRequestMessage</returns>
         private HttpRequestMessage CreateHttpRequest(
-            HttpMethod method, 
-            Uri uri, 
+            HttpMethod method,
+            Uri uri,
             HttpContent content,
             Dictionary<string, string> extraHeaders)
         {
@@ -133,6 +165,7 @@ namespace Spotify.NetStandard.Client.Internal
                     HttpStatusCode = message.StatusCode
                 };
             }
+            var test = await message.Content.ReadAsStringAsync();
             using (Stream stream = await message.Content.ReadAsStreamAsync())
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -158,10 +191,13 @@ namespace Spotify.NetStandard.Client.Internal
         private void SetClientHeaders(
             Dictionary<string, string> headers)
         {
-            _httpClient.Value.DefaultRequestHeaders.Clear();
-            foreach(KeyValuePair<string, string> header in headers)
+            if (headers != null)
             {
-                _httpClient.Value.DefaultRequestHeaders.Add(header.Key, header.Value);
+                _httpClient.Value.DefaultRequestHeaders.Clear();
+                foreach (KeyValuePair<string, string> header in headers)
+                {
+                    _httpClient.Value.DefaultRequestHeaders.Add(header.Key, header.Value);
+                }
             }
         }
 
@@ -171,6 +207,60 @@ namespace Spotify.NetStandard.Client.Internal
         private void ClearClientHeaders()
         {
             _httpClient.Value.DefaultRequestHeaders.Clear();
+        }
+
+        /// <summary>
+        /// Get Content
+        /// </summary>
+        /// <typeparam name="TRequest">Request Type</typeparam>
+        /// <param name="request">Request of Type</param>
+        /// <param name="requestBody">Request Body</param>
+        /// <returns></returns>
+        private HttpContent GetContent<TRequest>(TRequest request,
+            Dictionary<string, string> requestBody = null)
+        {
+            return requestBody == null ?
+                request == null ?
+                null :
+                GetJsonContent(request) :
+                GetJsonContent(requestBody);
+        }
+
+        /// <summary>
+        /// HTTP Request
+        /// </summary>
+        /// <typeparam name="TResult">The result data contract type</typeparam>
+        /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="method">HTTP Method</param>
+        /// <param name="content">HTTP Content</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="requestParameters">Optional query string parameters</param>
+        /// <param name="extraHeaders">Optional HTTP headers</param>
+        /// <returns>SimpleServiceResult</returns>
+        private async Task<SimpleServiceResult<TResult, TErrorResult>>
+            RequestAsync<TResult, TErrorResult>(
+            Uri hostname,
+            string relativeUri,
+            HttpMethod method,
+            HttpContent content,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> requestParameters = null,
+            Dictionary<string, string> extraHeaders = null)
+            where TResult : class
+            where TErrorResult : class
+        {
+            Uri uri = GetUri(hostname, relativeUri, requestParameters);
+            SetClientHeaders(extraHeaders);
+            using (HttpRequestMessage requestMessage = CreateHttpRequest(
+                method, uri, content, extraHeaders))
+            using (HttpResponseMessage httpResponseMessage =
+                await _httpClient.Value.SendAsync(requestMessage, cancellationToken))
+            {
+                ClearClientHeaders();
+                return await ParseResponseAsync<TResult, TErrorResult>(httpResponseMessage);
+            }
         }
         #endregion Private Methods
 
@@ -183,235 +273,17 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="requestParameters">Optional query string parameters</param>
         /// <returns>Uri</returns>
         public Uri GetUri(
-            Uri hostname, 
+            Uri hostname,
             string relativeUri,
             Dictionary<string, string> requestParameters = null)
         {
-            string relUri = requestParameters == null ? relativeUri : requestParameters.Aggregate(relativeUri,
-                (current, param) => current + (current.Contains("?") ? "&" : "?") + param.Key + "=" + param.Value);
+            string relUri = 
+                requestParameters == null ? 
+                relativeUri : 
+                requestParameters.Aggregate(relativeUri,
+                (current, param) => current + 
+                (current.Contains("?") ? "&" : "?") + param.Key + "=" + param.Value);
             return new Uri(hostname, relUri);
-        }
-
-        /// <summary>
-        /// Issue an HTTP GET request
-        /// </summary>
-        /// <typeparam name="TResult">The result data contract type</typeparam>
-        /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
-        /// <param name="hostname">The HTTP host</param>
-        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="requestParameters">Optional query string parameters</param>
-        /// <param name="extraHeaders">Optional HTTP headers</param>
-        public async Task<SimpleServiceResult<TResult, TErrorResult>> GetAsync<TResult, TErrorResult>(
-            Uri hostname, 
-            string relativeUri,
-            CancellationToken cancellationToken,
-            Dictionary<string, string> requestParameters = null,
-            Dictionary<string, string> extraHeaders = null)
-            where TResult : class
-            where TErrorResult : class
-        {
-            Uri uri = GetUri(hostname, relativeUri, requestParameters);
-            using (HttpRequestMessage httpRequestMessage = CreateHttpRequest(HttpMethod.Get, uri, null, extraHeaders))
-            using (HttpResponseMessage httpResponseMessage = await _httpClient.Value.SendAsync(httpRequestMessage, cancellationToken))
-            {
-                return await ParseResponseAsync<TResult, TErrorResult>(httpResponseMessage);
-            }
-        }
-
-        /// <summary>
-        /// Issue an HTTP GET request
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="hostname"></param>
-        /// <param name="relativeUri"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="requestParameters"></param>
-        /// <param name="extraHeaders"></param>
-        /// <returns></returns>
-        public async Task<TResult> GetAsync<TResult>(
-            Uri hostname, 
-            string relativeUri,
-            CancellationToken cancellationToken,
-            Dictionary<string, string> requestParameters = null,
-            Dictionary<string, string> extraHeaders = null)
-            where TResult : class
-        {
-            SimpleServiceResult<TResult, TResult> result = await GetAsync<TResult, TResult>(
-                hostname, relativeUri, cancellationToken, requestParameters, extraHeaders);
-            return result.Result ?? result.ErrorResult;
-        }
-
-        /// <summary>
-        /// Issue HTTP POST request
-        /// </summary>
-        /// <typeparam name="TResult">The result data contract type</typeparam>
-        /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
-        /// <typeparam name="TRequest">The request data contract type</typeparam>
-        /// <param name="hostname">The HTTP host</param>
-        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
-        /// <param name="requestPayload"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="requestParameters">Optional query string parameters</param>
-        /// <param name="extraHeaders">Optional HTTP headers</param>
-        public async Task<SimpleServiceResult<TResult, TErrorResult>> PostAsync<TResult, TErrorResult, TRequest>(
-            Uri hostname, 
-            string relativeUri,
-            TRequest requestPayload,
-            CancellationToken cancellationToken,
-            Dictionary<string, string> bodyParameters = null,
-            Dictionary<string, string> requestParameters = null,
-            Dictionary<string, string> extraHeaders = null)
-            where TResult : class
-            where TErrorResult : class
-        {
-            Uri uri = GetUri(hostname, relativeUri, requestParameters);
-            using (MemoryStream stream = new MemoryStream())
-            using (StreamWriter writer = new StreamWriter(stream))
-            using (HttpContent content = bodyParameters == null ? CreateHttpContent(requestPayload, writer, stream) : new FormUrlEncodedContent(bodyParameters))
-            using (HttpRequestMessage requestMessage = CreateHttpRequest(HttpMethod.Post, uri, content, extraHeaders))
-            using (HttpResponseMessage result = await _httpClient.Value.SendAsync(requestMessage, cancellationToken))
-            {
-                return await ParseResponseAsync<TResult, TErrorResult>(result);
-            }
-        }
-
-        /// <summary>
-        /// PostAsync
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <param name="hostname"></param>
-        /// <param name="relativeUri"></param>
-        /// <param name="requestPayload"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="requestParameters"></param>
-        /// <param name="extraHeaders"></param>
-        /// <returns></returns>
-        public async Task<TResult> PostAsync<TResult, TRequest>(
-            Uri hostname, string relativeUri,
-            TRequest requestPayload,
-            CancellationToken cancellationToken,
-            Dictionary<string, string> bodyParameters = null,
-            Dictionary<string, string> requestParameters = null,
-            Dictionary<string, string> extraHeaders = null)
-            where TResult : class
-        {
-            SimpleServiceResult<TResult, TResult> result = await PostAsync<TResult, TResult, TRequest>(
-                hostname, relativeUri, requestPayload, cancellationToken, bodyParameters, requestParameters, extraHeaders);
-            return result.Result ?? result.ErrorResult;
-        }
-
-        /// <summary>
-        /// Put Async
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <typeparam name="TErrorResult"></typeparam>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <param name="hostname"></param>
-        /// <param name="relativeUri"></param>
-        /// <param name="requestPayload"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="bodyParameters"></param>
-        /// <param name="requestParameters"></param>
-        /// <param name="extraHeaders"></param>
-        /// <returns></returns>
-        public async Task<SimpleServiceResult<TResult, TErrorResult>> PutAsync<TResult, TErrorResult, TRequest>(
-            Uri hostname, string relativeUri,
-            TRequest requestPayload,
-            CancellationToken cancellationToken,
-            Dictionary<string, string> bodyParameters = null,
-            Dictionary<string, string> requestParameters = null,
-            Dictionary<string, string> extraHeaders = null)
-            where TResult : class
-            where TErrorResult : class
-        {
-            Uri uri = GetUri(hostname, relativeUri, requestParameters);
-            SetClientHeaders(extraHeaders);
-            using (MemoryStream stream = new MemoryStream())
-            using (StreamWriter writer = new StreamWriter(stream))
-            using (HttpContent content = bodyParameters == null ? CreateHttpContent(requestPayload, writer, stream) : new FormUrlEncodedContent(bodyParameters))
-            using (HttpResponseMessage result = await _httpClient.Value.PutAsync(uri, content, cancellationToken))
-            {
-                ClearClientHeaders();
-                return await ParseResponseAsync<TResult, TErrorResult>(result);
-            }
-        }
-
-        /// <summary>
-        /// Issue an HTTP PUT request
-        /// </summary>
-        /// <typeparam name="TResult">The result data contract type</typeparam>
-        /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
-        /// <param name="hostname">The HTTP host</param>
-        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="requestParameters">Optional query string parameters</param>
-        /// <param name="extraHeaders">Optional HTTP headers</param>
-        public async Task<SimpleServiceResult<TResult, TErrorResult>> PutAsync<TResult, TErrorResult>(
-            Uri hostname, string relativeUri,
-            CancellationToken cancellationToken,
-            Dictionary<string, string> requestParameters = null,
-            Dictionary<string, string> extraHeaders = null)
-            where TResult : class
-            where TErrorResult : class
-        {
-            Uri uri = GetUri(hostname, relativeUri, requestParameters);
-            SetClientHeaders(extraHeaders);
-            using (HttpResponseMessage httpResponseMessage = await _httpClient.Value.PutAsync(uri, null, cancellationToken))
-            {
-                ClearClientHeaders();
-                return await ParseResponseAsync<TResult, TErrorResult>(httpResponseMessage);
-            }
-        }
-
-        /// <summary>
-        /// Issue HTTP PUT Request
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <typeparam name="TRequest"></typeparam>
-        /// <param name="hostname"></param>
-        /// <param name="relativeUri"></param>
-        /// <param name="requestPayload"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="requestParameters"></param>
-        /// <param name="extraHeaders"></param>
-        /// <returns></returns>
-        public async Task<TResult> PutAsync<TResult, TRequest>(
-            Uri hostname, string relativeUri,
-            TRequest requestPayload,
-            CancellationToken cancellationToken,
-            Dictionary<string, string> bodyParameters = null,
-            Dictionary<string, string> requestParameters = null,
-            Dictionary<string, string> extraHeaders = null)
-            where TResult : class
-        {
-            SimpleServiceResult<TResult, TResult> result = await PutAsync<TResult, TResult, TRequest>(
-                hostname, relativeUri, requestPayload, cancellationToken, bodyParameters, requestParameters, extraHeaders);
-            return result.Result ?? result.ErrorResult;
-        }
-
-        /// <summary>
-        /// Issue a HTTP PUT request
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="hostname"></param>
-        /// <param name="relativeUri"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="requestParameters"></param>
-        /// <param name="extraHeaders"></param>
-        /// <returns></returns>
-        public async Task<TResult> PutAsync<TResult>(
-            Uri hostname, string relativeUri,
-            CancellationToken cancellationToken,
-            Dictionary<string, string> requestParameters = null,
-            Dictionary<string, string> extraHeaders = null)
-            where TResult : class
-        {
-            SimpleServiceResult<TResult, TResult> result = await PutAsync<TResult, TResult>(
-                hostname, relativeUri, cancellationToken, requestParameters, extraHeaders);
-            TResult value = result.Result ?? result.ErrorResult;
-            return value;
         }
 
         /// <summary>
@@ -425,5 +297,404 @@ namespace Spotify.NetStandard.Client.Internal
             }
         }
         #endregion Public Methods
+
+        #region HTTP GET
+        /// <summary>
+        /// GET Request
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="parameters">Optional query string parameters</param>
+        /// <param name="headers">Optional HTTP headers</param>
+        /// <returns>Response & Status Code</returns>
+        /// <returns></returns>
+        public async Task<TResponse> GetRequestAsync<TResponse>(
+            Uri hostname,
+            string relativeUri,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> parameters = null,
+            Dictionary<string, string> headers = null)
+            where TResponse : class
+        {
+            var result =
+            await GetRequestAsync<TResponse, TResponse, TResponse>(
+            hostname,
+            relativeUri,
+            null,
+            cancellationToken,
+            parameters,
+            headers);
+            return result.Result ?? result.ErrorResult;
+        }
+
+        /// <summary>
+        /// GET Request
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <typeparam name="TRequest">Request Type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Optional Request</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="parameters">Optional query string parameters</param>
+        /// <param name="headers">Optional HTTP headers</param>
+        /// <returns>Response & Status Code</returns>
+        /// <returns></returns>
+        public async Task<TResponse> GetRequestAsync<TRequest, TResponse>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> parameters = null,
+            Dictionary<string, string> headers = null)
+            where TRequest : class
+            where TResponse : class
+        {
+            var result =
+            await GetRequestAsync<TRequest, TResponse, TResponse>(
+            hostname,
+            relativeUri,
+            request,
+            cancellationToken,
+            parameters,
+            headers);
+            return result.Result ?? result.ErrorResult;
+        }
+
+        /// <summary>
+        /// HTTP GET Request
+        /// </summary>
+        /// <typeparam name="TRequest">The request data type</typeparam>
+        /// <typeparam name="TResult">The result data contract type</typeparam>
+        /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Optional Request Object</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="requestParameters">Optional query string parameters</param>
+        /// <param name="extraHeaders">Optional HTTP headers</param>
+        /// <returns>SimpleServiceResult</returns>
+        public Task<SimpleServiceResult<TResult, TErrorResult>>
+            GetRequestAsync<TRequest, TResult, TErrorResult>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> requestParameters = null,
+            Dictionary<string, string> extraHeaders = null)
+            where TRequest : class
+            where TResult : class
+            where TErrorResult : class =>
+            RequestAsync<TResult, TErrorResult>(
+                hostname,
+                relativeUri,
+                HttpMethod.Get,
+                GetJsonContent(request),
+                cancellationToken,
+                requestParameters,
+                extraHeaders);
+        #endregion HTTP GET
+
+        #region HTTP POST
+        /// <summary>
+        /// POST Request
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <typeparam name="TRequest">Request Type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Optional Request</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="body">Optional Body Parameters</param>
+        /// <param name="parameters">Optional query string parameters</param>
+        /// <param name="headers">Optional HTTP headers</param>
+        /// <param name="useFormContent">Use Form Content</param>
+        /// <returns>Response & Status Code</returns>
+        /// <returns></returns>
+        public async Task<TResponse> PostRequestAsync<TRequest, TResponse>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> body = null,
+            Dictionary<string, string> parameters = null,
+            Dictionary<string, string> headers = null,
+            bool useFormContent = false)
+            where TRequest : class
+            where TResponse : class
+        {
+            var result =
+            await PostRequestAsync<TRequest, TResponse, TResponse>(
+            hostname,
+            relativeUri,
+            request,
+            cancellationToken,
+            body,
+            parameters,
+            headers,
+            useFormContent);
+            return result.Result ?? result.ErrorResult;
+        }
+
+        /// <summary>
+        /// POST Request
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <typeparam name="TRequest">Request Type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Optional Request</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="body">Optional Body Parameters</param>
+        /// <param name="parameters">Optional query string parameters</param>
+        /// <param name="headers">Optional HTTP headers</param>
+        /// <returns>Response & Status Code</returns>
+        /// <returns></returns>
+        public async Task<(TResponse Response, HttpStatusCode StatusCode)>
+            PostRequestAsync<TRequest, TResponse>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> body = null,
+            Dictionary<string, string> parameters = null,
+            Dictionary<string, string> headers = null)
+            where TRequest : class
+            where TResponse : class
+        {
+            var result =
+            await PostRequestAsync<TRequest, TResponse, TResponse>(
+            hostname,
+            relativeUri,
+            request,
+            cancellationToken,
+            body,
+            parameters,
+            headers);
+            return (result.Result ?? result.ErrorResult, 
+                result.HttpStatusCode);
+        }
+
+        /// <summary>
+        /// HTTP POST Request
+        /// </summary>
+        /// <typeparam name="TRequest">The request data type</typeparam>
+        /// <typeparam name="TResult">The result data contract type</typeparam>
+        /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Request</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="requestBody">Optional Request Body</param>
+        /// <param name="requestParameters">Optional query string parameters</param>
+        /// <param name="extraHeaders">Optional HTTP headers</param>
+        /// <param name="useFormContent">Use Form Content</param>
+        /// <returns>SimpleServiceResult</returns>
+        public Task<SimpleServiceResult<TResult, TErrorResult>>
+            PostRequestAsync<TRequest, TResult, TErrorResult>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> requestBody = null,
+            Dictionary<string, string> requestParameters = null,
+            Dictionary<string, string> extraHeaders = null,
+            bool useFormContent = false)
+            where TRequest : class
+            where TResult : class
+            where TErrorResult : class => 
+            RequestAsync<TResult, TErrorResult>(
+                hostname,
+                relativeUri,
+                HttpMethod.Post,
+                useFormContent ?
+                    new FormUrlEncodedContent(requestBody) :
+                    GetContent(request, requestBody),
+                cancellationToken,
+                requestParameters,
+                extraHeaders);
+        #endregion HTTP POST
+
+        #region HTTP DELETE
+        /// <summary>
+        /// DELETE Request
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Request Object</param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="parameters">Optional query string parameters</param>
+        /// <param name="headers">Optional HTTP headers</param>
+        /// <returns>Response & Status Code</returns>
+        public async Task<(TResponse Response, HttpStatusCode StatusCode)>
+            DeleteRequestAsync<TRequest, TResponse>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> parameters = null,
+            Dictionary<string, string> headers = null)
+            where TRequest : class
+            where TResponse : class
+        {
+            var result =
+            await DeleteRequestAsync<TRequest, TResponse, TResponse>(
+            hostname,
+            relativeUri,
+            request,
+            cancellationToken,
+            parameters,
+            headers);
+            return (result.Result ?? result.ErrorResult, 
+                result.HttpStatusCode);
+        }
+
+        /// <summary>
+        /// HTTP DELETE Request
+        /// </summary>
+        /// <typeparam name="TResult">The result data contract type</typeparam>
+        /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Request Object</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="requestParameters">Optional query string parameters</param>
+        /// <param name="extraHeaders">Optional HTTP headers</param>
+        /// <returns>SimpleServiceResult</returns>
+        public Task<SimpleServiceResult<TResult, TErrorResult>>
+            DeleteRequestAsync<TRequest, TResult, TErrorResult>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> requestParameters = null,
+            Dictionary<string, string> extraHeaders = null)
+            where TRequest : class
+            where TResult : class
+            where TErrorResult : class => 
+                RequestAsync<TResult, TErrorResult>(
+                hostname,
+                relativeUri,
+                HttpMethod.Delete,
+                GetJsonContent(request),
+                cancellationToken,
+                requestParameters,
+                extraHeaders);
+        #endregion HTTP DELETE
+
+        #region HTTP PUT
+        /// <summary>
+        /// PUT Request
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="fileBytes">Optional Request File Bytes</param>
+        /// <param name="parameters">Optional query string parameters</param>
+        /// <param name="headers">Optional HTTP headers</param>
+        /// <returns>Response & Status Code</returns>
+        /// <returns></returns>
+        public async Task<(TResponse Response, HttpStatusCode StatusCode)>
+            PutRequestAsync<TResponse>(
+            Uri hostname,
+            string relativeUri,
+            CancellationToken cancellationToken,
+            byte[] fileBytes = null,
+            Dictionary<string, string> parameters = null,
+            Dictionary<string, string> headers = null)
+            where TResponse : class
+        {
+            var result = await PutRequestAsync<TResponse, TResponse, TResponse>(
+            hostname,
+            relativeUri,
+            null,
+            cancellationToken,
+            fileBytes,
+            parameters,
+            headers);
+            return (result.Result ?? result.ErrorResult,
+                result.HttpStatusCode);
+        }
+
+        /// <summary>
+        /// PUT Request
+        /// </summary>
+        /// <typeparam name="TRequest">Request Type</typeparam>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Optional Request</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="fileBytes">Optional Request File Bytes</param>
+        /// <param name="parameters">Optional query string parameters</param>
+        /// <param name="headers">Optional HTTP headers</param>
+        /// <param name="fileBytes">File Bytes</param>
+        /// <returns>Response & Status Code</returns>
+        /// <returns></returns>
+        public async Task<(TResponse Response, HttpStatusCode StatusCode)> 
+            PutRequestAsync<TRequest, TResponse>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            byte[] fileBytes = null,
+            Dictionary<string, string> parameters = null,
+            Dictionary<string, string> headers = null)
+            where TRequest : class
+            where TResponse : class
+        {
+            var result = 
+            await PutRequestAsync<TRequest, TResponse, TResponse>(
+            hostname,
+            relativeUri,
+            request,
+            cancellationToken,
+            fileBytes,
+            parameters,
+            headers);
+            return (result.Result ?? result.ErrorResult, 
+                result.HttpStatusCode);
+        }
+
+        /// <summary>
+        /// HTTP PUT Request
+        /// </summary>
+        /// <typeparam name="TResult">The result data contract type</typeparam>
+        /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="cancellationToken"></param>
+        /// <param name="fileBytes">Optional Request File Bytes</param>
+        /// <param name="requestParameters">Optional query string parameters</param>
+        /// <param name="extraHeaders">Optional HTTP headers</param>
+        /// <param name="fileBytes">File Bytes</param>
+        /// <returns>SimpleServiceResult</returns>
+        public Task<SimpleServiceResult<TResult, TErrorResult>>
+            PutRequestAsync<TRequest, TResult, TErrorResult>(
+            Uri hostname,
+            string relativeUri,
+            TRequest request,
+            CancellationToken cancellationToken,
+            byte[] fileBytes = null,
+            Dictionary<string, string> requestParameters = null,
+            Dictionary<string, string> extraHeaders = null)
+            where TRequest : class
+            where TResult : class
+            where TErrorResult : class => 
+                RequestAsync<TResult, TErrorResult>(
+                hostname,
+                relativeUri,
+                HttpMethod.Put,
+                fileBytes != null ?
+                    GetJpegContent(fileBytes) :
+                    GetJsonContent(request),
+                cancellationToken,
+                requestParameters,
+                extraHeaders);
+        #endregion HTTP PUT
     }
 }

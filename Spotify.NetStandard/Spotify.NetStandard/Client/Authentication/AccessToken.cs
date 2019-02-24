@@ -17,6 +17,12 @@ namespace Spotify.NetStandard.Client.Authentication
         public string Token { get; set; }
 
         /// <summary>
+        /// Refresh
+        /// </summary>
+        [DataMember(Name = "refresh")]
+        public string Refresh { get; set; }
+
+        /// <summary>
         /// Token Expiration Date
         /// </summary>
         [DataMember(Name = "expires")]
@@ -27,5 +33,11 @@ namespace Spotify.NetStandard.Client.Authentication
         /// </summary>
         [DataMember(Name = "type")]
         public TokenType TokenType { get; set; }
+
+        /// <summary>
+        /// Scopes
+        /// </summary>
+        [DataMember(Name = "scopes")]
+        public string Scopes { get; set; }
     }
 }

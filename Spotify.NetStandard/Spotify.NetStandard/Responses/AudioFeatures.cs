@@ -29,7 +29,7 @@ namespace Spotify.NetStandard.Responses
         /// The duration of the track in milliseconds.
         /// </summary>
         [DataMember(Name = "duration_ms")]
-        public int? Duration { get; set; }
+        public long? Duration { get; set; }
 
         /// <summary>
         /// Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity

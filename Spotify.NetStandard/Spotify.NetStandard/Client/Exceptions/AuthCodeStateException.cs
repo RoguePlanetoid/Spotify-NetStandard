@@ -1,7 +1,7 @@
 ﻿namespace Spotify.NetStandard.Client.Exceptions
 {
     /// <summary>
-    /// Auth Code Value Error
+    /// Auth Code State Error
     /// </summary>
-    public class AuthValueException : AuthException { }
+    public class AuthCodeStateException : AuthException { }
 }
