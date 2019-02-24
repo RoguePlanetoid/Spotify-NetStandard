@@ -47,7 +47,7 @@ namespace Spotify.NetStandard.Test
             _client.SetToken(accessToken);
         }
 
-        #region Auth
+        #region Authenticate
         /// <summary>
         /// Authenticate User
         /// </summary>
@@ -66,7 +66,7 @@ namespace Spotify.NetStandard.Test
             });
             Assert.IsNotNull(uri);
         }
-        #endregion Auth
+        #endregion Authenticate
 
         #region Follow
         /// <summary>
@@ -212,6 +212,7 @@ namespace Spotify.NetStandard.Test
             var result = await _client.AuthGetPlaylistCoverImageAsync(
                 "3cEYpjA9oz9GiPac4AsH4n");
             Assert.IsNotNull(result);
+            Assert.IsTrue(result.Count > 0);
         }
 
         /// <summary>

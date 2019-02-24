@@ -33,5 +33,11 @@ namespace Spotify.NetStandard.Client.Authentication
         /// </summary>
         [DataMember(Name = "type")]
         public TokenType TokenType { get; set; }
+
+        /// <summary>
+        /// Scopes
+        /// </summary>
+        [DataMember(Name = "scopes")]
+        public string Scopes { get; set; }
     }
 }

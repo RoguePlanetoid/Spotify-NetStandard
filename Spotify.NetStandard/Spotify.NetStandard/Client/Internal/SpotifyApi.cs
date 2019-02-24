@@ -318,9 +318,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// Get a Playlist Cover Image
         /// </summary>
         /// <param name="playlistId">(Require) The Spotify ID for the playlist.</param>
-        /// <returns>Image Object</returns>
+        /// <returns>List of Image Object</returns>
         /// <exception cref="AuthTokenRequiredException"></exception>
-        public Task<Image> GetPlaylistCoverImageAsync(
+        public Task<List<Image>> GetPlaylistCoverImageAsync(
             string playlistId) => 
             _client.AuthGetPlaylistCoverImageAsync(
                 playlistId);

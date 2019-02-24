@@ -155,6 +155,8 @@ namespace Spotify.NetStandard.Requests
 
         /// <summary>
         /// User Generated Content Image Upload
+        /// <para>Required For</para>
+        /// <para>Upload a Custom Playlist Cover Image</para>
         /// </summary>
         [Description("ugc-image-upload")]
         public bool? UserGeneratedContentImageUpload { get; set; }
