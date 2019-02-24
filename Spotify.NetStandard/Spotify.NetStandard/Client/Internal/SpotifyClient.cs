@@ -957,7 +957,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// Check if Users Follow a Playlist
         /// <para>Scopes: PlaylistReadPrivate</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of Spotify User IDs ; the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.</param>
+        /// <param name="itemIds">(Required) List of Spotify User IDs, the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.</param>
         /// <param name="playlistId">(Required) The Spotify ID of the playlist.</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
@@ -1261,7 +1261,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public Task<Status> AuthSaveUserTracksAsync(
-             List<string> itemIds)
+            List<string> itemIds)
         {
             return PutApiAsync<Status, Status>(itemIds,
             "me/tracks",
@@ -1481,13 +1481,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// Start/Resume a User's Playback
         /// <para>Scopes: ConnectModifyPlaybackState</para>
         /// </summary>
-        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <param name="request">(Optional) Playback Request Object</param>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public Task<Status> AuthUserPlaybackStartResumeAsync(
-             string deviceId = null,
-             PlaybackRequest request = null)
+            PlaybackRequest request = null,
+            string deviceId = null)
         {
             var parameters = new Dictionary<string, string>();
             if (deviceId != null)

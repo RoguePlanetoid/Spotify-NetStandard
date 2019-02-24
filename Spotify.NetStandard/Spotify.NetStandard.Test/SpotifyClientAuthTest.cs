@@ -235,7 +235,7 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_AuthGetListOfCurrentUserPlaylists()
+        public async Task Test_AuthLookupUserPlaylists()
         {
             var result = await _client.AuthLookupUserPlaylistsAsync();
             Assert.IsNotNull(result?.Items);
@@ -256,6 +256,7 @@ namespace Spotify.NetStandard.Test
                     Name = "Spotify.NetStandard",
                     Description = "Spotify Client Auth Test"
                 });
+            Assert.IsTrue(result.Success);
         }
 
         /// <summary>
@@ -521,7 +522,6 @@ namespace Spotify.NetStandard.Test
         public async Task Test_AuthUserPlaybackStartResume()
         {
             var result = await _client.AuthUserPlaybackStartResumeAsync(
-                null,
                 new PlaybackRequest()
                 {
                     ContextUri = "spotify:album:3lwu4qs7RJEBRfsDL7aUwu",
@@ -530,7 +530,8 @@ namespace Spotify.NetStandard.Test
                         Position = 3
                     },
                     Position = 0
-                });
+                },
+                null);
             Assert.IsTrue(result.Success);
         }
 
