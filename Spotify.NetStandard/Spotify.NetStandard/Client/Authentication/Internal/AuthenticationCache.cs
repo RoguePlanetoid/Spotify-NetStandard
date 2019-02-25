@@ -183,7 +183,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <summary>
         /// Get Auth
         /// </summary>
-        /// <param name="redirect">Redirect Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scopes">Scope</param>
         /// <returns>Authentication Uri</returns>

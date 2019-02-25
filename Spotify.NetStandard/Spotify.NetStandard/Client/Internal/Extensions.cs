@@ -18,7 +18,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// Get Property Description
         /// </summary>
-        /// <param name="PropertyInfo">Info</param>
+        /// <param name="info">Property Info</param>
         /// <returns>Description as String</returns>
         private static string GetPropertyDescription(
             this PropertyInfo info)

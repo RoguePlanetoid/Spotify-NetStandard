@@ -12,6 +12,10 @@
     <AssemblyVersion>0.7.5.0</AssemblyVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\GitHub\Spotify-NetStandard\Spotify.NetStandard\Spotify.NetStandard\Spotify.NetStandard.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>

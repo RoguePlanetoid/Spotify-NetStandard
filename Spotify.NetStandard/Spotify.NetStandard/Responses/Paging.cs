@@ -35,6 +35,9 @@ namespace Spotify.NetStandard.Responses
         [DataMember(Name = "previous")]
         public string Previous { get; set; }
 
+        /// <summary>
+        /// IEnumerable of Type
+        /// </summary>
         public IEnumerable<T> ReadOnlyItems => Items;
 
         /// <summary>
@@ -42,6 +45,9 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         public Page Page { get { return this; } }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Paging()
         {
             Items = new List<T>();

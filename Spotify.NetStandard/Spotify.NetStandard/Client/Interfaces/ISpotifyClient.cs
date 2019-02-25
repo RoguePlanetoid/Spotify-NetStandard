@@ -128,7 +128,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <summary>
         /// Lookup Artist's Albums
         /// </summary>
-        /// <param name="id">(Required) The Spotify ID for the artist.</param>
+        /// <param name="itemId">(Required) The Spotify ID for the artist.</param>
         /// <param name="includeGroup">(Optional) Filters the response. If not supplied, all album types will be returned</param>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code</param>
         /// <param name="page">(Optional) Limit: The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50 - Offset: The index of the first album to return. Default: 0 (i.e., the first album).</param>

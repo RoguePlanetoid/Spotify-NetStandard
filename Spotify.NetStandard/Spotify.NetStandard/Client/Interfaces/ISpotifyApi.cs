@@ -8,6 +8,9 @@ using Spotify.NetStandard.Client.Exceptions;
 
 namespace Spotify.NetStandard.Client.Interfaces
 {
+    /// <summary>
+    /// Spotify API
+    /// </summary>
     public interface ISpotifyApi
     {
         #region Search API
@@ -131,7 +134,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// Get Following State for Artists/Users
         /// <para>Scopes: FollowRead</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs to check.</param>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs to check.</param>
         /// <param name="followType">(Required) Either artist or user.</param>
         /// <returns>List of true or false values</returns>
         Task<List<bool>> GetFollowingStateForArtistsOrUsersAsync(
@@ -142,7 +145,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// Check if Users Follow a Playlist
         /// <para>Scopes: PlaylistReadPrivate</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of Spotify User IDs, the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.</param>
+        /// <param name="ids">(Required) List of Spotify User IDs, the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.</param>
         /// <param name="playlistId">(Required) The Spotify ID of the playlist.</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
@@ -154,7 +157,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// Follow Artists or Users
         /// <para>Scopes: FollowModify</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs.</param>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
         /// <param name="followType">(Required) Either artist or user</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
@@ -188,7 +191,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// Unfollow Artists or Users
         /// <para>Scopes: FollowModify</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs.</param>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
         /// <param name="followType">(Required) Either artist or user</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>

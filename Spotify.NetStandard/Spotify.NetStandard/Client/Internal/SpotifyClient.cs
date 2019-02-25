@@ -142,6 +142,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="browseCategory">Category</param>
         /// <param name="country">Country</param>
         /// <param name="locale">Locale</param>
+        /// <param name="parameters">Parameters</param>
+        /// <param name="page">Page</param>
         /// <returns>Content Response</returns>
         private async Task<ContentResponse> GetBrowseAsync(
             string browseCategory,
@@ -174,7 +176,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="country">Country</param>
         /// <param name="key">Parameter Key</param>
         /// <param name="value">Parameter Value</param>
-        /// <param name="page">Page Offset & Limit</param>
+        /// <param name="page">Page Offset and Limit</param>
         /// <returns>Response of Type</returns>
         private async Task<TResult> LookupApiAsync<TResult>(
             string itemId,
@@ -210,7 +212,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemIds">Spotify IDs of the Items</param>
         /// <param name="lookupType">Lookup Type</param>
         /// <param name="country">Country</param>
-        /// <param name="page">Page Offset & Limit</param>
+        /// <param name="page">Page Offset and Limit</param>
         /// <returns>Lookup Response</returns>
         private async Task<LookupResponse> LookupApiAsync(
             List<string> itemIds,
@@ -236,7 +238,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="lookupType">Lookup Type</param>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        /// <param name="cusror">Cursor Limit & After</param>
+        /// <param name="cursor">Cursor Limit and After</param>
         /// <param name="tokenType">Token Type</param>
         /// <returns>Response Object</returns>
         private async Task<TResult> LookupCursorApiAsync<TResult>(
@@ -732,7 +734,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// Lookup Artist's Albums
         /// </summary>
-        /// <param name="id">(Required) The Spotify ID for the artist.</param>
+        /// <param name="itemId">(Required) The Spotify ID for the artist.</param>
         /// <param name="includeGroup">(Optional) Filters the response. If not supplied, all album types will be returned</param>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code</param>
         /// <param name="page">(Optional) Limit: The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50 - Offset: The index of the first album to return. Default: 0 (i.e., the first album).</param>
