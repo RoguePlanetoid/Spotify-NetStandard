@@ -2,7 +2,7 @@
 
 Spotify API .NET Standard Library
 
-## Documentation &amp; Source Code
+## Documentation and Source Code
 
 Project Documentation and Source Code can be found at [https://github.com/RoguePlanetoid/Spotify-NetStandard](https://github.com/RoguePlanetoid/Spotify-NetStandard)
 
@@ -30,6 +30,6 @@ foreach (var album in browse.Albums.Items)
 }
 ```
 
-## Client Id &amp; Client Secret
+## Client Id and Client Secret
 
 You can get a "client-id" and "client-secret" from [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard/) by signing in with your Spotify Id then creating an Application.

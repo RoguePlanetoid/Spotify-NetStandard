@@ -165,7 +165,6 @@ namespace Spotify.NetStandard.Client.Internal
                     HttpStatusCode = message.StatusCode
                 };
             }
-            var test = await message.Content.ReadAsStringAsync();
             using (Stream stream = await message.Content.ReadAsStreamAsync())
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -173,11 +172,13 @@ namespace Spotify.NetStandard.Client.Internal
                     return new SimpleServiceResult<TResult, TErrorResult>
                     {
                         Result = message.IsSuccessStatusCode
-                            ? _jsonSerializer.Deserialize(reader, typeof(TResult)) as TResult
+                            ? _jsonSerializer.Deserialize(reader, 
+                            typeof(TResult)) as TResult
                             : null,
                         ErrorResult = message.IsSuccessStatusCode
                             ? null
-                            : _jsonSerializer.Deserialize(reader, typeof(TErrorResult)) as TErrorResult,
+                            : _jsonSerializer.Deserialize(reader, 
+                            typeof(TErrorResult)) as TErrorResult,
                         HttpStatusCode = message.StatusCode
                     };
                 }
