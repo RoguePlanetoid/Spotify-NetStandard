@@ -38,5 +38,11 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         [DataMember(Name = "images")]
         public List<Image> Images { get; set; }
+
+        /// <summary>
+        /// The total number of tracks
+        /// </summary>
+        [DataMember(Name = "total_tracks")]
+        public int TotalTracks { get; set; }
     }
 }

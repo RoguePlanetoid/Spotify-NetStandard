@@ -4770,6 +4770,11 @@
             The cover art for the album in various sizes, widest first.
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedAlbum.TotalTracks">
+            <summary>
+            The total number of tracks
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.SimplifiedArtist">
             <summary>
             Simplified Artist Object
