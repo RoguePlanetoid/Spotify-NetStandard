@@ -35,6 +35,35 @@ namespace Spotify.NetStandard.Client.Interfaces
         void SetToken(AccessToken value);
 
         /// <summary>
+        /// Refresh Token
+        /// </summary>
+        /// <param name="type">Token Type</param>
+        /// <returns>Access Token</returns>
+        Task<AccessToken> RefreshToken();
+
+        /// <summary>
+        /// Get
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">Hostname</param>
+        /// <param name="endpoint">Endpoint</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns>Response</returns>
+        Task<TResponse> GetAsync<TResponse>(
+            string hostname, string endpoint,
+            Dictionary<string, string> parameters) 
+            where TResponse : class;
+
+        /// <summary>
+        /// Get
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="source">Source Uri</param>
+        /// <returns>Response</returns>
+        Task<TResponse> GetAsync<TResponse>(Uri source)
+        where TResponse : class;
+
+        /// <summary>
         /// Navigate 
         /// </summary>
         /// <typeparam name="TResponse">Response Type</typeparam>
@@ -219,7 +248,7 @@ namespace Spotify.NetStandard.Client.Interfaces
 
         #region Authenticate
         /// <summary>
-        /// Auth User
+        /// Auth User - Authorisation Code Flow
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
@@ -228,10 +257,11 @@ namespace Spotify.NetStandard.Client.Interfaces
         Uri AuthUser(
             Uri redirectUri,
             string state,
-            Scope scope);
+            Scope scope,
+            bool showDialog = false);
 
         /// <summary>
-        /// Auth User
+        /// Auth User - Authorisation Code Flow
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
@@ -243,6 +273,39 @@ namespace Spotify.NetStandard.Client.Interfaces
             Uri responseUri,
             Uri redirectUri,
             string state);
+
+        /// <summary>
+        /// Auth User Implicit - Implicit Grant Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <returns>Uri</returns>
+        Uri AuthUserImplicit(
+            Uri redirectUri,
+            string state,
+            Scope scope,
+            bool showDialog = false);
+
+        /// <summary>
+        /// Auth User Implicit - Implicit Grant Flow
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthTokenValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthTokenStateException">AuthCodeStateException</exception>
+        AccessToken AuthUserImplicit(
+            Uri responseUri,
+            Uri redirectUri,
+            string state);
+
+        /// <summary>
+        /// Auth - Client Credentials Flow
+        /// </summary>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        Task<AccessToken> AuthAsync();
         #endregion Authenticate
 
         #region Authenticated Follow API

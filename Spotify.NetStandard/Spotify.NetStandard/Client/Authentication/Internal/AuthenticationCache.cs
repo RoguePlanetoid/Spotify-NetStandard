@@ -16,6 +16,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         private readonly string _clientSecret;
         private readonly AuthenticationClient _client;
         private AccessCode _accessCode = null;
+        private ImplicitGrant _implicitGrant = null;
 
         #region Private Methods
         /// <summary>
@@ -25,9 +26,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="response">AuthenticationResponse</param>
         /// <returns>Access Token</returns>
         private AccessToken Map(TokenType tokenType,
-            AuthenticationResponse response)
-        {
-            return new AccessToken
+            AuthenticationResponse response) => 
+            new AccessToken
             {
                 TokenType = tokenType,
                 Token = response.AccessToken,
@@ -35,9 +35,23 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 Expiration = DateTime.UtcNow.Add(
                 TimeSpan.FromSeconds(Convert.ToDouble(
                 response.ExpiresIn))),
-                Scopes = response.Scope             
+                Scopes = response.Scope
             };
-        }
+
+        /// <summary>
+        /// Map
+        /// </summary>
+        /// <param name="response">ImplicitGrant</param>
+        /// <returns>Access Token</returns>
+        private AccessToken Map(ImplicitGrant response) => 
+            new AccessToken
+            {
+                TokenType = TokenType.User,
+                Token = response.AccessToken,
+                Expiration = DateTime.UtcNow.Add(
+                    TimeSpan.FromSeconds(Convert.ToDouble(
+                    response.ExpiresIn)))
+            };
         #endregion Private Methods
 
         #region Public Methods
@@ -79,9 +93,10 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 AccessToken = await GetAccessTokenAsync(
                     cancellationToken);
             }
-            else if(AccessToken.Expiration < DateTime.UtcNow)
+            else if(AccessToken?.Refresh != null && 
+                (AccessToken.Expiration < DateTime.UtcNow))
             {
-                AccessToken = await RefreshTokenAsync(
+                AccessToken = await GetRefreshTokenAsync(
                     AccessToken.Refresh, 
                     AccessToken.TokenType, 
                     cancellationToken);
@@ -95,7 +110,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 }
             }
             if(AccessToken?.Token == null || 
-                AccessToken.Expiration < DateTime.UtcNow)
+                (AccessToken.Expiration < DateTime.UtcNow))
             {
                 if (requiresUserToken)
                 {
@@ -110,19 +125,19 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Refresh Token
+        /// Get Refresh Token
         /// </summary>
         /// <param name="refreshToken">Refresh Token</param>
         /// <param name="tokenType">Token Type</param>
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <returns>Access Token</returns>
-        public async Task<AccessToken> RefreshTokenAsync(
+        public async Task<AccessToken> GetRefreshTokenAsync(
             string refreshToken,
             TokenType tokenType,
             CancellationToken cancellationToken)
         {
             var authenticationResponse =
-            await _client.AuthenticateAsync(
+            await _client.RefreshTokenAuthAsync(
                 _clientId, 
                 _clientSecret, 
                 refreshToken, 
@@ -144,7 +159,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             CancellationToken cancellationToken)
         {
             var authenticationResponse =  
-            await _client.AuthenticateAsync(
+            await _client.ClientCredentialsAuthAsync(
                 _clientId, 
                 _clientSecret, 
                 cancellationToken);
@@ -167,7 +182,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             CancellationToken cancellationToken)
         {
             var authenticationResponse =
-            await _client.AuthenticateAsync(
+            await _client.AuthorisationCodeAuthAsync(
                 _clientId, 
                 _clientSecret, 
                 accessCode, 
@@ -181,29 +196,30 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Get Auth
+        /// Get Access Token Auth
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scopes">Scope</param>
         /// <returns>Authentication Uri</returns>
-        public Uri GetAuth(
+        public Uri GetAccessTokenAuth(
             Uri redirectUri,
             string state,
-            string scopes) => 
-            _client.Authenticate(_clientId, scopes,
-                state, redirectUri.ToString());
+            string scopes,
+            bool showDialog) => 
+            _client.AccessTokenAuth(_clientId, scopes,
+                state, redirectUri.ToString(), showDialog);
 
         /// <summary>
-        /// Get Auth
+        /// Get Access Code Auth
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State Value</param>
         /// <returns>Access Token</returns>
-        /// <exception cref="AuthCodeValueException">AuthAccessCodeException</exception>
-        /// <exception cref="AuthCodeStateException">AuthStateException</exception>
-        public async Task<AccessToken> GetAuth(
+        /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+        public async Task<AccessToken> GetAccessCodeAuthAsync(
             Uri responseUri, 
             Uri redirectUri, 
             string state)
@@ -239,11 +255,70 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             }
             return null;
         }
-        #endregion Public Methods
 
         /// <summary>
-        /// Access Token
+        /// Get Implicit Grant Auth
         /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scopes">Scope</param>
+        /// <returns>Authentication Uri</returns>
+        public Uri GetImplicitGrantAuth(
+            Uri redirectUri,
+            string state,
+            string scopes,
+            bool showDialog) =>
+            _client.ImplicitGrantAuth(_clientId, scopes,
+                state, redirectUri.ToString(), showDialog);
+
+        /// <summary>
+        /// Get Implicit Grant Auth
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State Value</param>
+        /// <returns>Access Token</returns>
+        /// <exception cref="AuthTokenValueException">AuthTokenValueException</exception>
+        /// <exception cref="AuthTokenStateException">AuthTokenStateException</exception>
+        public AccessToken GetImplicitGrantAuth(
+            Uri responseUri,
+            Uri redirectUri,
+            string state)
+        {
+            if (responseUri != null)
+            {
+                if (responseUri.ToString().Contains(redirectUri.ToString()))
+                {
+                    if (_implicitGrant == null || _implicitGrant.ResponseUri != responseUri)
+                    {
+                        _implicitGrant = new ImplicitGrant(
+                            responseUri, redirectUri,
+                            responseUri.Fragment.TrimStart('#').QueryStringAsDictionary());
+                        if (state == null || _implicitGrant.State == state)
+                        {
+                            if (string.IsNullOrEmpty(_implicitGrant.AccessToken))
+                            {
+                                throw new AuthTokenValueException();
+                            }
+                            else
+                            {
+                                return Map(_implicitGrant);
+                            }
+                        }
+                        else
+                        {
+                            throw new AuthTokenStateException();
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        #endregion Public Methods
+
+            /// <summary>
+            /// Access Token
+            /// </summary>
         public AccessToken AccessToken { get; set; } = null;
     }
 }

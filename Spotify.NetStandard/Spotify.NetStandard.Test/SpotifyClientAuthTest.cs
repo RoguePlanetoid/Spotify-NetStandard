@@ -52,7 +52,7 @@ namespace Spotify.NetStandard.Test
         /// Authenticate User
         /// </summary>
         [TestMethod]
-        public void Test_AuthUserUri()
+        public void Test_AuthUser_Request()
         {
             var uri = _client.AuthUser(redirect_url, state,
             new Scope
@@ -65,6 +65,44 @@ namespace Spotify.NetStandard.Test
                 UserGeneratedContentImageUpload = true
             });
             Assert.IsNotNull(uri);
+        }
+
+        /// <summary>
+        /// Refresh Token
+        /// </summary>
+        [TestMethod]
+        public async Task Test_RefreshToken()
+        {
+            var token = await _client.RefreshToken();
+            Assert.IsNotNull(token);
+        }
+
+        /// <summary>
+        /// Auth Access Request
+        /// </summary>
+        [TestMethod]
+        public void Test_AuthUserImplicit_Request()
+        {
+            var uri = _client.AuthUserImplicit(redirect_url, state, new Scope
+            {
+                UserReadPrivate = true,
+                FollowRead = true,
+                FollowModify = true,
+                PlaylistModifyPublic = true,
+                PlaylistModifyPrivate = true,
+                UserGeneratedContentImageUpload = true
+            });
+            Assert.IsNotNull(uri);
+        }
+
+        /// <summary>
+        /// Auth
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthAsync()
+        {
+            var token = await _client.AuthAsync();
+            Assert.IsNotNull(token);
         }
         #endregion Authenticate
 
@@ -496,7 +534,7 @@ namespace Spotify.NetStandard.Test
             {
                 DeviceIds = new List<string>
                 {
-                    "52d83639998abe14a8e2f63d4d309a24345a0f7b"
+                    "80f881f68b09341238323926e637e246f96b9159"
                 },
                 Play = true
             });

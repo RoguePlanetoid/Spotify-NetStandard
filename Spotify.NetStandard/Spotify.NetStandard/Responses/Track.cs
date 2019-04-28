@@ -34,7 +34,7 @@ namespace Spotify.NetStandard.Responses
         public List<TrackRestriction> Restrictions { get; set; }
 
         /// <summary>
-        /// The popularity of the track.The value will be between 0 and 100, with 100 being the most popular.
+        /// The popularity of the track. The value will be between 0 and 100, with 100 being the most popular.
         /// </summary>
         [DataMember(Name = "popularity")]
         public int Popularity { get; set; }
