@@ -12,6 +12,12 @@ namespace Spotify.NetStandard.Responses
     public class Paging<T> : Page
     {
         /// <summary>
+        /// Error Object
+        /// </summary>
+        [DataMember(Name = "error")]
+        public ErrorResponse Error { get; set; }
+
+        /// <summary>
         /// A link to the Web API endpoint returning the full result of the request.
         /// </summary>
         [DataMember(Name = "href")]

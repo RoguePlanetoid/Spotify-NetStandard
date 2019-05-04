@@ -7,7 +7,7 @@ namespace Spotify.NetStandard.Responses
     /// Playlist Track Object
     /// </summary>
     [DataContract]
-    public class PlaylistTrack
+    public class PlaylistTrack : BaseResponse
     {
         /// <summary>
         /// The date and time the track was added.

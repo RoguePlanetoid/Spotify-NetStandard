@@ -7,7 +7,7 @@ namespace Spotify.NetStandard.Responses
     /// Devices Object
     /// </summary>
     [DataContract]
-    public class Devices
+    public class Devices : BaseResponse
     {
         /// <summary>
         /// A list of 0..n Device objects.

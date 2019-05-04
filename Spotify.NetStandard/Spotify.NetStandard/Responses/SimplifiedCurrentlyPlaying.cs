@@ -6,7 +6,7 @@ namespace Spotify.NetStandard.Responses
     /// Simplified Currently Playing Object
     /// </summary>
     [DataContract]
-    public class SimplifiedCurrentlyPlaying
+    public class SimplifiedCurrentlyPlaying : BaseResponse
     {
         /// <summary>
         /// A Context Object. Can be null
