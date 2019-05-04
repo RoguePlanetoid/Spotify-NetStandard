@@ -100,6 +100,13 @@
             <param name="response">AuthenticationResponse</param>
             <returns>Access Token</returns>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.Map(Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant)">
+            <summary>
+            Map
+            </summary>
+            <param name="response">ImplicitGrant</param>
+            <returns>Access Token</returns>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.#ctor(Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient,System.String,System.String)">
             <summary>
             Constructor
@@ -110,7 +117,7 @@
         </member>
         <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.CheckAndRenewTokenAsync(Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Threading.CancellationToken)">
             <summary>
-            Check And Renew Token Async
+            Check And Renew Token - Client Credentials Flow
             </summary>
             <param name="tokenType">Token Type</param>
             <param name="cancellationToken">Cancellation Token</param>
@@ -118,49 +125,69 @@
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException">AuthAccessTokenRequiredException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException">AuthUserTokenRequiredException</exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.RefreshTokenAsync(System.String,Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Threading.CancellationToken)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetRefreshTokenAsync(System.String,Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Threading.CancellationToken)">
             <summary>
-            Refresh Token
+            Get Refresh Token - Client Credentials Flow
             </summary>
             <param name="refreshToken">Refresh Token</param>
             <param name="tokenType">Token Type</param>
             <param name="cancellationToken">Cancellation Token</param>
             <returns>Access Token</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAccessTokenAsync(System.Threading.CancellationToken)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetClientCredentialsTokenAsync(System.Threading.CancellationToken)">
             <summary>
-            Get Access Token
+            Get Client Credentials Token - Client Credentials Flow
             </summary>
             <param name="cancellationToken">Cancellation Token</param>
             <returns>Access Token</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetUserTokenAsync(Spotify.NetStandard.Client.Authentication.Internal.AccessCode,System.Threading.CancellationToken)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAuthorisationCodeTokenAsync(Spotify.NetStandard.Client.Authentication.Internal.AccessCode,System.Threading.CancellationToken)">
             <summary>
-            Get User Token
+            Get Authorisation Code Token - Authorisation Code Flow
             </summary>
             <param name="accessCode">Access Code</param>
             <param name="cancellationToken">Cancellation Token</param>
-            <returns></returns>
+            <returns>Access Token</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAuth(System.Uri,System.String,System.String)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAccessCodeAuth(System.Uri,System.String,System.String,System.Boolean)">
             <summary>
-            Get Auth
+            Get Access Code Auth - Authorisation Code Flow
             </summary>
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scopes">Scope</param>
             <returns>Authentication Uri</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAuth(System.Uri,System.Uri,System.String)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAccessCodeAuthAsync(System.Uri,System.Uri,System.String)">
             <summary>
-            Get Auth
+            Get Access Code Auth - Authorisation Code Flow
             </summary>
             <param name="responseUri">Response Uri</param>
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State Value</param>
             <returns>Access Token</returns>
-            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthAccessCodeException</exception>
-            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthStateException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetImplicitGrantAuth(System.Uri,System.String,System.String,System.Boolean)">
+            <summary>
+            Get Implicit Grant Auth - Implicit Grant Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scopes">Scope</param>
+            <returns>Authentication Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetImplicitGrantAuth(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Implicit Grant Auth - Implicit Grant Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State Value</param>
+            <returns>Access Token</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">AuthTokenValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">AuthTokenStateException</exception>
         </member>
         <member name="P:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.AccessToken">
             <summary>
@@ -180,18 +207,18 @@
             <param name="clientSecret">Client Secret</param>
             <returns>Dictionary Of String, String</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.AuthenticateAsync(System.String,System.String,System.Threading.CancellationToken)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.ClientCredentialsAsync(System.String,System.String,System.Threading.CancellationToken)">
             <summary>
-            Authenticate
+            Client Credentials - Client Credentials Flow
             </summary>
             <param name="clientId">Client Id</param>
             <param name="clientSecret">Client Secret</param>
             <param name="cancellationToken">Cancellation Token</param>
             <returns>Authentication Response</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.AuthenticateAsync(System.String,System.String,Spotify.NetStandard.Client.Authentication.Internal.AccessCode,System.Threading.CancellationToken)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.AuthorisationCodeAsync(System.String,System.String,Spotify.NetStandard.Client.Authentication.Internal.AccessCode,System.Threading.CancellationToken)">
             <summary>
-            Authenticate
+            Authorisation Code - Authorisation Code Flow
             </summary>
             <param name="clientId">Client Id</param>
             <param name="clientSecret">Client Secret</param>
@@ -199,9 +226,9 @@
             <param name="cancellationToken">Cancellation Token</param>
             <returns>Authentication Response</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.AuthenticateAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.RefreshTokenAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
             <summary>
-            Authenticate
+            Refresh Token - Authorization Code Flow
             </summary>
             <param name="clientId">Client Id</param>
             <param name="clientSecret">Client Secret</param>
@@ -209,14 +236,26 @@
             <param name="cancellationToken">Cancellation Token</param>
             <returns>Authentication Response</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.Authenticate(System.String,System.String,System.String,System.String)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.GetAccessCodeRequest(System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
-            Authenticate
+            Access Code Request - Authorization Code Flow
             </summary>
             <param name="clientId">Client Id</param>
             <param name="scopes">Comma delimited scopes</param>
             <param name="state">State</param>
             <param name="redirectUrl">Redirect Url</param>
+            <param name="showDialog">Show Dialog</param>
+            <returns>Url</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.GetImplicitGrantRequest(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Implicit Grant Request - Implicit Grant Flow
+            </summary>
+            <param name="clientId">Client Id</param>
+            <param name="scopes">Comma delimited scopes</param>
+            <param name="state">State</param>
+            <param name="redirectUrl">Redirect Url</param>
+            <param name="showDialog">Show Dialog</param>
             <returns>Url</returns>
         </member>
         <member name="T:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationResponse">
@@ -249,6 +288,54 @@
             A token that can be sent to the Spotify Accounts service in place of an authorization code
             </summary>
         </member>
+        <member name="T:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant">
+            <summary>
+            Implicit Grant
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant.AccessToken">
+            <summary>
+            An access token that can be provided in subsequent calls, for example to Spotify Web API services.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant.TokenType">
+            <summary>
+            Value: “Bearer”
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant.ExpiresIn">
+            <summary>
+            The time period (in seconds) for which the access token is valid.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant.State">
+            <summary>
+            The value of the state parameter supplied in the request.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant.Error">
+            <summary>
+            The reason authorization failed, for example: “access_denied”
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant.ResponseUri">
+            <summary>
+            An authorization Uri
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant.RedirectUri">
+            <summary>
+            Redirect Uri
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant.#ctor(System.Uri,System.Uri,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="responseUri">An authorization Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="dictionary">QueryString Dictionary</param>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">
             <summary>
             Auth Code State Error
@@ -279,10 +366,66 @@
             Auth Access Token Expired or Required Error
             </summary>
         </member>
+        <member name="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">
+            <summary>
+            Auth Token State Error
+            </summary>
+        </member>
+        <member name="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">
+            <summary>
+            Auth Token Value Error
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Interfaces.ISpotifyApi">
             <summary>
             Spotify API
             </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetAuthorisationCodeAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
+            <summary>
+            Get Authorisation Code Auth Uri - Authorisation Code Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scope">Scope</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetAuthorisationCodeAuthTokenAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Authorisation Code Auth Token - Authorisation Code Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetClientCredentialsAuthTokenAsync">
+            <summary>
+            Get Client Credentials Auth Token - Client Credentials Flow
+            </summary>
+            <returns>AccessToken on Success, Null if Not</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetImplicitGrantAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
+            <summary>
+            Get Implicit Grant Auth Uri - Implicit Grant Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scope">Scope</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetImplicitGrantAuthToken(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Implicit Grant Auth Token - Implicit Grant Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">AuthCodeStateException</exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.SearchForItemAsync(System.String,Spotify.NetStandard.Requests.SearchType,System.String,System.Nullable{System.Boolean},Spotify.NetStandard.Requests.Page)">
             <summary>
@@ -932,6 +1075,31 @@
             </summary>
             <param name="value">Access Token</param>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.RefreshToken">
+            <summary>
+            Refresh Token
+            </summary>
+            <param name="type">Token Type</param>
+            <returns>Access Token</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.GetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Get
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="hostname">Hostname</param>
+            <param name="endpoint">Endpoint</param>
+            <param name="parameters">Parameters</param>
+            <returns>Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.GetAsync``1(System.Uri)">
+            <summary>
+            Get
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="source">Source Uri</param>
+            <returns>Response</returns>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.NavigateAsync``1(Spotify.NetStandard.Responses.Paging{``0},Spotify.NetStandard.Enums.NavigateType)">
             <summary>
             Navigate 
@@ -1069,9 +1237,9 @@
             <returns>Available Genre Seeds Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
             <summary>
-            Auth User
+            Auth User - Authorisation Code Flow
             </summary>
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
@@ -1080,7 +1248,7 @@
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserAsync(System.Uri,System.Uri,System.String)">
             <summary>
-            Auth User
+            Auth User - Authorisation Code Flow
             </summary>
             <param name="responseUri">Response Uri</param>
             <param name="redirectUri">Redirect Uri</param>
@@ -1088,6 +1256,32 @@
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthAsync">
+            <summary>
+            Auth - Client Credentials Flow
+            </summary>
+            <returns>AccessToken on Success, Null if Not</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserImplicit(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
+            <summary>
+            Auth User Implicit - Implicit Grant Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scope">Scope</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserImplicit(System.Uri,System.Uri,System.String)">
+            <summary>
+            Auth User Implicit - Implicit Grant Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">AuthCodeStateException</exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupFollowingStateAsync(System.Collections.Generic.List{System.String},Spotify.NetStandard.Enums.FollowType)">
             <summary>
@@ -1850,6 +2044,52 @@
             Spotify API
             </summary>
             <param name="client">Spotify Client</param>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetAuthorisationCodeAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
+            <summary>
+            Get Authorisation Code Auth Uri - Authorisation Code Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scope">Scope</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetAuthorisationCodeAuthTokenAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Authorisation Code Auth Token - Authorisation Code Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetClientCredentialsAuthTokenAsync">
+            <summary>
+            Get Client Credentials Auth Token - Client Credentials Flow
+            </summary>
+            <returns>AccessToken on Success, Null if Not</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetImplicitGrantAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
+            <summary>
+            Get Implicit Grant Auth Uri - Implicit Grant Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scope">Scope</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetImplicitGrantAuthToken(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Implicit Grant Auth Token - Implicit Grant Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">AuthCodeStateException</exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.SearchForItemAsync(System.String,Spotify.NetStandard.Requests.SearchType,System.String,System.Nullable{System.Boolean},Spotify.NetStandard.Requests.Page)">
             <summary>
@@ -2650,11 +2890,6 @@
             <param name="successCode">Success Code</param>
             <returns>Response Object</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.#cctor">
-            <summary>
-            Spotify Client
-            </summary>
-        </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.#ctor(Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache)">
             <summary>
             Spotify Client
@@ -2677,6 +2912,31 @@
             Set Access Token
             </summary>
             <param name="value">Access Token</param>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.RefreshToken">
+            <summary>
+            Refresh Token
+            </summary>
+            <param name="type">Token Type</param>
+            <returns>Access Token</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Get
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="hostname">Hostname</param>
+            <param name="endpoint">Endpoint</param>
+            <param name="parameters">Parameters</param>
+            <returns>Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetAsync``1(System.Uri)">
+            <summary>
+            Get
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="source">Source Uri</param>
+            <returns>Response</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.NavigateAsync``1(Spotify.NetStandard.Responses.Paging{``0},Spotify.NetStandard.Enums.NavigateType)">
             <summary>
@@ -2815,9 +3075,9 @@
             <returns>Available Genre Seeds Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
             <summary>
-            Auth User
+            Auth User - Authorisation Code Flow
             </summary>
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
@@ -2826,7 +3086,7 @@
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserAsync(System.Uri,System.Uri,System.String)">
             <summary>
-            Auth User
+            Auth User - Authorisation Code Flow
             </summary>
             <param name="responseUri">Response Uri</param>
             <param name="redirectUri">Redirect Uri</param>
@@ -2834,6 +3094,32 @@
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthAsync">
+            <summary>
+            Auth - Client Credentials Flow
+            </summary>
+            <returns>AccessToken on Success, Null if Not</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserImplicit(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
+            <summary>
+            Auth User Implicit - Implicit Grant Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scope">Scope</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserImplicit(System.Uri,System.Uri,System.String)">
+            <summary>
+            Auth User Implicit - Implicit Grant Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">AuthCodeStateException</exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupFollowingStateAsync(System.Collections.Generic.List{System.String},Spotify.NetStandard.Enums.FollowType)">
             <summary>
@@ -4000,7 +4286,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Danceability">
             <summary>
-            Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity.
+            Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Duration">
@@ -4015,7 +4301,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Instrumentalness">
             <summary>
-            Predicts whether a track contains no vocals
+            Predicts whether a track contains no vocals. “Ooh” and “aah” sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly “vocal”. The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Key">
@@ -4025,32 +4311,32 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Liveness">
             <summary>
-            Detects the presence of an audience in the recording.
+            Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Loudness">
             <summary>
-            The overall loudness of a track in decibels (dB)
+            The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typical range between -60 and 0 db.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Mode">
             <summary>
-            Mode indicates the modality(major or minor) of a track, the type of scale from which its melodic content is derived
+            Mode indicates the modality(major or minor) of a track, the type of scale from which its melodic content is derived. Major is represented by 1 and minor is 0.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Speechiness">
             <summary>
-            Speechiness detects the presence of spoken words in a track. 
+            Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Tempo">
             <summary>
-            The overall estimated tempo of a track in beats per minute (BPM). 
+            The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration. 
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.TimeSignature">
             <summary>
-            An estimated overall time signature of a track.
+            An estimated overall time signature of a track. The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure).
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.TrackHref">
@@ -4060,7 +4346,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.AudioFeatures.Valence">
             <summary>
-            A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track.
+            A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.AvailableGenreSeeds">
@@ -4203,6 +4489,11 @@
             Cursor Paging Object
             </summary>
             <typeparam name="T">Object Type</typeparam>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.CursorPaging`1.Error">
+            <summary>
+            Error Object
+            </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.CursorPaging`1.Href">
             <summary>
@@ -4419,6 +4710,11 @@
             Paging Object
             </summary>
             <typeparam name="T">Object Type</typeparam>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Paging`1.Error">
+            <summary>
+            Error Object
+            </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.Paging`1.Href">
             <summary>
@@ -4937,7 +5233,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.Track.Popularity">
             <summary>
-            The popularity of the track.The value will be between 0 and 100, with 100 being the most popular.
+            The popularity of the track. The value will be between 0 and 100, with 100 being the most popular.
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.TrackRestriction">

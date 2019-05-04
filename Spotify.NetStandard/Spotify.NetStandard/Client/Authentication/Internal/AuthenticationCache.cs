@@ -28,12 +28,13 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="response">AuthenticationResponse</param>
         /// <returns>Access Token</returns>
         private AccessToken Map(TokenType tokenType,
-            AuthenticationResponse response) => 
+            AuthenticationResponse response, 
+            string refreshToken = null) => 
             new AccessToken
             {
                 TokenType = tokenType,
                 Token = response.AccessToken,
-                Refresh = response.RefreshToken,
+                Refresh = refreshToken ?? response.RefreshToken,
                 Expiration = DateTime.UtcNow.Add(
                 TimeSpan.FromSeconds(Convert.ToDouble(
                 response.ExpiresIn))),
@@ -147,7 +148,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             if (authenticationResponse != null)
             {
                 AccessToken = Map(tokenType, 
-                    authenticationResponse);
+                    authenticationResponse, 
+                    refreshToken);
             }
             return AccessToken;
         }
