@@ -12,11 +12,13 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
     /// </summary>
     internal class AuthenticationCache
     {
+        #region Private Members
         private readonly string _clientId;
         private readonly string _clientSecret;
         private readonly AuthenticationClient _client;
         private AccessCode _accessCode = null;
         private ImplicitGrant _implicitGrant = null;
+        #endregion Private Members
 
         #region Private Methods
         /// <summary>
@@ -72,7 +74,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Check And Renew Token Async
+        /// Check And Renew Token - Client Credentials Flow
         /// </summary>
         /// <param name="tokenType">Token Type</param>
         /// <param name="cancellationToken">Cancellation Token</param>
@@ -90,7 +92,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 {
                     throw new AuthUserTokenRequiredException();
                 }
-                AccessToken = await GetAccessTokenAsync(
+                AccessToken = await GetClientCredentialsTokenAsync(
                     cancellationToken);
             }
             else if(AccessToken?.Refresh != null && 
@@ -125,7 +127,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Get Refresh Token
+        /// Get Refresh Token - Client Credentials Flow
         /// </summary>
         /// <param name="refreshToken">Refresh Token</param>
         /// <param name="tokenType">Token Type</param>
@@ -137,7 +139,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             CancellationToken cancellationToken)
         {
             var authenticationResponse =
-            await _client.RefreshTokenAuthAsync(
+            await _client.RefreshTokenAsync(
                 _clientId, 
                 _clientSecret, 
                 refreshToken, 
@@ -151,15 +153,15 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Get Access Token
+        /// Get Client Credentials Token - Client Credentials Flow
         /// </summary>
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <returns>Access Token</returns>
-        public async Task<AccessToken> GetAccessTokenAsync(
+        public async Task<AccessToken> GetClientCredentialsTokenAsync(
             CancellationToken cancellationToken)
         {
             var authenticationResponse =  
-            await _client.ClientCredentialsAuthAsync(
+            await _client.ClientCredentialsAsync(
                 _clientId, 
                 _clientSecret, 
                 cancellationToken);
@@ -172,17 +174,17 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Get User Token
+        /// Get Authorisation Code Token - Authorisation Code Flow
         /// </summary>
         /// <param name="accessCode">Access Code</param>
         /// <param name="cancellationToken">Cancellation Token</param>
-        /// <returns></returns>
-        public async Task<AccessToken> GetUserTokenAsync(
+        /// <returns>Access Token</returns>
+        public async Task<AccessToken> GetAuthorisationCodeTokenAsync(
             AccessCode accessCode, 
             CancellationToken cancellationToken)
         {
             var authenticationResponse =
-            await _client.AuthorisationCodeAuthAsync(
+            await _client.AuthorisationCodeAsync(
                 _clientId, 
                 _clientSecret, 
                 accessCode, 
@@ -196,22 +198,22 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Get Access Token Auth
+        /// Get Access Code Auth - Authorisation Code Flow
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scopes">Scope</param>
         /// <returns>Authentication Uri</returns>
-        public Uri GetAccessTokenAuth(
+        public Uri GetAccessCodeAuth(
             Uri redirectUri,
             string state,
             string scopes,
             bool showDialog) => 
-            _client.AccessTokenAuth(_clientId, scopes,
+            _client.GetAccessCodeRequest(_clientId, scopes,
                 state, redirectUri.ToString(), showDialog);
 
         /// <summary>
-        /// Get Access Code Auth
+        /// Get Access Code Auth - Authorisation Code Flow
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
@@ -241,7 +243,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                             }
                             else
                             {
-                                return await GetUserTokenAsync(
+                                return await GetAuthorisationCodeTokenAsync(
                                     _accessCode, 
                                     new CancellationToken(false));
                             }
@@ -257,7 +259,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Get Implicit Grant Auth
+        /// Get Implicit Grant Auth - Implicit Grant Flow
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
@@ -268,11 +270,11 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             string state,
             string scopes,
             bool showDialog) =>
-            _client.ImplicitGrantAuth(_clientId, scopes,
+            _client.GetImplicitGrantRequest(_clientId, scopes,
                 state, redirectUri.ToString(), showDialog);
 
         /// <summary>
-        /// Get Implicit Grant Auth
+        /// Get Implicit Grant Auth - Implicit Grant Flow
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
@@ -316,9 +318,11 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
         #endregion Public Methods
 
-            /// <summary>
-            /// Access Token
-            /// </summary>
+        #region Public Properties
+        /// <summary>
+        /// Access Token
+        /// </summary>
         public AccessToken AccessToken { get; set; } = null;
+        #endregion Publoc Properties
     }
 }

@@ -1,10 +1,11 @@
-﻿using Spotify.NetStandard.Enums;
+﻿using Spotify.NetStandard.Client.Authentication;
+using Spotify.NetStandard.Client.Exceptions;
+using Spotify.NetStandard.Enums;
 using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Spotify.NetStandard.Client.Exceptions;
 
 namespace Spotify.NetStandard.Client.Interfaces
 {
@@ -13,6 +14,68 @@ namespace Spotify.NetStandard.Client.Interfaces
     /// </summary>
     public interface ISpotifyApi
     {
+        #region Authentication
+        /// <summary>
+        /// Get Authorisation Code Auth Uri - Authorisation Code Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <returns>Uri</returns>
+        Uri GetAuthorisationCodeAuthUri(
+            Uri redirectUri,
+            string state,
+            Scope scope,
+            bool showDialog = false);
+
+        /// <summary>
+        /// Get Authorisation Code Auth Token - Authorisation Code Flow
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+        Task<AccessToken> GetAuthorisationCodeAuthTokenAsync(
+            Uri responseUri,
+            Uri redirectUri,
+            string state);
+
+        /// <summary>
+        /// Get Client Credentials Auth Token - Client Credentials Flow
+        /// </summary>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        Task<AccessToken> GetClientCredentialsAuthTokenAsync();
+
+        /// <summary>
+        /// Get Implicit Grant Auth Uri - Implicit Grant Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <returns>Uri</returns>
+        Uri GetImplicitGrantAuthUri(
+            Uri redirectUri,
+            string state,
+            Scope scope,
+            bool showDialog = false);
+
+        /// <summary>
+        /// Get Implicit Grant Auth Token - Implicit Grant Flow
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthTokenValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthTokenStateException">AuthCodeStateException</exception>
+        AccessToken GetImplicitGrantAuthToken(
+            Uri responseUri,
+            Uri redirectUri,
+            string state);
+        #endregion Authentication
+
         #region Search API
         /// <summary>
         /// Search for an Item

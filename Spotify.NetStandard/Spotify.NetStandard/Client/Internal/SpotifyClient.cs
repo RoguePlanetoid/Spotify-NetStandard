@@ -901,7 +901,7 @@ namespace Spotify.NetStandard.Client.Internal
             string state,
             Scope scope,
             bool showDialog = false) => 
-                _authenticationCache.GetAccessTokenAuth(
+                _authenticationCache.GetAccessCodeAuth(
                 redirectUri, state, scope.Get(), showDialog);
 
         /// <summary>
@@ -919,6 +919,13 @@ namespace Spotify.NetStandard.Client.Internal
             string state) => 
                 _authenticationCache.GetAccessCodeAuthAsync(
                 responseUri, redirectUri, state);
+
+        /// <summary>
+        /// Auth - Client Credentials Flow
+        /// </summary>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        public Task<AccessToken> AuthAsync() =>
+            _authenticationCache.GetClientCredentialsTokenAsync(new CancellationToken(false));
 
         /// <summary>
         /// Auth User Implicit - Implicit Grant Flow
@@ -950,13 +957,6 @@ namespace Spotify.NetStandard.Client.Internal
             string state) =>
                 _authenticationCache.GetImplicitGrantAuth(
                 responseUri, redirectUri, state);
-
-        /// <summary>
-        /// Auth - Client Credentials Flow
-        /// </summary>
-        /// <returns>AccessToken on Success, Null if Not</returns>
-        public Task<AccessToken> AuthAsync() =>
-            _authenticationCache.GetAccessTokenAsync(new CancellationToken(false));
         #endregion Authenticate
 
         #region Authenticated Follow API

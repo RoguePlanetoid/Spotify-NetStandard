@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Spotify.NetStandard.Client.Exceptions;
+using Spotify.NetStandard.Client.Authentication;
 
 namespace Spotify.NetStandard.Client.Internal
 {
@@ -29,6 +30,74 @@ namespace Spotify.NetStandard.Client.Internal
             _client = client;
         }
         #endregion Constructor
+
+        #region Authentication
+        /// <summary>
+        /// Get Authorisation Code Auth Uri - Authorisation Code Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <returns>Uri</returns>
+        public Uri GetAuthorisationCodeAuthUri(
+            Uri redirectUri,
+            string state,
+            Scope scope,
+            bool showDialog = false) => 
+            _client.AuthUser(redirectUri, state, scope, showDialog);
+
+        /// <summary>
+        /// Get Authorisation Code Auth Token - Authorisation Code Flow
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+        public Task<AccessToken> GetAuthorisationCodeAuthTokenAsync(
+            Uri responseUri,
+            Uri redirectUri,
+            string state) =>
+                _client.AuthUserAsync(
+                responseUri, redirectUri, state);
+
+        /// <summary>
+        /// Get Client Credentials Auth Token - Client Credentials Flow
+        /// </summary>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        public Task<AccessToken> GetClientCredentialsAuthTokenAsync() =>
+            _client.AuthAsync();
+
+        /// <summary>
+        /// Get Implicit Grant Auth Uri - Implicit Grant Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <returns>Uri</returns>
+        public Uri GetImplicitGrantAuthUri(
+            Uri redirectUri,
+            string state,
+            Scope scope,
+            bool showDialog = false) => 
+            _client.AuthUserImplicit(redirectUri, state, scope, showDialog);
+
+        /// <summary>
+        /// Get Implicit Grant Auth Token - Implicit Grant Flow
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthTokenValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthTokenStateException">AuthCodeStateException</exception>
+        public AccessToken GetImplicitGrantAuthToken(
+            Uri responseUri,
+            Uri redirectUri,
+            string state) =>
+            _client.AuthUserImplicit(responseUri, redirectUri, state);
+        #endregion Authentication
 
         #region Search API
         /// <summary>
