@@ -12,6 +12,12 @@ namespace Spotify.NetStandard.Responses
     public class CursorPaging<T> : Cursor
     {
         /// <summary>
+        /// Error Object
+        /// </summary>
+        [DataMember(Name = "error")]
+        public ErrorResponse Error { get; set; }
+
+        /// <summary>
         /// A link to the Web API endpoint returning the full result of the request.
         /// </summary>
         [DataMember(Name = "href")]
@@ -41,6 +47,9 @@ namespace Spotify.NetStandard.Responses
         [DataMember(Name = "total")]
         public int Total { get; set; }
 
+        /// <summary>
+        /// IEnumerable of Type
+        /// </summary>
         public IEnumerable<T> ReadOnlyItems => Items;
 
         /// <summary>
@@ -48,6 +57,9 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         public new Cursor After => Cursors;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public CursorPaging()
         {
             Items = new List<T>();

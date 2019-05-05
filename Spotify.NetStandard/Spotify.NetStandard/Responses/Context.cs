@@ -6,7 +6,7 @@ namespace Spotify.NetStandard.Responses
     /// Context Object
     /// </summary>
     [DataContract]
-    public class Context
+    public class Context : BaseResponse
     {
         /// <summary>
         /// The object type of the object

@@ -7,8 +7,14 @@ namespace Spotify.NetStandard.Enums
     /// </summary>
     public enum FollowType : byte
     {
+        /// <summary>
+        /// User
+        /// </summary>
         [Description("user")]
         User,
+        /// <summary>
+        /// Artist
+        /// </summary>
         [Description("artist")]
         Artist,
     }

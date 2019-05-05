@@ -6,7 +6,7 @@ namespace Spotify.NetStandard.Responses
     /// <summary>
     /// Available Genre Seeds Object
     /// </summary>
-    public class AvailableGenreSeeds
+    public class AvailableGenreSeeds : BaseResponse
     {
         /// <summary>
         /// Genres

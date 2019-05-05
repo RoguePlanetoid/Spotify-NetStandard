@@ -5,7 +5,13 @@
     /// </summary>
     public enum TokenType : byte
     {
+        /// <summary>
+        /// Access Token
+        /// </summary>
         Access,
+        /// <summary>
+        /// User Token
+        /// </summary>
         User
     }
 }

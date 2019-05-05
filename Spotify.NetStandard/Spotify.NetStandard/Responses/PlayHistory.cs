@@ -6,7 +6,7 @@ namespace Spotify.NetStandard.Responses
     /// Play History Object
     /// </summary>
     [DataContract]
-    public class PlayHistory
+    public class PlayHistory : BaseResponse
     {
         /// <summary>
         /// The track the user listened to.

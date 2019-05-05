@@ -165,7 +165,6 @@ namespace Spotify.NetStandard.Client.Internal
                     HttpStatusCode = message.StatusCode
                 };
             }
-            var test = await message.Content.ReadAsStringAsync();
             using (Stream stream = await message.Content.ReadAsStreamAsync())
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -173,11 +172,13 @@ namespace Spotify.NetStandard.Client.Internal
                     return new SimpleServiceResult<TResult, TErrorResult>
                     {
                         Result = message.IsSuccessStatusCode
-                            ? _jsonSerializer.Deserialize(reader, typeof(TResult)) as TResult
+                            ? _jsonSerializer.Deserialize(reader, 
+                            typeof(TResult)) as TResult
                             : null,
                         ErrorResult = message.IsSuccessStatusCode
                             ? null
-                            : _jsonSerializer.Deserialize(reader, typeof(TErrorResult)) as TErrorResult,
+                            : _jsonSerializer.Deserialize(reader, 
+                            typeof(TErrorResult)) as TErrorResult,
                         HttpStatusCode = message.StatusCode
                     };
                 }
@@ -308,7 +309,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <param name="parameters">Optional query string parameters</param>
         /// <param name="headers">Optional HTTP headers</param>
-        /// <returns>Response & Status Code</returns>
+        /// <returns>Response and Status Code</returns>
         /// <returns></returns>
         public async Task<TResponse> GetRequestAsync<TResponse>(
             Uri hostname,
@@ -340,7 +341,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cancellationToken">Cancellation Token</param>
         /// <param name="parameters">Optional query string parameters</param>
         /// <param name="headers">Optional HTTP headers</param>
-        /// <returns>Response & Status Code</returns>
+        /// <returns>Response and Status Code</returns>
         /// <returns></returns>
         public async Task<TResponse> GetRequestAsync<TRequest, TResponse>(
             Uri hostname,
@@ -411,7 +412,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="parameters">Optional query string parameters</param>
         /// <param name="headers">Optional HTTP headers</param>
         /// <param name="useFormContent">Use Form Content</param>
-        /// <returns>Response & Status Code</returns>
+        /// <returns>Response and Status Code</returns>
         /// <returns></returns>
         public async Task<TResponse> PostRequestAsync<TRequest, TResponse>(
             Uri hostname,
@@ -450,7 +451,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="body">Optional Body Parameters</param>
         /// <param name="parameters">Optional query string parameters</param>
         /// <param name="headers">Optional HTTP headers</param>
-        /// <returns>Response & Status Code</returns>
+        /// <returns>Response and Status Code</returns>
         /// <returns></returns>
         public async Task<(TResponse Response, HttpStatusCode StatusCode)>
             PostRequestAsync<TRequest, TResponse>(
@@ -521,6 +522,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// DELETE Request
         /// </summary>
+        /// <typeparam name="TRequest">Request Type</typeparam>
         /// <typeparam name="TResponse">Response Type</typeparam>
         /// <param name="hostname">The HTTP host</param>
         /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
@@ -528,7 +530,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cancellationToken"></param>
         /// <param name="parameters">Optional query string parameters</param>
         /// <param name="headers">Optional HTTP headers</param>
-        /// <returns>Response & Status Code</returns>
+        /// <returns>Response and Status Code</returns>
         public async Task<(TResponse Response, HttpStatusCode StatusCode)>
             DeleteRequestAsync<TRequest, TResponse>(
             Uri hostname,
@@ -555,6 +557,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// HTTP DELETE Request
         /// </summary>
+        /// <typeparam name="TRequest">Request Type</typeparam>
         /// <typeparam name="TResult">The result data contract type</typeparam>
         /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
         /// <param name="hostname">The HTTP host</param>
@@ -596,7 +599,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="fileBytes">Optional Request File Bytes</param>
         /// <param name="parameters">Optional query string parameters</param>
         /// <param name="headers">Optional HTTP headers</param>
-        /// <returns>Response & Status Code</returns>
+        /// <returns>Response and Status Code</returns>
         /// <returns></returns>
         public async Task<(TResponse Response, HttpStatusCode StatusCode)>
             PutRequestAsync<TResponse>(
@@ -632,8 +635,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="fileBytes">Optional Request File Bytes</param>
         /// <param name="parameters">Optional query string parameters</param>
         /// <param name="headers">Optional HTTP headers</param>
-        /// <param name="fileBytes">File Bytes</param>
-        /// <returns>Response & Status Code</returns>
+        /// <returns>Response and Status Code</returns>
         /// <returns></returns>
         public async Task<(TResponse Response, HttpStatusCode StatusCode)> 
             PutRequestAsync<TRequest, TResponse>(
@@ -663,15 +665,16 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// HTTP PUT Request
         /// </summary>
+        /// <typeparam name="TRequest">Request Type</typeparam>
         /// <typeparam name="TResult">The result data contract type</typeparam>
         /// <typeparam name="TErrorResult">The error result data contract type</typeparam>
         /// <param name="hostname">The HTTP host</param>
         /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="request">Request of Type</param>
         /// <param name="cancellationToken"></param>
         /// <param name="fileBytes">Optional Request File Bytes</param>
         /// <param name="requestParameters">Optional query string parameters</param>
         /// <param name="extraHeaders">Optional HTTP headers</param>
-        /// <param name="fileBytes">File Bytes</param>
         /// <returns>SimpleServiceResult</returns>
         public Task<SimpleServiceResult<TResult, TErrorResult>>
             PutRequestAsync<TRequest, TResult, TErrorResult>(

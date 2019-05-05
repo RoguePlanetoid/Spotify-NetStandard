@@ -12,6 +12,12 @@ namespace Spotify.NetStandard.Responses
     public class Paging<T> : Page
     {
         /// <summary>
+        /// Error Object
+        /// </summary>
+        [DataMember(Name = "error")]
+        public ErrorResponse Error { get; set; }
+
+        /// <summary>
         /// A link to the Web API endpoint returning the full result of the request.
         /// </summary>
         [DataMember(Name = "href")]
@@ -35,6 +41,9 @@ namespace Spotify.NetStandard.Responses
         [DataMember(Name = "previous")]
         public string Previous { get; set; }
 
+        /// <summary>
+        /// IEnumerable of Type
+        /// </summary>
         public IEnumerable<T> ReadOnlyItems => Items;
 
         /// <summary>
@@ -42,6 +51,9 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         public Page Page { get { return this; } }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public Paging()
         {
             Items = new List<T>();

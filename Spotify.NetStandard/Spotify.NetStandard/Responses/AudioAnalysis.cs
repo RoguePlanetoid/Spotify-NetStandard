@@ -7,7 +7,7 @@ namespace Spotify.NetStandard.Responses
     /// Audio Analysis Object
     /// </summary>
     [DataContract]
-    public class AudioAnalysis
+    public class AudioAnalysis : BaseResponse
     {
         /// <summary>
         /// The time intervals of the bars throughout the track

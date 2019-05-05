@@ -81,7 +81,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_GetCategory()
         {
             var result = await _client.Api.GetCategoryAsync(
-                "decades");
+                "pop");
             Assert.IsNotNull(result);
         }
 
@@ -93,7 +93,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_GetCategoryPlaylists()
         {
             var result = await _client.Api.GetCategoryPlaylistsAsync(
-                "decades");
+                "pop");
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count > 0);
         }
@@ -622,7 +622,7 @@ namespace Spotify.NetStandard.Test
             var result = await _client.Api.UserPlaybackTransferAsync(
                 new List<string>
                 {
-                    "52d83639998abe14a8e2f63d4d309a24345a0f7b"
+                    "80f881f68b09341238323926e637e246f96b9159"
                 },
                 true);
             Assert.IsTrue(result.Success);

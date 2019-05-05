@@ -1656,15 +1656,16 @@ Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### AuthUser(redirectUri, state, scope)
+### AuthUser(redirectUri, state, scope, showDialog)
 
-Auth User
+Auth User - Authorisation Code Flow
 
 | Name | Description |
 | ---- | ----------- |
 | redirectUri | *System.Uri*<br>Redirect Uri |
 | state | *System.String*<br>State |
 | scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+| showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
 
 #### Returns
 
@@ -1672,7 +1673,7 @@ Uri
 
 ### AuthUserAsync(responseUri, redirectUri, state)
 
-Auth User
+Auth User - Authorisation Code Flow
 
 | Name | Description |
 | ---- | ----------- |
@@ -1687,6 +1688,47 @@ AccessToken on Success, Null if Not
 *Spotify.NetStandard.Client.Exceptions.AuthCodeValueException:* AuthCodeValueException
 
 *Spotify.NetStandard.Client.Exceptions.AuthCodeStateException:* AuthCodeStateException
+
+### AuthAsync()
+
+Auth - Client Credentials Flow
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+### AuthUserImplicit(redirectUri, state, scope, showDialog)
+
+Auth User Implicit - Implicit Grant Flow
+
+| Name | Description |
+| ---- | ----------- |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+| showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
+
+#### Returns
+
+Uri
+
+### AuthUserImplicit(responseUri, redirectUri, state)
+
+Auth User Implicit - Implicit Grant Flow
+
+| Name | Description |
+| ---- | ----------- |
+| responseUri | *System.Uri*<br>Response Uri |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+*Spotify.NetStandard.Client.Exceptions.AuthTokenValueException:* AuthCodeValueException
+
+*Spotify.NetStandard.Client.Exceptions.AuthTokenStateException:* AuthCodeStateException
 
 ### AuthUserPlaybackNextTrackAsync(deviceId)
 

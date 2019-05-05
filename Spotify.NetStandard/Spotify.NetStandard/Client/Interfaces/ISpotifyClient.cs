@@ -35,6 +35,34 @@ namespace Spotify.NetStandard.Client.Interfaces
         void SetToken(AccessToken value);
 
         /// <summary>
+        /// Refresh Token
+        /// </summary>
+        /// <returns>Access Token</returns>
+        Task<AccessToken> RefreshToken();
+
+        /// <summary>
+        /// Get
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">Hostname</param>
+        /// <param name="endpoint">Endpoint</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns>Response</returns>
+        Task<TResponse> GetAsync<TResponse>(
+            string hostname, string endpoint,
+            Dictionary<string, string> parameters) 
+            where TResponse : class;
+
+        /// <summary>
+        /// Get
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="source">Source Uri</param>
+        /// <returns>Response</returns>
+        Task<TResponse> GetAsync<TResponse>(Uri source)
+        where TResponse : class;
+
+        /// <summary>
         /// Navigate 
         /// </summary>
         /// <typeparam name="TResponse">Response Type</typeparam>
@@ -128,7 +156,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <summary>
         /// Lookup Artist's Albums
         /// </summary>
-        /// <param name="id">(Required) The Spotify ID for the artist.</param>
+        /// <param name="itemId">(Required) The Spotify ID for the artist.</param>
         /// <param name="includeGroup">(Optional) Filters the response. If not supplied, all album types will be returned</param>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code</param>
         /// <param name="page">(Optional) Limit: The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50 - Offset: The index of the first album to return. Default: 0 (i.e., the first album).</param>
@@ -219,19 +247,21 @@ namespace Spotify.NetStandard.Client.Interfaces
 
         #region Authenticate
         /// <summary>
-        /// Auth User
+        /// Auth User - Authorisation Code Flow
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scope">Scope</param>
+        /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         Uri AuthUser(
             Uri redirectUri,
             string state,
-            Scope scope);
+            Scope scope,
+            bool showDialog = false);
 
         /// <summary>
-        /// Auth User
+        /// Auth User - Authorisation Code Flow
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
@@ -240,6 +270,40 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
         /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
         Task<AccessToken> AuthUserAsync(
+            Uri responseUri,
+            Uri redirectUri,
+            string state);
+
+        /// <summary>
+        /// Auth - Client Credentials Flow
+        /// </summary>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        Task<AccessToken> AuthAsync();
+
+        /// <summary>
+        /// Auth User Implicit - Implicit Grant Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+        /// <returns>Uri</returns>
+        Uri AuthUserImplicit(
+            Uri redirectUri,
+            string state,
+            Scope scope,
+            bool showDialog = false);
+
+        /// <summary>
+        /// Auth User Implicit - Implicit Grant Flow
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthTokenValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthTokenStateException">AuthCodeStateException</exception>
+        AccessToken AuthUserImplicit(
             Uri responseUri,
             Uri redirectUri,
             string state);

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Spotify.NetStandard.Client.Exceptions;
+using Spotify.NetStandard.Client.Authentication;
 
 namespace Spotify.NetStandard.Client.Internal
 {
@@ -29,6 +30,76 @@ namespace Spotify.NetStandard.Client.Internal
             _client = client;
         }
         #endregion Constructor
+
+        #region Authentication
+        /// <summary>
+        /// Get Authorisation Code Auth Uri - Authorisation Code Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+        /// <returns>Uri</returns>
+        public Uri GetAuthorisationCodeAuthUri(
+            Uri redirectUri,
+            string state,
+            Scope scope,
+            bool showDialog = false) => 
+            _client.AuthUser(redirectUri, state, scope, showDialog);
+
+        /// <summary>
+        /// Get Authorisation Code Auth Token - Authorisation Code Flow
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+        public Task<AccessToken> GetAuthorisationCodeAuthTokenAsync(
+            Uri responseUri,
+            Uri redirectUri,
+            string state) =>
+                _client.AuthUserAsync(
+                responseUri, redirectUri, state);
+
+        /// <summary>
+        /// Get Client Credentials Auth Token - Client Credentials Flow
+        /// </summary>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        public Task<AccessToken> GetClientCredentialsAuthTokenAsync() =>
+            _client.AuthAsync();
+
+        /// <summary>
+        /// Get Implicit Grant Auth Uri - Implicit Grant Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scope">Scope</param>
+        /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+        /// <returns>Uri</returns>
+        public Uri GetImplicitGrantAuthUri(
+            Uri redirectUri,
+            string state,
+            Scope scope,
+            bool showDialog = false) => 
+            _client.AuthUserImplicit(redirectUri, state, scope, showDialog);
+
+        /// <summary>
+        /// Get Implicit Grant Auth Token - Implicit Grant Flow
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthTokenValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthTokenStateException">AuthCodeStateException</exception>
+        public AccessToken GetImplicitGrantAuthToken(
+            Uri responseUri,
+            Uri redirectUri,
+            string state) =>
+            _client.AuthUserImplicit(responseUri, redirectUri, state);
+        #endregion Authentication
 
         #region Search API
         /// <summary>
@@ -168,7 +239,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// Get Following State for Artists/Users
         /// <para>Scopes: FollowRead</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs to check.</param>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs to check.</param>
         /// <param name="followType">(Required) Either artist or user.</param>
         /// <returns>List of true or false values</returns>
         public Task<List<bool>> GetFollowingStateForArtistsOrUsersAsync(
@@ -181,7 +252,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// Check if Users Follow a Playlist
         /// <para>Scopes: PlaylistReadPrivate</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of Spotify User IDs, the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.</param>
+        /// <param name="ids">(Required) List of Spotify User IDs, the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids.</param>
         /// <param name="playlistId">(Required) The Spotify ID of the playlist.</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
@@ -195,7 +266,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// Follow Artists or Users
         /// <para>Scopes: FollowModify</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs.</param>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
         /// <param name="followType">(Required) Either artist or user</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
@@ -235,7 +306,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// Unfollow Artists or Users
         /// <para>Scopes: FollowModify</para>
         /// </summary>
-        /// <param name="itemIds">(Required) List of the artist or the user Spotify IDs.</param>
+        /// <param name="ids">(Required) List of the artist or the user Spotify IDs.</param>
         /// <param name="followType">(Required) Either artist or user</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>

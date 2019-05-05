@@ -7,7 +7,7 @@ namespace Spotify.NetStandard.Responses
     /// Recommendations Response Object
     /// </summary>
     [DataContract]
-    public class RecommendationsResponse
+    public class RecommendationsResponse : BaseResponse
     {
         /// <summary>
         /// An array of recommendation seed objects.

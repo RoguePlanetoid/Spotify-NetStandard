@@ -184,7 +184,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_Lookup_Category()
         {
             Category item = await _client.LookupAsync<Category>(
-                "decades", LookupType.Categories);
+                "pop", LookupType.Categories);
             Assert.IsNotNull(item);
         }
 
@@ -196,7 +196,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_Lookup_CategoryPlaylists()
         {
             _content = await _client.LookupAsync<ContentResponse>(
-                "decades", LookupType.CategoriesPlaylists);
+                "pop", LookupType.CategoriesPlaylists);
             Assert.IsNotNull(_content.Playlists);
             Assert.IsTrue(_content.Playlists.Count > 0);
         }
