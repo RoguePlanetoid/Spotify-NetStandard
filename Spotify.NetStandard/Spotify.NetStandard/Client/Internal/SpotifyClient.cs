@@ -537,7 +537,6 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// Refresh Token
         /// </summary>
-        /// <param name="type">Token Type</param>
         /// <returns>Access Token</returns>
         public Task<AccessToken> RefreshToken() => 
             _authenticationCache.CheckAndRenewTokenAsync(
@@ -895,6 +894,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scope">Scope</param>
+        /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         public Uri AuthUser(
             Uri redirectUri,
@@ -933,6 +933,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scope">Scope</param>
+        /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         public Uri AuthUserImplicit(
             Uri redirectUri,

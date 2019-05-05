@@ -26,6 +26,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// </summary>
         /// <param name="tokenType">TokenType</param>
         /// <param name="response">AuthenticationResponse</param>
+        /// <param name="refreshToken">Refresh Token</param>
         /// <returns>Access Token</returns>
         private AccessToken Map(TokenType tokenType,
             AuthenticationResponse response, 
@@ -205,6 +206,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scopes">Scope</param>
+        /// <param name="showDialog">Show Dialog</param>
         /// <returns>Authentication Uri</returns>
         public Uri GetAccessCodeAuth(
             Uri redirectUri,
@@ -266,6 +268,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scopes">Scope</param>
+        /// <param name="showDialog">Show Dialog</param>
         /// <returns>Authentication Uri</returns>
         public Uri GetImplicitGrantAuth(
             Uri redirectUri,

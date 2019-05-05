@@ -92,12 +92,13 @@
             Authentication Cache
             </summary>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.Map(Spotify.NetStandard.Client.Authentication.Enums.TokenType,Spotify.NetStandard.Client.Authentication.Internal.AuthenticationResponse)">
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.Map(Spotify.NetStandard.Client.Authentication.Enums.TokenType,Spotify.NetStandard.Client.Authentication.Internal.AuthenticationResponse,System.String)">
             <summary>
             Map
             </summary>
             <param name="tokenType">TokenType</param>
             <param name="response">AuthenticationResponse</param>
+            <param name="refreshToken">Refresh Token</param>
             <returns>Access Token</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.Map(Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant)">
@@ -156,6 +157,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scopes">Scope</param>
+            <param name="showDialog">Show Dialog</param>
             <returns>Authentication Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAccessCodeAuthAsync(System.Uri,System.Uri,System.String)">
@@ -176,6 +178,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scopes">Scope</param>
+            <param name="showDialog">Show Dialog</param>
             <returns>Authentication Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetImplicitGrantAuth(System.Uri,System.Uri,System.String)">
@@ -388,6 +391,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scope">Scope</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetAuthorisationCodeAuthTokenAsync(System.Uri,System.Uri,System.String)">
@@ -414,6 +418,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scope">Scope</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetImplicitGrantAuthToken(System.Uri,System.Uri,System.String)">
@@ -1079,7 +1084,6 @@
             <summary>
             Refresh Token
             </summary>
-            <param name="type">Token Type</param>
             <returns>Access Token</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.GetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -1244,6 +1248,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scope">Scope</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserAsync(System.Uri,System.Uri,System.String)">
@@ -1270,6 +1275,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scope">Scope</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserImplicit(System.Uri,System.Uri,System.String)">
@@ -2052,6 +2058,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scope">Scope</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetAuthorisationCodeAuthTokenAsync(System.Uri,System.Uri,System.String)">
@@ -2078,6 +2085,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scope">Scope</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetImplicitGrantAuthToken(System.Uri,System.Uri,System.String)">
@@ -2917,7 +2925,6 @@
             <summary>
             Refresh Token
             </summary>
-            <param name="type">Token Type</param>
             <returns>Access Token</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -3082,6 +3089,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scope">Scope</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserAsync(System.Uri,System.Uri,System.String)">
@@ -3108,6 +3116,7 @@
             <param name="redirectUri">Redirect Uri</param>
             <param name="state">State</param>
             <param name="scope">Scope</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserImplicit(System.Uri,System.Uri,System.String)">

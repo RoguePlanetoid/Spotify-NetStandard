@@ -21,6 +21,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scope">Scope</param>
+        /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         Uri GetAuthorisationCodeAuthUri(
             Uri redirectUri,
@@ -54,6 +55,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="redirectUri">Redirect Uri</param>
         /// <param name="state">State</param>
         /// <param name="scope">Scope</param>
+        /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         Uri GetImplicitGrantAuthUri(
             Uri redirectUri,
