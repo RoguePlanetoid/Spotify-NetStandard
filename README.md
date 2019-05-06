@@ -1,5 +1,4 @@
-Spotify.NetStandard 
-===
+# Spotify.NetStandard
 
 Spotify API .NET Standard Library
 
@@ -40,6 +39,41 @@ Access Token
 
 User Token
 
+
+## AccessCode
+
+Access Code
+
+### Constructor(responseUri, redirectUri, dictionary)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| responseUri | *System.Uri*<br>An authorization Uri |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| dictionary | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>QueryString Dictionary |
+
+### Code
+
+An authorization code that can be exchanged for an access token.
+
+### Error
+
+The reason authorization failed, for example: “access_denied”
+
+### RedirectUri
+
+Redirect Uri
+
+### ResponseUri
+
+An authorization Uri
+
+### State
+
+The value of the state parameter supplied in the request.
+
 ## AuthAccessTokenRequiredException
 
 Auth Access Token Expired or Required Error
@@ -63,6 +97,16 @@ Auth Code Error
 ## AuthTokenRequiredException
 
 Auth Token Expired or Required Error
+
+
+## AuthTokenStateException
+
+Auth Token State Error
+
+
+## AuthTokenValueException
+
+Auth Token Value Error
 
 
 ## AuthUserTokenRequiredException
@@ -354,6 +398,39 @@ List of Track Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
+### GetAuthorisationCodeAuthTokenAsync(responseUri, redirectUri, state)
+
+Get Authorisation Code Auth Token - Authorisation Code Flow
+
+| Name | Description |
+| ---- | ----------- |
+| responseUri | *System.Uri*<br>Response Uri |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+*Spotify.NetStandard.Client.Exceptions.AuthCodeValueException:* AuthCodeValueException
+
+*Spotify.NetStandard.Client.Exceptions.AuthCodeStateException:* AuthCodeStateException
+
+### GetAuthorisationCodeAuthUri(redirectUri, state, scope, showDialog)
+
+Get Authorisation Code Auth Uri - Authorisation Code Flow
+
+| Name | Description |
+| ---- | ----------- |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+| showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
+
+#### Returns
+
+Uri
+
 ### GetCategoryAsync(categoryId, country, locale)
 
 Get a Category
@@ -386,6 +463,14 @@ Paging List of Playlist Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
+### GetClientCredentialsAuthTokenAsync
+
+Get Client Credentials Auth Token - Client Credentials Flow
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
 ### GetFollowingStateForArtistsOrUsersAsync(ids, followType)
 
 Get Following State for Artists/Users 
@@ -400,6 +485,39 @@ Scopes: FollowRead
 #### Returns
 
 List of true or false values
+
+### GetImplicitGrantAuthToken(responseUri, redirectUri, state)
+
+Get Implicit Grant Auth Token - Implicit Grant Flow
+
+| Name | Description |
+| ---- | ----------- |
+| responseUri | *System.Uri*<br>Response Uri |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+*Spotify.NetStandard.Client.Exceptions.AuthTokenValueException:* AuthCodeValueException
+
+*Spotify.NetStandard.Client.Exceptions.AuthTokenStateException:* AuthCodeStateException
+
+### GetImplicitGrantAuthUri(redirectUri, state, scope, showDialog)
+
+Get Implicit Grant Auth Uri - Implicit Grant Flow
+
+| Name | Description |
+| ---- | ----------- |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+| showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
+
+#### Returns
+
+Uri
 
 ### GetMultipleAlbumsAsync(ids, market)
 
@@ -1144,6 +1262,14 @@ Snapshot Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
+### AuthAsync
+
+Auth - Client Credentials Flow
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
 ### AuthChangePlaylistDetailsAsync(playlistId, request)
 
 Change a Playlist's Details 
@@ -1689,14 +1815,6 @@ AccessToken on Success, Null if Not
 
 *Spotify.NetStandard.Client.Exceptions.AuthCodeStateException:* AuthCodeStateException
 
-### AuthAsync()
-
-Auth - Client Credentials Flow
-
-#### Returns
-
-AccessToken on Success, Null if Not
-
 ### AuthUserImplicit(redirectUri, state, scope, showDialog)
 
 Auth User Implicit - Implicit Grant Flow
@@ -1878,6 +1996,40 @@ Scopes: ConnectModifyPlaybackState
 Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### GetAsync\`\`1(hostname, endpoint, parameters)
+
+Get
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| hostname | *System.String*<br>Hostname |
+| endpoint | *System.String*<br>Endpoint |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Parameters |
+
+#### Returns
+
+Response
+
+### GetAsync\`\`1(source)
+
+Get
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| source | *System.Uri*<br>Source Uri |
+
+#### Returns
+
+Response
 
 ### GetToken
 
@@ -2068,7 +2220,7 @@ Recommendation Response Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### NavigateAsync\`\`1(paging, navigateType)
+### NavigateAsync(paging, navigateType)
 
 Navigate
 
@@ -2078,7 +2230,7 @@ Navigate
 
 | Name | Description |
 | ---- | ----------- |
-| paging | *Spotify.NetStandard.Responses.Paging{\`\`0}*<br>Paging Object |
+| paging | *Spotify.NetStandard.Responses.Paging*<br>Paging Object |
 | navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
 
 #### Returns
@@ -2086,6 +2238,14 @@ Navigate
 Content Response
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### RefreshToken
+
+Refresh Token
+
+#### Returns
+
+Access Token
 
 ### SearchAsync(query, searchType, country, external, page)
 
@@ -2129,6 +2289,20 @@ Create Spotify Client
 #### Returns
 
 Spotify Client
+
+### GetOrAddAuthenticationCache(clientId, clientSecret)
+
+Get or Add Authenciation Cache
+
+| Name | Description |
+| ---- | ----------- |
+| clientId | *System.String*<br>Spotify Client Id |
+| clientSecret | *System.String*<br>Spotify Client Secret |
+
+#### Returns
+
+Authentication Cache
+
 
 ## FollowType
 
@@ -2775,7 +2949,7 @@ An HTTP URL to access the full audio analysis of this track.
 
 ### Danceability
 
-Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
 
 ### Duration
 
@@ -2787,7 +2961,7 @@ Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of inten
 
 ### Instrumentalness
 
-Predicts whether a track contains no vocals
+Predicts whether a track contains no vocals. “Ooh” and “aah” sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly “vocal”. The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.
 
 ### Key
 
@@ -2795,27 +2969,27 @@ The key the track is in. Integers map to pitches using standard Pitch Class nota
 
 ### Liveness
 
-Detects the presence of an audience in the recording.
+Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live. A value above 0.8 provides strong likelihood that the track is live.
 
 ### Loudness
 
-The overall loudness of a track in decibels (dB)
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typical range between -60 and 0 db.
 
 ### Mode
 
-Mode indicates the modality(major or minor) of a track, the type of scale from which its melodic content is derived
+Mode indicates the modality(major or minor) of a track, the type of scale from which its melodic content is derived. Major is represented by 1 and minor is 0.
 
 ### Speechiness
 
-Speechiness detects the presence of spoken words in a track.
+Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 1.0 the attribute value. Values above 0.66 describe tracks that are probably made entirely of spoken words. Values between 0.33 and 0.66 describe tracks that may contain both music and speech, either in sections or layered, including such cases as rap music. Values below 0.33 most likely represent music and other non-speech-like tracks.
 
 ### Tempo
 
-The overall estimated tempo of a track in beats per minute (BPM).
+The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.
 
 ### TimeSignature
 
-An estimated overall time signature of a track.
+An estimated overall time signature of a track. The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure).
 
 ### TrackHref
 
@@ -2823,7 +2997,7 @@ A link to the Web API endpoint providing full details of the track.
 
 ### Valence
 
-A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track.
+A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
 
 
 ## AvailableGenreSeeds
@@ -2942,7 +3116,7 @@ off, track, context
 If shuffle is on or off
 
 
-## CursorPaging\`1
+## CursorPaging
 
 Cursor Paging Object
 
@@ -2961,6 +3135,10 @@ The cursor to use as key to find the next page of items.
 ### Cursors
 
 The cursors used to find the next set of items.
+
+### Error
+
+Error Object
 
 ### Href
 
@@ -3129,7 +3307,7 @@ List of Audio Feature Object
 List of Track Object
 
 
-## Paging\`1
+## Paging
 
 Paging Object
 
@@ -3140,6 +3318,10 @@ Paging Object
 ### Constructor
 
 Constructor
+
+### Error
+
+Error Object
 
 ### Href
 
@@ -3429,6 +3611,10 @@ The markets in which the album is available: ISO 3166-1 alpha-2 country codes
 
 The cover art for the album in various sizes, widest first.
 
+### TotalTracks
+
+The total number of tracks
+
 
 ## SimplifiedArtist
 
@@ -3562,7 +3748,7 @@ Known external IDs for the track.
 
 ### Popularity
 
-The popularity of the track.The value will be between 0 and 100, with 100 being the most popular.
+The popularity of the track. The value will be between 0 and 100, with 100 being the most popular.
 
 ### Restrictions
 
