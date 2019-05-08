@@ -39,41 +39,6 @@ Access Token
 
 User Token
 
-
-## AccessCode
-
-Access Code
-
-### Constructor(responseUri, redirectUri, dictionary)
-
-Constructor
-
-| Name | Description |
-| ---- | ----------- |
-| responseUri | *System.Uri*<br>An authorization Uri |
-| redirectUri | *System.Uri*<br>Redirect Uri |
-| dictionary | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>QueryString Dictionary |
-
-### Code
-
-An authorization code that can be exchanged for an access token.
-
-### Error
-
-The reason authorization failed, for example: “access_denied”
-
-### RedirectUri
-
-Redirect Uri
-
-### ResponseUri
-
-An authorization Uri
-
-### State
-
-The value of the state parameter supplied in the request.
-
 ## AuthAccessTokenRequiredException
 
 Auth Access Token Expired or Required Error
@@ -1997,7 +1962,7 @@ Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### GetAsync\`\`1(hostname, endpoint, parameters)
+### GetAsync(hostname, endpoint, parameters)
 
 Get
 
@@ -2015,7 +1980,7 @@ Get
 
 Response
 
-### GetAsync\`\`1(source)
+### GetAsync(source)
 
 Get
 
@@ -2118,7 +2083,7 @@ Lookup Response
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### LookupAsync\`\`1(itemId, lookupType, market, key, value, page)
+### LookupAsync(itemId, lookupType, market, key, value, page)
 
 Lookup
 
@@ -2289,20 +2254,6 @@ Create Spotify Client
 #### Returns
 
 Spotify Client
-
-### GetOrAddAuthenticationCache(clientId, clientSecret)
-
-Get or Add Authenciation Cache
-
-| Name | Description |
-| ---- | ----------- |
-| clientId | *System.String*<br>Spotify Client Id |
-| clientSecret | *System.String*<br>Spotify Client Secret |
-
-#### Returns
-
-Authentication Cache
-
 
 ## FollowType
 
