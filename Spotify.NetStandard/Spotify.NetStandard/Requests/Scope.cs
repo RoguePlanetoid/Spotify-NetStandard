@@ -222,24 +222,64 @@ namespace Spotify.NetStandard.Requests
 
         #region MultiScopeHelpers
 
+        /// <summary>
+        /// Returns a new Scope object with all "read" scopes set to true
+        /// Usage : Scope.ReadAllAccess
+        /// </summary>
         public static Scope ReadAllAccess => new Scope().AddReadAllAccess();
 
+        /// <summary>
+        /// Returns a new Scope object with all "modify" scopes set to true
+        /// Usage : Scope.ModifyAllAccess
+        /// </summary>
         public static Scope ModifyAllAccess => new Scope().AddModifyAllAccess();
 
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Playlists set to true
+        /// Usage : Scope.PlaylistAll
+        /// </summary>
         public static Scope PlaylistAll => new Scope().AddPlaylistAll();
 
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Spotify Connect set to true
+        /// Usage : Scope.SpotifyConnectAll
+        /// </summary>
         public static Scope SpotifyConnectAll => new Scope().AddSpotifyConnectAll();
 
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Listening History set to true
+        /// Usage : Scope.ListeningHistoryAll
+        /// </summary>
         public static Scope ListeningHistoryAll => new Scope().AddListeningHistoryAll();
 
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Playback set to true
+        /// Usage : Scope.PlaybackAll
+        /// </summary>
         public static Scope PlaybackAll => new Scope().AddPlaybackAll();
 
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Users set to true
+        /// Usage : Scope.UsersAll
+        /// </summary>
         public static Scope UsersAll => new Scope().AddUsersAll();
 
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Users set to true
+        /// Usage : Scope.FollowAll
+        /// </summary>
         public static Scope FollowAll => new Scope().AddFollowAll();
 
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Library set to true
+        /// Usage : Scope.LibraryAll
+        /// </summary>
         public static Scope LibraryAll => new Scope().AddLibraryAll();
 
+        /// <summary>
+        /// Returns a new Scope object with all scopes set to true
+        /// Usage : Scope.AllPermissions
+        /// </summary>
         public static Scope AllPermissions =>
             new Scope()
                 .AddReadAllAccess()
