@@ -8,6 +8,7 @@ namespace Spotify.NetStandard.Requests
     public class Scope
     {
         #region Playlists
+
         /// <summary>
         /// Read access to user's private playlists.
         /// <para>Required For</para>
@@ -58,9 +59,11 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("playlist-read-collaborative")]
         public bool? PlaylistReadCollaborative { get; set; }
+
         #endregion Playlists
 
         #region Spotify Connect 
+
         /// <summary>
         /// Pause a User's Playback
         /// <para>Required For</para>
@@ -93,9 +96,11 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("user-read-playback-state")]
         public bool? ConnectReadPlaybackState { get; set; }
+
         #endregion Spotify Connect 
 
         #region Listening History
+
         /// <summary>
         /// Read access to a user's top artists and tracks. 
         /// <para>Required For</para>
@@ -111,9 +116,11 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("user-read-recently-played")]
         public bool? ListeningRecentlyPlayed { get; set; }
+
         #endregion Listening History
 
         #region Playback
+
         /// <summary>
         /// Remote control playback of Spotify.
         /// </summary>
@@ -125,9 +132,11 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("streaming")]
         public bool? PlaybackStreaming { get; set; }
+
         #endregion Playback
 
         #region Users
+
         /// <summary>
         /// Read access to the user's birthdate.
         /// <para>Required For</para>
@@ -160,9 +169,11 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("ugc-image-upload")]
         public bool? UserGeneratedContentImageUpload { get; set; }
+
         #endregion Users
 
         #region Follow
+
         /// <summary>
         /// Read access to the list of artists and other users that the user follows.
         /// <para>Required For</para>
@@ -180,9 +191,11 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("user-follow-modify")]
         public bool? FollowModify { get; set; }
+
         #endregion Follow
 
         #region Library
+
         /// <summary>
         /// Write/delete access to a user's "Your Music" library. 
         /// <para>Required For</para>
@@ -204,6 +217,82 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("user-library-read")]
         public bool? LibraryRead { get; set; }
+
         #endregion Library
+
+        #region MultiScopeHelpers
+
+        /// <summary>
+        /// Returns a new Scope object with all "read" scopes set to true
+        /// Usage : Scope.ReadAllAccess
+        /// </summary>
+        public static Scope ReadAllAccess => new Scope().AddReadAllAccess();
+
+        /// <summary>
+        /// Returns a new Scope object with all "modify" scopes set to true
+        /// Usage : Scope.ModifyAllAccess
+        /// </summary>
+        public static Scope ModifyAllAccess => new Scope().AddModifyAllAccess();
+
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Playlists set to true
+        /// Usage : Scope.PlaylistAll
+        /// </summary>
+        public static Scope PlaylistAll => new Scope().AddPlaylistAll();
+
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Spotify Connect set to true
+        /// Usage : Scope.SpotifyConnectAll
+        /// </summary>
+        public static Scope SpotifyConnectAll => new Scope().AddSpotifyConnectAll();
+
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Listening History set to true
+        /// Usage : Scope.ListeningHistoryAll
+        /// </summary>
+        public static Scope ListeningHistoryAll => new Scope().AddListeningHistoryAll();
+
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Playback set to true
+        /// Usage : Scope.PlaybackAll
+        /// </summary>
+        public static Scope PlaybackAll => new Scope().AddPlaybackAll();
+
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Users set to true
+        /// Usage : Scope.UsersAll
+        /// </summary>
+        public static Scope UsersAll => new Scope().AddUsersAll();
+
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Users set to true
+        /// Usage : Scope.FollowAll
+        /// </summary>
+        public static Scope FollowAll => new Scope().AddFollowAll();
+
+        /// <summary>
+        /// Returns a new Scope object with all scopes within the confines of Library set to true
+        /// Usage : Scope.LibraryAll
+        /// </summary>
+        public static Scope LibraryAll => new Scope().AddLibraryAll();
+
+        /// <summary>
+        /// Returns a new Scope object with all scopes set to true
+        /// Usage : Scope.AllPermissions
+        /// </summary>
+        public static Scope AllPermissions =>
+            new Scope()
+                .AddReadAllAccess()
+                .AddModifyAllAccess()
+                .AddPlaylistAll()
+                .AddSpotifyConnectAll()
+                .AddListeningHistoryAll()
+                .AddPlaybackAll()
+                .AddUsersAll()
+                .AddFollowAll()
+                .AddLibraryAll();
+
+        #endregion MultiScopeHelpers
     }
 }
+

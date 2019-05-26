@@ -41,7 +41,8 @@ namespace Spotify.NetStandard.Client.Internal
             {
                 foreach (PropertyInfo info in typeof(T).GetProperties())
                 {
-                    if (info.CanRead)
+                    if (info.CanRead && 
+                        info.PropertyType == typeof(bool))
                     {
                         object value = info.GetValue(source, null);
                         if (value != null && (bool)value)
