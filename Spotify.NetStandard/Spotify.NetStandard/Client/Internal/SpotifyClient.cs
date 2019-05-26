@@ -90,25 +90,26 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// Format Cursor Parameters
         /// </summary>
-        /// <param name="limit">Limit</param>
-        /// <param name="after">After</param>
-        /// <param name="before">Before</param>
+        /// <param name="cursor">Format Cursor Parameters</param>
         /// <returns>Dictionary of Request Parameters</returns>
-        private Dictionary<string, string> FormatCursorParameters(
-            int? limit = null,
-            string after = null,
-            string before = null)
-        {
+        private Dictionary<string, string> FormatCursorParameters(Cursor cursor)
+        { 
+            if (cursor?.Next != null)
+                return new Uri(cursor.Next).Query.QueryStringAsDictionary();
+
             var parameters = new Dictionary<string, string>();
 
-            if (limit != null)
-                parameters.Add("limit", limit.Value.ToString());
+            if (cursor?.Offset != null)
+                parameters.Add("offset", cursor.Offset.Value.ToString());
 
-            if (after != null)
-                parameters.Add("after", after);
+            if (cursor?.Limit != null)
+                parameters.Add("limit", cursor.Limit.Value.ToString());
 
-            if (before != null)
-                parameters.Add("before", before);
+            if (cursor?.After != null)
+                parameters.Add("after", cursor?.After);
+
+            if (cursor?.Before != null)
+                parameters.Add("before", cursor?.Before);
 
             return parameters;
         }
@@ -248,12 +249,8 @@ namespace Spotify.NetStandard.Client.Internal
             where TResult : class
         {
             var headers = await FormatRequestHeadersAsync(tokenType);
-            var parameters =
-                FormatCursorParameters(
-                limit: cursor?.Limit,
-                after: cursor?.After,
-                before: cursor?.Before);
-            if (key != null && value != null)
+            var parameters = FormatCursorParameters(cursor);
+            if (key != null && value != null && !parameters.ContainsKey(key)) 
                 parameters.Add(key, value);
             var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
@@ -498,6 +495,45 @@ namespace Spotify.NetStandard.Client.Internal
                 headers);
             return GetStatus(response, (int)statusCode, successCode);
         }
+
+        /// <summary>
+        /// Get Response
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">Hostname</param>
+        /// <param name="endpoint">Endpoint</param>
+        /// <param name="parameters">Parameters</param>
+        /// <param name="tokenType">Token Type</param>
+        /// <returns>Response</returns>
+        private async Task<TResponse> GetResponseAsync<TResponse>(
+            string hostname, string endpoint,
+            Dictionary<string, string> parameters, 
+            TokenType tokenType)
+            where TResponse : class =>
+                await GetRequestAsync<TResponse>(
+                new Uri(hostname),
+                endpoint,
+                new CancellationToken(false),
+                parameters,
+                await FormatRequestHeadersAsync(tokenType));
+
+        /// <summary>
+        /// Get Response
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="source">Source Uri</param>
+        /// <param name="tokenType">Token Type</param>
+        /// <returns>Response</returns>
+        private async Task<TResponse> GetResponseAsync<TResponse>(
+            Uri source, 
+            TokenType tokenType)
+            where TResponse : class =>
+            await GetRequestAsync<TResponse>(
+            new Uri($"{source.Scheme}://{source.Host}"),
+            source.AbsolutePath,
+            new CancellationToken(false),
+            source.Query.QueryStringAsDictionary(),
+            await FormatRequestHeadersAsync(tokenType));
         #endregion Private Methods
 
         #region Constructors
@@ -544,6 +580,62 @@ namespace Spotify.NetStandard.Client.Internal
             ?? TokenType.Access, new CancellationToken());
 
         /// <summary>
+        /// Authenticated Get
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">Hostname</param>
+        /// <param name="endpoint">Endpoint</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns>Response</returns>
+        public async Task<TResponse> AuthGetAsync<TResponse>(
+            string hostname, string endpoint,
+            Dictionary<string, string> parameters)
+            where TResponse : class =>
+                await GetResponseAsync<TResponse>(
+                    hostname, endpoint, parameters, TokenType.User);
+
+        /// <summary>
+        /// Authenticated Get
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="source">Source Uri</param>
+        /// <returns>Response</returns>
+        public async Task<TResponse> AuthGetAsync<TResponse>(Uri source)
+            where TResponse : class =>
+            await GetResponseAsync<TResponse>(
+                source, TokenType.User);
+
+        /// <summary>
+        /// Authenticated Navigate 
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="cursor">Cursor Object</param>
+        /// <param name="navigateType">Navigate Type</param>
+        /// <returns>Content Response</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        public Task<CursorPaging<TResponse>> AuthNavigateAsync<TResponse>(
+            CursorPaging<TResponse> cursor,
+            NavigateType navigateType)
+        {
+            Uri source = null;
+            switch (navigateType)
+            {
+                case NavigateType.None:
+                    source = new Uri(cursor.Href);
+                    break;
+                case NavigateType.Previous:
+                    if (cursor.Before != null)
+                        source = new Uri(cursor.Before);
+                    break;
+                case NavigateType.Next:
+                    if (cursor.Next != null)
+                        source = new Uri(cursor.Next ?? cursor?.After?.After);
+                    break;
+            }
+            return AuthGetAsync<CursorPaging<TResponse>>(source);
+        }
+
+        /// <summary>
         /// Get
         /// </summary>
         /// <typeparam name="TResponse">Response Type</typeparam>
@@ -555,12 +647,8 @@ namespace Spotify.NetStandard.Client.Internal
             string hostname, string endpoint,
             Dictionary<string, string> parameters)
             where TResponse : class => 
-                await GetRequestAsync<TResponse>(
-                new Uri(hostname),
-                endpoint,
-                new CancellationToken(false),
-                parameters, 
-                await FormatRequestHeadersAsync());
+                await GetResponseAsync<TResponse>(
+                    hostname, endpoint, parameters, TokenType.Access);
 
         /// <summary>
         /// Get
@@ -570,12 +658,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <returns>Response</returns>
         public async Task<TResponse> GetAsync<TResponse>(Uri source) 
             where TResponse : class =>
-            await GetRequestAsync<TResponse>(
-                new Uri($"{source.Scheme}://{source.Host}"),
-                source.AbsolutePath,
-                new CancellationToken(false),
-                source.Query.QueryStringAsDictionary(), 
-                await FormatRequestHeadersAsync());
+            await GetResponseAsync<TResponse>(
+                source, TokenType.Access);
 
         /// <summary>
         /// Navigate 
@@ -585,7 +669,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="navigateType">Navigate Type</param>
         /// <returns>Content Response</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public async Task<ContentResponse> NavigateAsync<TResponse>(
+        public Task<ContentResponse> NavigateAsync<TResponse>(
             Paging<TResponse> paging,
             NavigateType navigateType)
         {
@@ -604,7 +688,7 @@ namespace Spotify.NetStandard.Client.Internal
                         source = new Uri(paging.Next);
                     break;
             }
-            return await GetAsync<ContentResponse>(source);
+            return GetAsync<ContentResponse>(source);
         }
 
         /// <summary>
@@ -1319,15 +1403,11 @@ namespace Spotify.NetStandard.Client.Internal
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public Task<CursorPaging<SavedAlbum>> AuthLookupUserSavedAlbumsAsync(
             string market = null,
-            Cursor cursor = null)
-        {
-            var parameters = new Dictionary<string, string>();
-            if (market != null)
-                parameters.Add("market", market);
-            return GetApiAsync<CursorPaging<SavedAlbum>>((string)null,
-             "me/albums",
-             null, TokenType.User);
-        }
+            Cursor cursor = null) => 
+                LookupCursorApiAsync<CursorPaging<SavedAlbum>>(
+                "me/albums", 
+                "market", market, 
+                cursor, TokenType.User);
 
         /// <summary>
         /// Get User's Saved Tracks
@@ -1339,15 +1419,11 @@ namespace Spotify.NetStandard.Client.Internal
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public Task<CursorPaging<SavedTrack>> AuthLookupUserSavedTracksAsync(
             string market = null,
-            Cursor cursor = null)
-        {
-            var parameters = new Dictionary<string, string>();
-            if (market != null)
-                parameters.Add("market", market);
-            return GetApiAsync<CursorPaging<SavedTrack>>((string)null,
-             "me/tracks",
-             null, TokenType.User);
-        }
+            Cursor cursor = null) => 
+                LookupCursorApiAsync<CursorPaging<SavedTrack>>(
+                "me/tracks", 
+                "market", market, 
+                cursor, TokenType.User);
 
         /// <summary>
         /// Check User's Saved Tracks

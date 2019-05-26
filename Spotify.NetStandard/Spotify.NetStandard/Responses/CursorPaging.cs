@@ -30,12 +30,6 @@ namespace Spotify.NetStandard.Responses
         public List<T> Items { get; set; }
 
         /// <summary>
-        /// URL to the next page of items. (null if none)
-        /// </summary>
-        [DataMember(Name = "next")]
-        public string Next { get; set; }
-
-        /// <summary>
         /// The cursors used to find the next set of items.
         /// </summary>
         [DataMember(Name = "cursors")]
