@@ -1962,7 +1962,7 @@ Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### GetAsync\`\`1(hostname, endpoint, parameters)
+### GetAsync(hostname, endpoint, parameters)
 
 Get
 
@@ -1980,7 +1980,7 @@ Get
 
 Response
 
-### GetAsync\`\`1(source)
+### GetAsync(source)
 
 Get
 
@@ -2083,7 +2083,7 @@ Lookup Response
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### LookupAsync\`\`1(itemId, lookupType, market, key, value, page)
+### LookupAsync(itemId, lookupType, market, key, value, page)
 
 Lookup
 
@@ -2185,7 +2185,7 @@ Recommendation Response Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### NavigateAsync\`\`1(paging, navigateType)
+### NavigateAsync(paging, navigateType)
 
 Navigate
 
@@ -2195,7 +2195,7 @@ Navigate
 
 | Name | Description |
 | ---- | ----------- |
-| paging | *Spotify.NetStandard.Responses.Paging{\`\`0}*<br>Paging Object |
+| paging | *Spotify.NetStandard.Responses.Paging*<br>Paging Object |
 | navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
 
 #### Returns
