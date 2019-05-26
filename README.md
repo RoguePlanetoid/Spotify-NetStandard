@@ -2238,6 +2238,7 @@ Set Access Token
 | ---- | ----------- |
 | value | *Spotify.NetStandard.Client.Authentication.AccessToken*<br>Access Token |
 
+
 ## SpotifyClientFactory
 
 Spotify Client Factory
@@ -2542,6 +2543,10 @@ Is Public
 
 Authorisation Scopes
 
+### AllPermissions
+
+Returns a new Scope object with all scopes set to true Usage : Scope.AllPermissions
+
 ### ConnectModifyPlaybackState
 
 Pause a User's Playback 
@@ -2570,6 +2575,10 @@ Required For
 Get a User's Available Devices, Get Information About The User's Current Playback, Get the User's Currently Playing Track
 
 
+### FollowAll
+
+Returns a new Scope object with all scopes within the confines of Users set to true Usage : Scope.FollowAll
+
 ### FollowModify
 
 Write/delete access to the list of artists and other users that the user follows. 
@@ -2585,6 +2594,10 @@ Required For
 
 Check if Current User Follows Artists or Users, Get User's Followed Artists
 
+
+### LibraryAll
+
+Returns a new Scope object with all scopes within the confines of Library set to true Usage : Scope.LibraryAll
 
 ### LibraryModify
 
@@ -2602,6 +2615,10 @@ Required For
 Check User's Saved Albums Check User's Saved Tracks, Get Current User's Saved Albums Get a User's Saved Tracks
 
 
+### ListeningHistoryAll
+
+Returns a new Scope object with all scopes within the confines of Listening History set to true Usage : Scope.ListeningHistoryAll
+
 ### ListeningRecentlyPlayed
 
 Read access to a user’s recently played tracks 
@@ -2618,6 +2635,14 @@ Required For
 Get a User's Top Artists and Tracks
 
 
+### ModifyAllAccess
+
+Returns a new Scope object with all "modify" scopes set to true Usage : Scope.ModifyAllAccess
+
+### PlaybackAll
+
+Returns a new Scope object with all scopes within the confines of Playback set to true Usage : Scope.PlaybackAll
+
 ### PlaybackAppRemoteControl
 
 Remote control playback of Spotify.
@@ -2625,6 +2650,10 @@ Remote control playback of Spotify.
 ### PlaybackStreaming
 
 Control playback of a Spotify track. The user must have a Spotify Premium account.
+
+### PlaylistAll
+
+Returns a new Scope object with all scopes within the confines of Playlists set to true Usage : Scope.PlaylistAll
 
 ### PlaylistModifyPrivate
 
@@ -2666,6 +2695,14 @@ Required For
 Check if Users Follow a Playlist, Get a List of Current User's Playlists, Get a List of a User's Playlists
 
 
+### ReadAllAccess
+
+Returns a new Scope object with all "read" scopes set to true Usage : Scope.ReadAllAccess
+
+### SpotifyConnectAll
+
+Returns a new Scope object with all scopes within the confines of Spotify Connect set to true Usage : Scope.SpotifyConnectAll
+
 ### UserGeneratedContentImageUpload
 
 User Generated Content Image Upload 
@@ -2696,6 +2733,123 @@ Read access to user’s subscription details (type of user account).
 Required For
 
 Search for an Item, Get Current User's Profile
+
+
+### UsersAll
+
+Returns a new Scope object with all scopes within the confines of Users set to true Usage : Scope.UsersAll
+
+
+## ScopeExtensions
+
+Extension Methods for Scope Class to allow fluent additions of scopes for the API
+
+### AddFollowAll(scope)
+
+Adds all scopes to a scope within the Follow section of the defined Scopes
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
+
+
+### AddLibraryAll(scope)
+
+Adds all scopes to a scope within the Library section of the defined Scopes
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
+
+
+### AddListeningHistoryAll(scope)
+
+Adds all scopes to a scope within the Listening History section of the defined Scopes
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
+
+
+### AddModifyAllAccess(scope)
+
+/// Extension method to add all scopes with "modify" in their scope string
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
+
+
+### AddPlaybackAll(scope)
+
+Adds all scopes to a scope within the Playback section of the defined Scopes
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
+
+
+### AddPlaylistAll(scope)
+
+Adds all scopes to a scope within the Playlist section of the defined Scopes
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
+
+
+### AddReadAllAccess(scope)
+
+Extension method to add all scopes with "read" in their scope string
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
+
+
+### AddSpotifyConnectAll(scope)
+
+Adds all scopes to a scope within the Spotify Connect section of the defined Scopes
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
+
+
+### AddUsersAll(scope)
+
+Adds all scopes to a scope within the Users section of the defined Scopes
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br> |
+
+#### Returns
+
 
 
 

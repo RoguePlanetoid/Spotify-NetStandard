@@ -28,7 +28,7 @@
         }
 
         /// <summary>
-        /// /// Extension method to add all scopes with "modify" in their scope string
+        /// Extension method to add all scopes with "modify" in their scope string
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
@@ -59,7 +59,7 @@
         }
 
         /// <summary>
-        /// /// Adds all scopes to a scope within the Spotify Connect section of the defined Scopes
+        /// Adds all scopes to a scope within the Spotify Connect section of the defined Scopes
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
@@ -73,7 +73,7 @@
         }
 
         /// <summary>
-        /// /// Adds all scopes to a scope within the Listening History section of the defined Scopes
+        /// Adds all scopes to a scope within the Listening History section of the defined Scopes
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
@@ -86,7 +86,7 @@
         }
 
         /// <summary>
-        /// /// Adds all scopes to a scope within the Playback section of the defined Scopes
+        /// Adds all scopes to a scope within the Playback section of the defined Scopes
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
@@ -98,7 +98,7 @@
         }
 
         /// <summary>
-        /// /// Adds all scopes to a scope within the Users section of the defined Scopes
+        /// Adds all scopes to a scope within the Users section of the defined Scopes
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
@@ -113,7 +113,7 @@
         }
 
         /// <summary>
-        /// /// Adds all scopes to a scope within the Follow section of the defined Scopes
+        /// Adds all scopes to a scope within the Follow section of the defined Scopes
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
@@ -126,7 +126,7 @@
         }
 
         /// <summary>
-        /// /// Adds all scopes to a scope within the Library section of the defined Scopes
+        /// Adds all scopes to a scope within the Library section of the defined Scopes
         /// </summary>
         /// <param name="scope"></param>
         /// <returns></returns>
