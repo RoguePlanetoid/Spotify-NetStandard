@@ -66,6 +66,12 @@ namespace Spotify.NetStandard.Test
                 UserGeneratedContentImageUpload = true
             });
             Assert.IsNotNull(uri);
+            StringAssert.Contains(uri.ToString(), "user-read-private");
+            StringAssert.Contains(uri.ToString(), "user-follow-read");
+            StringAssert.Contains(uri.ToString(), "user-follow-modify");
+            StringAssert.Contains(uri.ToString(), "playlist-modify-public");
+            StringAssert.Contains(uri.ToString(), "playlist-modify-private");
+            StringAssert.Contains(uri.ToString(), "ugc-image-upload");
         }
 
         /// <summary>
