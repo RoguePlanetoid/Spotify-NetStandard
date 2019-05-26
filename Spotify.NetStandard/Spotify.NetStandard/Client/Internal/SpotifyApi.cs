@@ -25,10 +25,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// Spotify API
         /// </summary>
         /// <param name="client">Spotify Client</param>
-        public SpotifyApi(ISpotifyClient client)
-        {
+        public SpotifyApi(ISpotifyClient client) => 
             _client = client;
-        }
         #endregion Constructor
 
         #region Authentication

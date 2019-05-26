@@ -580,32 +580,6 @@ namespace Spotify.NetStandard.Client.Internal
             ?? TokenType.Access, new CancellationToken());
 
         /// <summary>
-        /// Get
-        /// </summary>
-        /// <typeparam name="TResponse">Response Type</typeparam>
-        /// <param name="hostname">Hostname</param>
-        /// <param name="endpoint">Endpoint</param>
-        /// <param name="parameters">Parameters</param>
-        /// <returns>Response</returns>
-        public async Task<TResponse> GetAsync<TResponse>(
-            string hostname, string endpoint,
-            Dictionary<string, string> parameters)
-            where TResponse : class => 
-                await GetResponseAsync<TResponse>(
-                    hostname, endpoint, parameters, TokenType.Access);
-
-        /// <summary>
-        /// Get
-        /// </summary>
-        /// <typeparam name="TResponse">Response Type</typeparam>
-        /// <param name="source">Source Uri</param>
-        /// <returns>Response</returns>
-        public async Task<TResponse> GetAsync<TResponse>(Uri source) 
-            where TResponse : class =>
-            await GetResponseAsync<TResponse>(
-                source, TokenType.Access);
-
-        /// <summary>
         /// Authenticated Get
         /// </summary>
         /// <typeparam name="TResponse">Response Type</typeparam>
@@ -630,6 +604,62 @@ namespace Spotify.NetStandard.Client.Internal
             where TResponse : class =>
             await GetResponseAsync<TResponse>(
                 source, TokenType.User);
+
+        /// <summary>
+        /// Authenticated Navigate 
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="cursor">Cursor Object</param>
+        /// <param name="navigateType">Navigate Type</param>
+        /// <returns>Content Response</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        public Task<CursorPaging<TResponse>> AuthNavigateAsync<TResponse>(
+            CursorPaging<TResponse> cursor,
+            NavigateType navigateType)
+        {
+            Uri source = null;
+            switch (navigateType)
+            {
+                case NavigateType.None:
+                    source = new Uri(cursor.Href);
+                    break;
+                case NavigateType.Previous:
+                    if (cursor.Before != null)
+                        source = new Uri(cursor.Before);
+                    break;
+                case NavigateType.Next:
+                    if (cursor.Next != null)
+                        source = new Uri(cursor.Next ?? cursor?.After?.After);
+                    break;
+            }
+            return AuthGetAsync<CursorPaging<TResponse>>(source);
+        }
+
+        /// <summary>
+        /// Get
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="hostname">Hostname</param>
+        /// <param name="endpoint">Endpoint</param>
+        /// <param name="parameters">Parameters</param>
+        /// <returns>Response</returns>
+        public async Task<TResponse> GetAsync<TResponse>(
+            string hostname, string endpoint,
+            Dictionary<string, string> parameters)
+            where TResponse : class => 
+                await GetResponseAsync<TResponse>(
+                    hostname, endpoint, parameters, TokenType.Access);
+
+        /// <summary>
+        /// Get
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="source">Source Uri</param>
+        /// <returns>Response</returns>
+        public async Task<TResponse> GetAsync<TResponse>(Uri source) 
+            where TResponse : class =>
+            await GetResponseAsync<TResponse>(
+                source, TokenType.Access);
 
         /// <summary>
         /// Navigate 
@@ -659,38 +689,6 @@ namespace Spotify.NetStandard.Client.Internal
                     break;
             }
             return GetAsync<ContentResponse>(source);
-        }
-
-        /// <summary>
-        /// Navigate 
-        /// </summary>
-        /// <typeparam name="TResponse">Response Type</typeparam>
-        /// <typeparam name="TResult">Result Type</typeparam>
-        /// <param name="cursor">Cursor Object</param>
-        /// <param name="navigateType">Navigate Type</param>
-        /// <returns>Content Response</returns>
-        /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<TResult> NavigateAsync<TResponse, TResult>(
-            CursorPaging<TResponse> cursor,
-            NavigateType navigateType)
-            where TResult : class
-        {
-            Uri source = null;
-            switch (navigateType)
-            {
-                case NavigateType.None:
-                    source = new Uri(cursor.Href);
-                    break;
-                case NavigateType.Previous:
-                    if (cursor.Before != null)
-                        source = new Uri(cursor.Before);
-                    break;
-                case NavigateType.Next:
-                    if (cursor.Next != null)
-                        source = new Uri(cursor.Next ?? cursor?.After?.After);
-                    break;
-            }
-            return AuthGetAsync<TResult>(source);
         }
 
         /// <summary>
