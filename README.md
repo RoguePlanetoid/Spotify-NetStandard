@@ -1303,6 +1303,40 @@ Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
+### AuthGetAsync(hostname, endpoint, parameters)
+
+Authenticated Get
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| hostname | *System.String*<br>Hostname |
+| endpoint | *System.String*<br>Endpoint |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Parameters |
+
+#### Returns
+
+Response
+
+### AuthGetAsync(source)
+
+Authenticated Get
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| source | *System.Uri*<br>Source Uri |
+
+#### Returns
+
+Response
+
 ### AuthGetPlaylistCoverImageAsync(playlistId)
 
 Get a Playlist Cover Image
@@ -1583,6 +1617,25 @@ Scopes: ListeningTopRead
 #### Returns
 
 Cursor Paging of Track Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthNavigateAsync(cursor, navigateType)
+
+Authenticated Navigate
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| cursor | *Spotify.NetStandard.Responses.CursorPaging*<br>Cursor Object |
+| navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
+
+#### Returns
+
+Content Response
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
@@ -2385,6 +2438,14 @@ The cursor to use as key to find the previous page of items.
 
 The maximum number of items in the response (as set in the query or by default).
 
+### Next
+
+URL to the next page of items. (null if none)
+
+### Offset
+
+The offset of the items returned (as set in the query or by default).
+
 
 ## DevicesRequest
 
@@ -2782,7 +2843,7 @@ Adds all scopes to a scope within the Listening History section of the defined S
 
 ### AddModifyAllAccess(scope)
 
-/// Extension method to add all scopes with "modify" in their scope string
+Extension method to add all scopes with "modify" in their scope string
 
 | Name | Description |
 | ---- | ----------- |
@@ -3252,10 +3313,6 @@ A link to the Web API endpoint returning the full result of the request.
 ### Items
 
 The requested data.
-
-### Next
-
-URL to the next page of items. (null if none)
 
 ### ReadOnlyItems
 
