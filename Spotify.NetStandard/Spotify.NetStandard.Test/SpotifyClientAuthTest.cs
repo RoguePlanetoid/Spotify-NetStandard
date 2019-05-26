@@ -535,7 +535,7 @@ namespace Spotify.NetStandard.Test
             {
                 DeviceIds = new List<string>
                 {
-                    "80f881f68b09341238323926e637e246f96b9159"
+                    "13ec64132fb267dc44d9385a95be0aeeb69dbdd4"
                 },
                 Play = true
             });

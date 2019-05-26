@@ -4053,6 +4053,134 @@
             Get a User's Saved Tracks</para>
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.ReadAllAccess">
+            <summary>
+            Returns a new Scope object with all "read" scopes set to true
+            Usage : Scope.ReadAllAccess
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.ModifyAllAccess">
+            <summary>
+            Returns a new Scope object with all "modify" scopes set to true
+            Usage : Scope.ModifyAllAccess
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.PlaylistAll">
+            <summary>
+            Returns a new Scope object with all scopes within the confines of Playlists set to true
+            Usage : Scope.PlaylistAll
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.SpotifyConnectAll">
+            <summary>
+            Returns a new Scope object with all scopes within the confines of Spotify Connect set to true
+            Usage : Scope.SpotifyConnectAll
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.ListeningHistoryAll">
+            <summary>
+            Returns a new Scope object with all scopes within the confines of Listening History set to true
+            Usage : Scope.ListeningHistoryAll
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.PlaybackAll">
+            <summary>
+            Returns a new Scope object with all scopes within the confines of Playback set to true
+            Usage : Scope.PlaybackAll
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.UsersAll">
+            <summary>
+            Returns a new Scope object with all scopes within the confines of Users set to true
+            Usage : Scope.UsersAll
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.FollowAll">
+            <summary>
+            Returns a new Scope object with all scopes within the confines of Users set to true
+            Usage : Scope.FollowAll
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.LibraryAll">
+            <summary>
+            Returns a new Scope object with all scopes within the confines of Library set to true
+            Usage : Scope.LibraryAll
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.AllPermissions">
+            <summary>
+            Returns a new Scope object with all scopes set to true
+            Usage : Scope.AllPermissions
+            </summary>
+        </member>
+        <member name="T:Spotify.NetStandard.Requests.ScopeExtensions">
+            <summary>
+            Extension Methods for Scope Class to allow fluent additions of scopes for the API
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddReadAllAccess(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            Extension method to add all scopes with "read" in their scope string
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddModifyAllAccess(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            /// Extension method to add all scopes with "modify" in their scope string
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddPlaylistAll(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            Adds all scopes to a scope within the Playlist section of the defined Scopes
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddSpotifyConnectAll(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            /// Adds all scopes to a scope within the Spotify Connect section of the defined Scopes
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddListeningHistoryAll(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            /// Adds all scopes to a scope within the Listening History section of the defined Scopes
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddPlaybackAll(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            /// Adds all scopes to a scope within the Playback section of the defined Scopes
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddUsersAll(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            /// Adds all scopes to a scope within the Users section of the defined Scopes
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddFollowAll(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            /// Adds all scopes to a scope within the Follow section of the defined Scopes
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddLibraryAll(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            /// Adds all scopes to a scope within the Library section of the defined Scopes
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
         <member name="T:Spotify.NetStandard.Requests.SearchType">
             <summary>
             Search Type
