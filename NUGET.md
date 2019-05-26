@@ -33,3 +33,13 @@ foreach (var album in browse.Albums.Items)
 ## Client Id and Client Secret
 
 You can get a "client-id" and "client-secret" from [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard/) by signing in with your Spotify Id then creating an Application.
+
+## Change Log
+
+### Version 1.0.1
+
+- Added Multi Scope Helpers by [parkeradam](https://github.com/parkeradam)
+
+### Version 1.0.0
+
+- Initial Release
