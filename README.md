@@ -2256,20 +2256,6 @@ Create Spotify Client
 
 Spotify Client
 
-### GetOrAddAuthenticationCache(clientId, clientSecret)
-
-Get or Add Authenciation Cache
-
-| Name | Description |
-| ---- | ----------- |
-| clientId | *System.String*<br>Spotify Client Id |
-| clientSecret | *System.String*<br>Spotify Client Secret |
-
-#### Returns
-
-Authentication Cache
-
-
 ## FollowType
 
 Follow Type
