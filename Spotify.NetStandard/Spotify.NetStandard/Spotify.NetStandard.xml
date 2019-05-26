@@ -1104,6 +1104,24 @@
             <param name="source">Source Uri</param>
             <returns>Response</returns>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthGetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Authenticated Get
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="hostname">Hostname</param>
+            <param name="endpoint">Endpoint</param>
+            <param name="parameters">Parameters</param>
+            <returns>Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthGetAsync``1(System.Uri)">
+            <summary>
+            Authenticated Get
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="source">Source Uri</param>
+            <returns>Response</returns>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.NavigateAsync``1(Spotify.NetStandard.Responses.Paging{``0},Spotify.NetStandard.Enums.NavigateType)">
             <summary>
             Navigate 
@@ -1113,6 +1131,17 @@
             <param name="navigateType">Navigate Type</param>
             <returns>Content Response</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.NavigateAsync``2(Spotify.NetStandard.Responses.CursorPaging{``0},Spotify.NetStandard.Enums.NavigateType)">
+            <summary>
+            Navigate 
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <typeparam name="TResult">Result Type</typeparam>
+            <param name="cursor">Cursor Object</param>
+            <param name="navigateType">Navigate Type</param>
+            <returns>Content Response</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.SearchAsync(System.String,Spotify.NetStandard.Requests.SearchType,System.String,System.Nullable{System.Boolean},Spotify.NetStandard.Requests.Page)">
             <summary>
@@ -2754,13 +2783,11 @@
             <param name="itemIds">IDs of the Items</param>
             <returns>Ids as String</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.FormatCursorParameters(System.Nullable{System.Int32},System.String,System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.FormatCursorParameters(Spotify.NetStandard.Requests.Cursor)">
             <summary>
             Format Cursor Parameters
             </summary>
-            <param name="limit">Limit</param>
-            <param name="after">After</param>
-            <param name="before">Before</param>
+            <param name="cursor">Format Cursor Parameters</param>
             <returns>Dictionary of Request Parameters</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetStatus``1(``0,System.Int32,System.Int32)">
@@ -2898,6 +2925,26 @@
             <param name="successCode">Success Code</param>
             <returns>Response Object</returns>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetResponseAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType)">
+            <summary>
+            Get Response
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="hostname">Hostname</param>
+            <param name="endpoint">Endpoint</param>
+            <param name="parameters">Parameters</param>
+            <param name="tokenType">Token Type</param>
+            <returns>Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetResponseAsync``1(System.Uri,Spotify.NetStandard.Client.Authentication.Enums.TokenType)">
+            <summary>
+            Get Response
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="source">Source Uri</param>
+            <param name="tokenType">Token Type</param>
+            <returns>Response</returns>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.#ctor(Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache)">
             <summary>
             Spotify Client
@@ -2945,6 +2992,24 @@
             <param name="source">Source Uri</param>
             <returns>Response</returns>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthGetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Authenticated Get
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="hostname">Hostname</param>
+            <param name="endpoint">Endpoint</param>
+            <param name="parameters">Parameters</param>
+            <returns>Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthGetAsync``1(System.Uri)">
+            <summary>
+            Authenticated Get
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="source">Source Uri</param>
+            <returns>Response</returns>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.NavigateAsync``1(Spotify.NetStandard.Responses.Paging{``0},Spotify.NetStandard.Enums.NavigateType)">
             <summary>
             Navigate 
@@ -2954,6 +3019,17 @@
             <param name="navigateType">Navigate Type</param>
             <returns>Content Response</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.NavigateAsync``2(Spotify.NetStandard.Responses.CursorPaging{``0},Spotify.NetStandard.Enums.NavigateType)">
+            <summary>
+            Navigate 
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <typeparam name="TResult">Result Type</typeparam>
+            <param name="cursor">Cursor Object</param>
+            <param name="navigateType">Navigate Type</param>
+            <returns>Content Response</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.SearchAsync(System.String,Spotify.NetStandard.Requests.SearchType,System.String,System.Nullable{System.Boolean},Spotify.NetStandard.Requests.Page)">
             <summary>
@@ -3692,9 +3768,19 @@
             The cursor to use as key to find the next page of items.
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Requests.Cursor.Next">
+            <summary>
+            URL to the next page of items. (null if none)
+            </summary>
+        </member>
         <member name="P:Spotify.NetStandard.Requests.Cursor.Before">
             <summary>
             The cursor to use as key to find the previous page of items.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.Cursor.Offset">
+            <summary>
+            The offset of the items returned (as set in the query or by default).
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Requests.Cursor.Limit">
@@ -4640,11 +4726,6 @@
         <member name="P:Spotify.NetStandard.Responses.CursorPaging`1.Items">
             <summary>
             The requested data.
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.CursorPaging`1.Next">
-            <summary>
-            URL to the next page of items. (null if none)
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.CursorPaging`1.Cursors">
