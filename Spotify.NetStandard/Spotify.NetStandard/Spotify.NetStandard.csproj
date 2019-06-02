@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>RoguePlanetoid,parkeradam</Authors>
     <Company>Comentsys</Company>
     <Description>Spotify API .NET Standard Library</Description>
@@ -10,9 +10,10 @@
     <PackageReleaseNotes>1.0.0 Initial Release
 1.0.1 Added Multi Scope Helpers by parkeradam
 1.0.2 Fixed Extension Methods
-1.1.0 Added Authenticated Get and Fixed Cursor Methods</PackageReleaseNotes>
+1.1.0 Added Authenticated Get and Fixed Cursor Methods
+1.1.1 Fixed Cursor and Paging Navigation</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

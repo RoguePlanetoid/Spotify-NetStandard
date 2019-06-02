@@ -1,5 +1,9 @@
 ## Spotify.NetStandard
 
+### Version 1.1.1
+
+- Fixed Cursor and Paging Navigation
+
 ### Version 1.1.0
 
 - Added Authenticated Get Methods
