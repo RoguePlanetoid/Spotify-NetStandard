@@ -621,18 +621,19 @@ namespace Spotify.NetStandard.Client.Internal
             switch (navigateType)
             {
                 case NavigateType.None:
-                    source = new Uri(cursor.Href);
+                    if(cursor.Href != null)
+                        source = new Uri(cursor.Href);
                     break;
                 case NavigateType.Previous:
                     if (cursor.Before != null)
                         source = new Uri(cursor.Before);
                     break;
                 case NavigateType.Next:
-                    if (cursor.Next != null)
+                    if (cursor.Next != null || cursor?.After?.After != null)
                         source = new Uri(cursor.Next ?? cursor?.After?.After);
                     break;
             }
-            return AuthGetAsync<CursorPaging<TResponse>>(source);
+            return source != null ? AuthGetAsync<CursorPaging<TResponse>>(source) : null;
         }
 
         /// <summary>
@@ -677,7 +678,8 @@ namespace Spotify.NetStandard.Client.Internal
             switch (navigateType)
             {
                 case NavigateType.None:
-                    source = new Uri(paging.Href);
+                    if (paging.Href != null)
+                        source = new Uri(paging.Href);
                     break;
                 case NavigateType.Previous:
                     if (paging.Previous != null)
@@ -688,7 +690,7 @@ namespace Spotify.NetStandard.Client.Internal
                         source = new Uri(paging.Next);
                     break;
             }
-            return GetAsync<ContentResponse>(source);
+            return source != null ? GetAsync<ContentResponse>(source) : null;
         }
 
         /// <summary>
