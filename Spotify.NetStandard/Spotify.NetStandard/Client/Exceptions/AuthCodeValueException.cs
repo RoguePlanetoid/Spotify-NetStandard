@@ -3,5 +3,12 @@
     /// <summary>
     /// Auth Code Value Error
     /// </summary>
-    public class AuthCodeValueException : AuthException { }
+    public class AuthCodeValueException : AuthException
+    {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="message">Message</param>
+        public AuthCodeValueException(string message) : base(message) { }
+    }
 }

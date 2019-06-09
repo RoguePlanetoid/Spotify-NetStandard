@@ -37,5 +37,11 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// </summary>
         [DataMember(Name = "refresh_token")]
         public string RefreshToken { get; set; }
+
+        /// <summary>
+        /// The reason authorisation failed, for example: “access_denied”.
+        /// </summary>
+        [DataMember(Name = "error")]
+        public string Error { get; set; }
     }
 }

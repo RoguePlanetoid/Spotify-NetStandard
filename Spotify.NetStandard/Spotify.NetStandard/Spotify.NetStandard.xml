@@ -34,6 +34,11 @@
             Scopes
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.AccessToken.Error">
+            <summary>
+            Error
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Authentication.Enums.TokenType">
             <summary>
             Authentication Token Type
@@ -107,6 +112,13 @@
             </summary>
             <param name="response">ImplicitGrant</param>
             <returns>Access Token</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetUriDictionary(System.Uri)">
+            <summary>
+            Get Uri Dictionary
+            </summary>
+            <param name="uri">Uri</param>
+            <returns>Dictionary of Key Values</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.#ctor(Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient,System.String,System.String)">
             <summary>
@@ -291,6 +303,11 @@
             A token that can be sent to the Spotify Accounts service in place of an authorization code
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationResponse.Error">
+            <summary>
+            The reason authorisation failed, for example: “access_denied”.
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Authentication.Internal.ImplicitGrant">
             <summary>
             Implicit Grant
@@ -344,15 +361,38 @@
             Auth Code State Error
             </summary>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message">Message</param>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">
             <summary>
             Auth Code Value Error
             </summary>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message">Message</param>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Exceptions.AuthException">
             <summary>
-            Auth Code Error
+            Auth Exception
             </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Exceptions.AuthException.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Exceptions.AuthException.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message">Error Message</param>
         </member>
         <member name="T:Spotify.NetStandard.Client.Exceptions.AuthTokenRequiredException">
             <summary>
@@ -374,10 +414,22 @@
             Auth Token State Error
             </summary>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message">Message</param>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">
             <summary>
             Auth Token Value Error
             </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="message">Message</param>
         </member>
         <member name="T:Spotify.NetStandard.Client.Interfaces.ISpotifyApi">
             <summary>
@@ -2073,7 +2125,7 @@
             Spotify API
             </summary>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.#ctor(Spotify.NetStandard.Client.Interfaces.ISpotifyClient)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.#ctor(Spotify.NetStandard.Client.Internal.SpotifyClient)">
             <summary>
             Spotify API
             </summary>
@@ -3617,7 +3669,7 @@
             <summary>
             Create Spotify Client
             </summary>
-            <param name="clientId">Spotify Client Id</param>
+            <param name="clientId">(Required) Spotify Client Id</param>
             <param name="clientSecret">Spotify Client Secret</param>
             <returns>Spotify Client</returns>
         </member>

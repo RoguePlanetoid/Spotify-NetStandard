@@ -2,6 +2,7 @@
 using Spotify.NetStandard.Client.Exceptions;
 using Spotify.NetStandard.Client.Internal;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,7 +40,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 Expiration = DateTime.UtcNow.Add(
                 TimeSpan.FromSeconds(Convert.ToDouble(
                 response.ExpiresIn))),
-                Scopes = response.Scope
+                Scopes = response.Scope,
+                Error = response.Error
             };
 
         /// <summary>
@@ -54,8 +56,19 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 Token = response.AccessToken,
                 Expiration = DateTime.UtcNow.Add(
                     TimeSpan.FromSeconds(Convert.ToDouble(
-                    response.ExpiresIn)))
+                    response.ExpiresIn))),
+                Error = response.Error
             };
+
+        /// <summary>
+        /// Get Uri Dictionary
+        /// </summary>
+        /// <param name="uri">Uri</param>
+        /// <returns>Dictionary of Key Values</returns>
+        private Dictionary<string, string> GetUriDictionary(Uri uri) => 
+            string.IsNullOrEmpty(uri.Fragment)
+                ? uri.Query.QueryStringAsDictionary()
+                : uri.Fragment.TrimStart('#').QueryStringAsDictionary();
         #endregion Private Methods
 
         #region Public Methods
@@ -71,8 +84,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             string clientSecret)
         {
             _client = client;
-            this._clientId = clientId;
-            this._clientSecret = clientSecret;
+            _clientId = clientId;
+            _clientSecret = clientSecret;
         }
 
         /// <summary>
@@ -94,11 +107,9 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 {
                     throw new AuthUserTokenRequiredException();
                 }
-                AccessToken = await GetClientCredentialsTokenAsync(
-                    cancellationToken);
+                AccessToken = await GetClientCredentialsTokenAsync(cancellationToken);
             }
-            else if(AccessToken?.Refresh != null && 
-                (AccessToken.Expiration < DateTime.UtcNow))
+            else if(AccessToken?.Refresh != null && (AccessToken.Expiration < DateTime.UtcNow))
             {
                 AccessToken = await GetRefreshTokenAsync(
                     AccessToken.Refresh, 
@@ -107,14 +118,12 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             }
             else
             {
-                bool isUserToken = (AccessToken.TokenType == TokenType.User);
-                if(requiresUserToken && !isUserToken)
+                if(requiresUserToken && !(AccessToken.TokenType == TokenType.User))
                 {
                     throw new AuthUserTokenRequiredException();
                 }
             }
-            if(AccessToken?.Token == null || 
-                (AccessToken.Expiration < DateTime.UtcNow))
+            if(AccessToken?.Token == null || (AccessToken.Expiration < DateTime.UtcNow))
             {
                 if (requiresUserToken)
                 {
@@ -170,8 +179,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 cancellationToken);
             if (authenticationResponse != null)
             {
-                AccessToken = Map(TokenType.Access,
-                    authenticationResponse);
+                AccessToken = Map(TokenType.Access, authenticationResponse);
             }
             return AccessToken;
         }
@@ -243,7 +251,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                         {
                             if (string.IsNullOrEmpty(_accessCode.Code))
                             {
-                                throw new AuthCodeValueException();
+                                throw new AuthCodeValueException(_accessCode.Error);
                             }
                             else
                             {
@@ -254,7 +262,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                         }
                         else
                         {
-                            throw new AuthCodeStateException();
+                            throw new AuthCodeStateException(_accessCode.State);
                         }
                     }
                 }
@@ -300,12 +308,12 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                     {
                         _implicitGrant = new ImplicitGrant(
                             responseUri, redirectUri,
-                            responseUri.Fragment.TrimStart('#').QueryStringAsDictionary());
+                            GetUriDictionary(responseUri));
                         if (state == null || _implicitGrant.State == state)
                         {
                             if (string.IsNullOrEmpty(_implicitGrant.AccessToken))
                             {
-                                throw new AuthTokenValueException();
+                                throw new AuthTokenValueException(_implicitGrant.Error);
                             }
                             else
                             {
@@ -314,7 +322,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                         }
                         else
                         {
-                            throw new AuthTokenStateException();
+                            throw new AuthTokenStateException(_implicitGrant.State);
                         }
                     }
                 }

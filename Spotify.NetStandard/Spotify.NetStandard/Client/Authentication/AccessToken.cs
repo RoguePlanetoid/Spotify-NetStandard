@@ -39,5 +39,11 @@ namespace Spotify.NetStandard.Client.Authentication
         /// </summary>
         [DataMember(Name = "scopes")]
         public string Scopes { get; set; }
+
+        /// <summary>
+        /// Error
+        /// </summary>
+        [DataMember(Name = "error")]
+        public string Error { get; set; }
     }
 }
