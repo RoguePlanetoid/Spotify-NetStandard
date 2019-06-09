@@ -6,6 +6,10 @@ Spotify API .NET Standard Library
 
 Access Token Object
 
+### Error
+
+Error
+
 ### Expiration
 
 Token Expiration Date
@@ -48,15 +52,43 @@ Auth Access Token Expired or Required Error
 
 Auth Code State Error
 
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Message |
+
 
 ## AuthCodeValueException
 
 Auth Code Value Error
 
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Message |
+
 
 ## AuthException
 
-Auth Code Error
+Auth Exception
+
+### Constructor
+
+Constructor
+
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Error Message |
 
 
 ## AuthTokenRequiredException
@@ -68,10 +100,26 @@ Auth Token Expired or Required Error
 
 Auth Token State Error
 
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Message |
+
 
 ## AuthTokenValueException
 
 Auth Token Value Error
+
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Message |
 
 
 ## AuthUserTokenRequiredException
@@ -2302,7 +2350,7 @@ Create Spotify Client
 
 | Name | Description |
 | ---- | ----------- |
-| clientId | *System.String*<br>Spotify Client Id |
+| clientId | *System.String*<br>(Required) Spotify Client Id |
 | clientSecret | *System.String*<br>Spotify Client Secret |
 
 #### Returns
