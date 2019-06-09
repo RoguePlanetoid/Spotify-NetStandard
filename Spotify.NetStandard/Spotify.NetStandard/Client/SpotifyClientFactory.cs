@@ -10,12 +10,15 @@ namespace Spotify.NetStandard.Client
     /// </summary>
     public class SpotifyClientFactory
     {
+        #region Private Constants
         private static readonly AuthenticationClient 
             _authenticationClient = new AuthenticationClient();
 
         private static readonly Dictionary<string, AuthenticationCache> 
             _authenticationCaches =  new Dictionary<string, AuthenticationCache>();
+        #endregion Private Constants
 
+        #region Private Methods
         /// <summary>
         /// Get or Add Authenciation Cache
         /// </summary>
@@ -27,25 +30,28 @@ namespace Spotify.NetStandard.Client
         {
             if (!_authenticationCaches.ContainsKey(clientId))
             {
-                AuthenticationCache authenticationCache = new AuthenticationCache(
+                var authenticationCache = new AuthenticationCache(
                 _authenticationClient, clientId, clientSecret);
                 _authenticationCaches[clientId] = authenticationCache;
             }
             return _authenticationCaches[clientId];
         }
+        #endregion Private Methods
 
+        #region Public Methods
         /// <summary>
         /// Create Spotify Client
         /// </summary>
-        /// <param name="clientId">Spotify Client Id</param>
+        /// <param name="clientId">(Required) Spotify Client Id</param>
         /// <param name="clientSecret">Spotify Client Secret</param>
         /// <returns>Spotify Client</returns>
         public static ISpotifyClient CreateSpotifyClient(
             string clientId, 
-            string clientSecret)
+            string clientSecret = null)
         {
             return new SpotifyClient(GetOrAddAuthenticationCache(
             clientId, clientSecret));
         }
+        #endregion Public Methods
     }
 }

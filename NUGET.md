@@ -36,6 +36,10 @@ You can get a "client-id" and "client-secret" from [developer.spotify.com/dashbo
 
 ## Change Log
 
+### Version 1.1.2
+
+- Fixed and Improved Authentication Exceptions including minor Client Changes
+
 ### Version 1.1.1
 
 - Fixed Cursor and Paging Navigation

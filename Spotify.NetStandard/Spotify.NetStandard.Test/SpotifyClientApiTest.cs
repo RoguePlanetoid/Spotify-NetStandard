@@ -622,7 +622,7 @@ namespace Spotify.NetStandard.Test
             var result = await _client.Api.UserPlaybackTransferAsync(
                 new List<string>
                 {
-                    "13ec64132fb267dc44d9385a95be0aeeb69dbdd4"
+                    "6a888bb2f25dc8c0d105ee2c4938f7f9edc4faba"
                 },
                 true);
             Assert.IsTrue(result.Success);

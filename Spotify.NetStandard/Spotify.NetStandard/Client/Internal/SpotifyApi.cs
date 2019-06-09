@@ -1,13 +1,13 @@
-﻿using Spotify.NetStandard.Client.Interfaces;
+﻿using Spotify.NetStandard.Client.Authentication;
+using Spotify.NetStandard.Client.Exceptions;
+using Spotify.NetStandard.Client.Interfaces;
 using Spotify.NetStandard.Enums;
 using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using Spotify.NetStandard.Client.Exceptions;
-using Spotify.NetStandard.Client.Authentication;
+using System.Threading.Tasks;
 
 namespace Spotify.NetStandard.Client.Internal
 {
@@ -17,7 +17,7 @@ namespace Spotify.NetStandard.Client.Internal
     internal class SpotifyApi : ISpotifyApi
     {
         #region Private Members
-        private readonly ISpotifyClient _client;
+        private readonly SpotifyClient _client;
         #endregion Private Members
 
         #region Constructor
@@ -25,7 +25,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// Spotify API
         /// </summary>
         /// <param name="client">Spotify Client</param>
-        public SpotifyApi(ISpotifyClient client) => 
+        public SpotifyApi(SpotifyClient client) => 
             _client = client;
         #endregion Constructor
 

@@ -1700,7 +1700,7 @@ namespace Spotify.NetStandard.Client.Internal
             if (timeRange != null)
             {
                 key = "time_range";
-                value = timeRange.GetDescription();
+                value = timeRange.Value.GetDescription();
             }
             return LookupCursorApiAsync<CursorPaging<Artist>>(
                 "me/top/artists",
@@ -1724,7 +1724,7 @@ namespace Spotify.NetStandard.Client.Internal
             if (timeRange != null)
             {
                 key = "time_range";
-                value = timeRange.GetDescription();
+                value = timeRange.Value.GetDescription();
             }
             return LookupCursorApiAsync<CursorPaging<Track>>(
                 "me/top/tracks",
