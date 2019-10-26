@@ -1035,7 +1035,7 @@
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetUserProfileAsync">
             <summary>
             Get Current User's Profile
-            <para>Scopes: UserReadEmail, UserReadBirthDate, UserReadPrivate</para>
+            <para>Scopes: UserReadEmail, UserReadPrivate</para>
             </summary>
             <returns>Private User Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
@@ -1760,7 +1760,7 @@
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupUserProfileAsync">
             <summary>
             Get Current User's Profile
-            <para>Scopes: UserReadEmail, UserReadBirthDate, UserReadPrivate</para>
+            <para>Scopes: UserReadEmail, UserReadPrivate</para>
             </summary>
             <returns>Private User Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
@@ -2730,7 +2730,7 @@
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetUserProfileAsync">
             <summary>
             Get Current User's Profile
-            <para>Scopes: UserReadEmail, UserReadBirthDate, UserReadPrivate</para>
+            <para>Scopes: UserReadEmail, UserReadPrivate</para>
             </summary>
             <returns>Private User Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
@@ -3647,7 +3647,7 @@
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupUserProfileAsync">
             <summary>
             Get Current User's Profile
-            <para>Scopes: UserReadEmail, UserReadBirthDate, UserReadPrivate</para>
+            <para>Scopes: UserReadEmail, UserReadPrivate</para>
             </summary>
             <returns>Private User Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
@@ -4122,13 +4122,6 @@
         <member name="P:Spotify.NetStandard.Requests.Scope.PlaybackStreaming">
             <summary>
             Control playback of a Spotify track. The user must have a Spotify Premium account. 
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Requests.Scope.UserReadBirthDate">
-            <summary>
-            Read access to the user's birthdate.
-            <para>Required For</para>
-            <para>Get Current User's Profile</para>
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Requests.Scope.UserReadEmail">
@@ -5112,11 +5105,6 @@
         <member name="T:Spotify.NetStandard.Responses.PrivateUser">
             <summary>
             Private User Object
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.PrivateUser.BirthDate">
-            <summary>
-            The user’s date-of-birth.This field is only available when the current user has granted access to the user-read-birthdate scope.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.PrivateUser.Country">

@@ -788,7 +788,7 @@ CursorPaging of Playlist Object
 ### GetUserProfileAsync
 
 Get Current User's Profile 
-Scopes: UserReadEmail, UserReadBirthDate, UserReadPrivate
+Scopes: UserReadEmail, UserReadPrivate
 
 
 #### Returns
@@ -1561,7 +1561,7 @@ CursorPaging of Playlist Object
 ### AuthLookupUserProfileAsync
 
 Get Current User's Profile 
-Scopes: UserReadEmail, UserReadBirthDate, UserReadPrivate
+Scopes: UserReadEmail, UserReadPrivate
 
 
 #### Returns
@@ -2819,15 +2819,6 @@ Required For
 
 Upload a Custom Playlist Cover Image
 
-
-### UserReadBirthDate
-
-Read access to the user's birthdate. 
-Required For
-
-Get Current User's Profile
-
-
 ### UserReadEmail
 
 Read access to user’s email address. 
@@ -3636,10 +3627,6 @@ Information about the track.
 ## PrivateUser
 
 Private User Object
-
-### BirthDate
-
-The user’s date-of-birth.This field is only available when the current user has granted access to the user-read-birthdate scope.
 
 ### Country
 
