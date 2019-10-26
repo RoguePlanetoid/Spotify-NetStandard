@@ -1,5 +1,9 @@
 ## Spotify.NetStandard
 
+### Version 1.1.3
+
+- Removed User Birthdate Value and Scope
+
 ### Version 1.1.2
 
 - Fixed and Improved Authentication Exceptions including minor Client Changes

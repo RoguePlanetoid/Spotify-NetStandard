@@ -763,7 +763,7 @@ namespace Spotify.NetStandard.Client.Interfaces
 
         /// <summary>
         /// Get Current User's Profile
-        /// <para>Scopes: UserReadEmail, UserReadBirthDate, UserReadPrivate</para>
+        /// <para>Scopes: UserReadEmail, UserReadPrivate</para>
         /// </summary>
         /// <returns>Private User Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>

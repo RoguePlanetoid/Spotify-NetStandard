@@ -18,7 +18,6 @@
             scope.ConnectReadPlaybackState = true;
             scope.ListeningTopRead = true;
             scope.ListeningRecentlyPlayed = true;
-            scope.UserReadBirthDate = true;
             scope.UserReadEmail = true;
             scope.UserReadPrivate = true;
             scope.FollowRead = true;
@@ -104,7 +103,6 @@
         /// <returns></returns>
         public static Scope AddUsersAll(this Scope scope)
         {
-            scope.UserReadBirthDate = true;
             scope.UserReadEmail = true;
             scope.UserReadPrivate = true;
             scope.UserGeneratedContentImageUpload = true;

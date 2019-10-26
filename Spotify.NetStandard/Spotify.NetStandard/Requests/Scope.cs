@@ -138,14 +138,6 @@ namespace Spotify.NetStandard.Requests
         #region Users
 
         /// <summary>
-        /// Read access to the user's birthdate.
-        /// <para>Required For</para>
-        /// <para>Get Current User's Profile</para>
-        /// </summary>
-        [Description("user-read-birthdate")]
-        public bool? UserReadBirthDate { get; set; }
-
-        /// <summary>
         /// Read access to user’s email address. 
         /// <para>Required For</para>
         /// <para>Get Current User's Profile</para>
