@@ -393,13 +393,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="id">(Required) The Spotify ID for the playlist.</param>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0</param>
-        /// <returns>Paging List of Track Object</returns>
+        /// <returns>Paging List of Playlist Track Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<Paging<Track>> GetPlaylistTracksAsync(
+        public Task<Paging<PlaylistTrack>> GetPlaylistTracksAsync(
             string id,
             string market = null,
             Page page = null) =>
-                _client.LookupAsync<Paging<Track>>(
+                _client.LookupAsync<Paging<PlaylistTrack>>(
                     id, LookupType.PlaylistTracks, market, page: page);
 
         /// <summary>

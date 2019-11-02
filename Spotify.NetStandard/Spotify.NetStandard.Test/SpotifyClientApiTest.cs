@@ -241,6 +241,31 @@ namespace Spotify.NetStandard.Test
 
         #region Playlists API
         /// <summary>
+        /// Get a Playlist
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetPlaylist()
+        {
+            var result = await _client.Api.GetPlaylistAsync(
+                "3cEYpjA9oz9GiPac4AsH4n");
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Get a Playlist's Tracks
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetPlaylistTracks()
+        {
+            var result = await _client.Api.GetPlaylistTracksAsync(
+                "3cEYpjA9oz9GiPac4AsH4n");
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
         /// Add Tracks to a Playlist
         /// </summary>
         /// <returns></returns>

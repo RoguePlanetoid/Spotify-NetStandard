@@ -601,7 +601,7 @@ Get a Playlist's Tracks
 
 #### Returns
 
-Paging List of Track Object
+Paging List of Playlist Track Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
