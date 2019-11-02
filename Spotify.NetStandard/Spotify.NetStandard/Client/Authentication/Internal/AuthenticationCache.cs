@@ -255,9 +255,9 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                             }
                             else
                             {
-                                return await GetAuthorisationCodeTokenAsync(
-                                    _accessCode, 
-                                    new CancellationToken(false));
+                                AccessToken = await GetAuthorisationCodeTokenAsync(
+                                    _accessCode, new CancellationToken(false));
+                                return AccessToken;
                             }
                         }
                         else
@@ -317,7 +317,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                             }
                             else
                             {
-                                return Map(_implicitGrant);
+                                AccessToken = Map(_implicitGrant);
+                                return AccessToken;
                             }
                         }
                         else
