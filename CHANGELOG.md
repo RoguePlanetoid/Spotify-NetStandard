@@ -1,5 +1,9 @@
 ## Spotify.NetStandard
 
+### Version 1.1.4
+
+- Fixed Token Storage and Get Playlist Tracks
+
 ### Version 1.1.3
 
 - Removed User Birthdate Value and Scope
