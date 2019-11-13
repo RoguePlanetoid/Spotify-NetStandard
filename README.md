@@ -2,6 +2,45 @@
 
 Spotify API .NET Standard Library
 
+## Change Log
+
+### Version 1.1.5
+
+- Added Actions Object, Disallows Object, Simplified Playlist Object and updated related methods
+
+### Version 1.1.4
+
+- Fixed Token Storage and Get Playlist Tracks
+
+### Version 1.1.3
+
+- Removed User Birthdate Value and Scope
+
+### Version 1.1.2
+
+- Fixed and Improved Authentication Exceptions including minor Client Changes
+
+### Version 1.1.1
+
+- Fixed Cursor and Paging Navigation
+
+### Version 1.1.0
+
+- Added Authenticated Get Methods
+- Fixed Issue with Cursor Responses
+
+### Version 1.0.2
+
+- Fixed Extension Methods
+
+### Version 1.0.1
+
+- Added Multi Scope Helpers by [parkeradam](https://github.com/parkeradam)
+
+### Version 1.0.0
+
+- Initial Release
+
 ## AccessToken
 
 Access Token Object
@@ -42,6 +81,7 @@ Access Token
 ### User
 
 User Token
+
 
 ## AuthAccessTokenRequiredException
 
@@ -332,7 +372,7 @@ Get All Featured Playlists
 
 #### Returns
 
-Paging List of Playlist Object
+Paging List of Simplified Playlist Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
@@ -472,7 +512,7 @@ Get a Category's Playlists
 
 #### Returns
 
-Paging List of Playlist Object
+Paging List of Simplified Playlist Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
@@ -764,7 +804,7 @@ Scopes: PlaylistReadPrivate, PlaylistReadCollaborative
 
 #### Returns
 
-CursorPaging of Playlist Object
+CursorPaging of Simplified Playlist Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
@@ -781,7 +821,7 @@ Scopes: PlaylistReadPrivate, PlaylistReadCollaborative
 
 #### Returns
 
-CursorPaging of Playlist Object
+CursorPaging of Simplified Playlist Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
@@ -911,7 +951,7 @@ Cursor Paging of Track Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### RemoveTracksFromPlaylistAsync(playlistId, tracks, snapshotId)
+### RemoveTracksFromPlaylistAsync(playlistId, uris, snapshotId)
 
 Remove Tracks from a Playlist 
 Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
@@ -920,7 +960,7 @@ Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
 | Name | Description |
 | ---- | ----------- |
 | playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
-| tracks | *System.Collections.Generic.List{System.String}*<br>(Required) List of Spotify URIs of the tracks to remove |
+| uris | *System.Collections.Generic.List{System.String}*<br>(Required) List of Spotify URIs of the tracks to remove |
 | snapshotId | *System.String*<br>(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist. |
 
 #### Returns
@@ -1351,7 +1391,7 @@ Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### AuthGetAsync(hostname, endpoint, parameters)
+### AuthGetAsync\`\`1(hostname, endpoint, parameters)
 
 Authenticated Get
 
@@ -1369,7 +1409,7 @@ Authenticated Get
 
 Response
 
-### AuthGetAsync(source)
+### AuthGetAsync\`\`1(source)
 
 Authenticated Get
 
@@ -1537,7 +1577,7 @@ Scopes: PlaylistReadPrivate, PlaylistReadCollaborative
 
 #### Returns
 
-CursorPaging of Playlist Object
+CursorPaging of Simplified Playlist Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
@@ -1554,7 +1594,7 @@ Scopes: PlaylistReadPrivate, PlaylistReadCollaborative
 
 #### Returns
 
-CursorPaging of Playlist Object
+CursorPaging of Simplified Playlist Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
@@ -1668,7 +1708,7 @@ Cursor Paging of Track Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### AuthNavigateAsync(cursor, navigateType)
+### AuthNavigateAsync\`\`1(cursor, navigateType)
 
 Authenticated Navigate
 
@@ -1678,7 +1718,7 @@ Authenticated Navigate
 
 | Name | Description |
 | ---- | ----------- |
-| cursor | *Spotify.NetStandard.Responses.CursorPaging*<br>Cursor Object |
+| cursor | *Spotify.NetStandard.Responses.CursorPaging{\`\`0}*<br>Cursor Object |
 | navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
 
 #### Returns
@@ -2063,7 +2103,7 @@ Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### GetAsync(hostname, endpoint, parameters)
+### GetAsync\`\`1(hostname, endpoint, parameters)
 
 Get
 
@@ -2081,7 +2121,7 @@ Get
 
 Response
 
-### GetAsync(source)
+### GetAsync\`\`1(source)
 
 Get
 
@@ -2184,7 +2224,7 @@ Lookup Response
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### LookupAsync(itemId, lookupType, market, key, value, page)
+### LookupAsync\`\`1(itemId, lookupType, market, key, value, page)
 
 Lookup
 
@@ -2286,7 +2326,7 @@ Recommendation Response Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### NavigateAsync(paging, navigateType)
+### NavigateAsync\`\`1(paging, navigateType)
 
 Navigate
 
@@ -2296,7 +2336,7 @@ Navigate
 
 | Name | Description |
 | ---- | ----------- |
-| paging | *Spotify.NetStandard.Responses.Paging*<br>Paging Object |
+| paging | *Spotify.NetStandard.Responses.Paging{\`\`0}*<br>Paging Object |
 | navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
 
 #### Returns
@@ -2304,6 +2344,1406 @@ Navigate
 Content Response
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### RefreshToken
+
+Refresh Token
+
+#### Returns
+
+Access Token
+
+### SearchAsync(query, searchType, country, external, page)
+
+Search
+
+| Name | Description |
+| ---- | ----------- |
+| query | *System.String*<br>(Required) Search Query |
+| searchType | *Spotify.NetStandard.Requests.SearchType*<br>(Required) Search results include hits from all the specified item types. |
+| country | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token |
+| external | *System.Nullable{System.Boolean}*<br>(Optional) Include any relevant audio content that is hosted externally. |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return |
+
+#### Returns
+
+Content Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### SetToken(value)
+
+Set Access Token
+
+| Name | Description |
+| ---- | ----------- |
+| value | *Spotify.NetStandard.Client.Authentication.AccessToken*<br>Access Token |
+
+
+
+
+Spotify Client
+
+### Constructor(authenticationCache)
+
+Spotify Client
+
+| Name | Description |
+| ---- | ----------- |
+| authenticationCache | *Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache*<br>Authentication Cache |
+
+### Api
+
+Spotify API
+
+### AuthAddTracksToPlaylistAsync(playlistId, uris, position)
+
+Add Tracks to a Playlist 
+Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
+| uris | *Spotify.NetStandard.Requests.UriListRequest*<br>(Optional) List of Spotify track URIs to add. |
+| position | *System.Nullable{System.Int32}*<br>(Optional) The position to insert the tracks, a zero-based index. |
+
+#### Returns
+
+Snapshot Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthAsync
+
+Auth - Client Credentials Flow
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+### AuthChangePlaylistDetailsAsync(playlistId, request)
+
+Change a Playlist's Details 
+Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
+| request | *Spotify.NetStandard.Requests.PlaylistRequest*<br>(Optional) Playlist Request Object |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthCreatePlaylistAsync(userId, request)
+
+Create a Playlist 
+Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| userId | *System.String*<br>(Required) The user’s Spotify user ID. |
+| request | *Spotify.NetStandard.Requests.PlaylistRequest*<br>(Required) Playlist Request |
+
+#### Returns
+
+Playlist Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthFollowAsync(itemIds, followType)
+
+Follow Artists or Users 
+Scopes: FollowModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the artist or the user Spotify IDs. |
+| followType | *Spotify.NetStandard.Enums.FollowType*<br>(Required) Either artist or user |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthFollowPlaylistAsync(playlistId, isPublic)
+
+Follow a Playlist 
+Scopes: FollowModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID of the playlist. Any playlist can be followed, regardless of its public/private status, as long as you know its playlist ID. |
+| isPublic | *System.Boolean*<br>(Optional) Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthGetAsync\`\`1(hostname, endpoint, parameters)
+
+Authenticated Get
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| hostname | *System.String*<br>Hostname |
+| endpoint | *System.String*<br>Endpoint |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Parameters |
+
+#### Returns
+
+Response
+
+### AuthGetAsync\`\`1(source)
+
+Authenticated Get
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| source | *System.Uri*<br>Source Uri |
+
+#### Returns
+
+Response
+
+### AuthGetPlaylistCoverImageAsync(playlistId)
+
+Get a Playlist Cover Image
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
+
+#### Returns
+
+List of Image Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupCheckUserSavedAlbumsAsync(itemIds)
+
+Check User's Saved Albums 
+Scopes: LibraryRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the albums |
+
+#### Returns
+
+List of true or false values
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupCheckUserSavedTracksAsync(itemIds)
+
+Check User's Saved Tracks 
+Scopes: LibraryRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the tracks |
+
+#### Returns
+
+List of true or false values
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupFollowedArtistsAsync(cursor)
+
+Get User's Followed Artists 
+Scopes: FollowRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - After: The last artist ID retrieved from the previous request. |
+
+#### Returns
+
+CursorPaging of Artist Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupFollowingStateAsync(itemIds, followType)
+
+Get Following State for Artists/Users 
+Scopes: FollowRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the artist or the user Spotify IDs to check. |
+| followType | *Spotify.NetStandard.Enums.FollowType*<br>(Required) Either artist or user. |
+
+#### Returns
+
+List of true or false values
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserFollowingPlaylistAsync(itemIds, playlistId)
+
+Check if Users Follow a Playlist 
+Scopes: PlaylistReadPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of Spotify User IDs, the ids of the users that you want to check to see if they follow the playlist. Maximum: 5 ids. |
+| playlistId | *System.String*<br>(Required) The Spotify ID of the playlist. |
+
+#### Returns
+
+List of true or false values
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserPlaybackCurrentAsync(market)
+
+Get Information About The User's Current Playback 
+Scopes: ConnectReadPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. |
+
+#### Returns
+
+Currently Playing Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserPlaybackCurrentTrackAsync(market)
+
+Get the User's Currently Playing Track 
+Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. |
+
+#### Returns
+
+Simplified Currently Playing Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserPlaybackDevicesAsync
+
+Get a User's Available Devices 
+Scopes: ConnectReadPlaybackState
+
+
+#### Returns
+
+Devices Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserPlaylistsAsync(cursor)
+
+Get a List of Current User's Playlists 
+Scopes: PlaylistReadPrivate, PlaylistReadCollaborative
+
+
+| Name | Description |
+| ---- | ----------- |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100. Use with limit to get the next set of playlists. |
+
+#### Returns
+
+CursorPaging of Simplified Playlist Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserPlaylistsAsync(userId, cursor)
+
+Get a List of a User's Playlists 
+Scopes: PlaylistReadPrivate, PlaylistReadCollaborative
+
+
+| Name | Description |
+| ---- | ----------- |
+| userId | *System.String*<br>(Required) The user’s Spotify user ID. |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100 |
+
+#### Returns
+
+CursorPaging of Simplified Playlist Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserProfileAsync
+
+Get Current User's Profile 
+Scopes: UserReadEmail, UserReadPrivate
+
+
+#### Returns
+
+Private User Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserProfileAsync(userId)
+
+Get a User's Profile
+
+| Name | Description |
+| ---- | ----------- |
+| userId | *System.String*<br>The user’s Spotify user ID. |
+
+#### Returns
+
+Public User Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserRecentlyPlayedTracksAsync(cursor)
+
+Get Current User's Recently Played Tracks 
+Scopes: ListeningRecentlyPlayed
+
+
+| Name | Description |
+| ---- | ----------- |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - After: A Unix timestamp in milliseconds. Returns all items after (but not including) this cursor position. If after is specified, before must not be specified. Before - (Optional) A Unix timestamp in milliseconds. Returns all items before (but not including) this cursor position. If before is specified, after must not be specified. |
+
+#### Returns
+
+Cursor Paging of Play History Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserSavedAlbumsAsync(market, cursor)
+
+Get User's Saved Albums 
+Scopes: LibraryRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects. |
+
+#### Returns
+
+Cursor Paging of Saved Album Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserSavedTracksAsync(market, cursor)
+
+Get User's Saved Tracks 
+Scopes: LibraryRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects. |
+
+#### Returns
+
+Cursor Paging of Saved Track Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserTopArtistsAsync(timeRange, cursor)
+
+Get a User's Top Artists 
+Scopes: ListeningTopRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| timeRange | *System.Nullable{Spotify.NetStandard.Enums.TimeRange}*<br>(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities. |
+
+#### Returns
+
+Cursor Paging of Artist Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthLookupUserTopTracksAsync(timeRange, cursor)
+
+Get a User's Top Tracks 
+Scopes: ListeningTopRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| timeRange | *System.Nullable{Spotify.NetStandard.Enums.TimeRange}*<br>(Optional) Over what time frame the affinities are computed. Long Term: alculated from several years of data and including all new data as it becomes available, Medium Term: (Default) approximately last 6 months, Short Term: approximately last 4 weeks |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities. |
+
+#### Returns
+
+Cursor Paging of Track Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthNavigateAsync\`\`1(cursor, navigateType)
+
+Authenticated Navigate
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| cursor | *Spotify.NetStandard.Responses.CursorPaging{\`\`0}*<br>Cursor Object |
+| navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
+
+#### Returns
+
+Content Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthRemoveTracksFromPlaylistAsync(playlistId, request)
+
+Remove Tracks from a Playlist 
+Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
+| request | *Spotify.NetStandard.Requests.PlaylistTracksRequest*<br>(Optional) Tracks: An array of objects containing Spotify URIs of the tracks to remove. Snapshot ID : The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist. |
+
+#### Returns
+
+Snapshot Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthRemoveUserAlbumsAsync(itemIds)
+
+Remove Albums for Current User 
+Scopes: LibraryModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the albums |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthRemoveUserTracksAsync(itemIds)
+
+Remove User's Saved Tracks 
+Scopes: LibraryModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the tracks |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthReorderPlaylistTracksAsync(playlistId, request)
+
+Reorder a Playlist's Tracks 
+Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
+| request | *Spotify.NetStandard.Requests.PlaylistReorderRequest*<br>(Required) Playlist Reorder Request |
+
+#### Returns
+
+Snapshot Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthReplacePlaylistTracksAsync(playlistId, uris)
+
+Replace a Playlist's Tracks 
+Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
+| uris | *Spotify.NetStandard.Requests.UriListRequest*<br>(Optional) Uri List Request. |
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthSaveUserAlbumsAsync(itemIds)
+
+Save Albums for Current User 
+Scopes: LibraryModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the albums |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthSaveUserTracksAsync(itemIds)
+
+Save Tracks for User 
+Scopes: LibraryModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the tracks |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUnfollowAsync(itemIds, followType)
+
+Unfollow Artists or Users 
+Scopes: FollowModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the artist or the user Spotify IDs. |
+| followType | *Spotify.NetStandard.Enums.FollowType*<br>(Required) Either artist or user |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUnfollowPlaylistAsync(playlistId)
+
+Unfollow Playlist 
+Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID of the playlist that is to be no longer followed. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUploadCustomPlaylistImageAsync(playlistId, file)
+
+Upload a Custom Playlist Cover Image 
+Scopes: UserGeneratedContentImageUpload, PlaylistModifyPublic, PlaylistModifyPrivate
+
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
+| file | *System.Byte[]*<br>(Required) JPEG Image File Bytes |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUser(redirectUri, state, scope, showDialog)
+
+Auth User - Authorisation Code Flow
+
+| Name | Description |
+| ---- | ----------- |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+| showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
+
+#### Returns
+
+Uri
+
+### AuthUserAsync(responseUri, redirectUri, state)
+
+Auth User - Authorisation Code Flow
+
+| Name | Description |
+| ---- | ----------- |
+| responseUri | *System.Uri*<br>Response Uri |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+*Spotify.NetStandard.Client.Exceptions.AuthCodeValueException:* AuthCodeValueException
+
+*Spotify.NetStandard.Client.Exceptions.AuthCodeStateException:* AuthCodeStateException
+
+### AuthUserImplicit(redirectUri, state, scope, showDialog)
+
+Auth User Implicit - Implicit Grant Flow
+
+| Name | Description |
+| ---- | ----------- |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+| showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
+
+#### Returns
+
+Uri
+
+### AuthUserImplicit(responseUri, redirectUri, state)
+
+Auth User Implicit - Implicit Grant Flow
+
+| Name | Description |
+| ---- | ----------- |
+| responseUri | *System.Uri*<br>Response Uri |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State |
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+*Spotify.NetStandard.Client.Exceptions.AuthTokenValueException:* AuthCodeValueException
+
+*Spotify.NetStandard.Client.Exceptions.AuthTokenStateException:* AuthCodeStateException
+
+### AuthUserPlaybackNextTrackAsync(deviceId)
+
+Skip User’s Playback To Next Track 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| deviceId | *System.String*<br>(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUserPlaybackPauseAsync(deviceId)
+
+Pause a User's Playback 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| deviceId | *System.String*<br>(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUserPlaybackPreviousTrackAsync(deviceId)
+
+Skip User’s Playback To Previous Track 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| deviceId | *System.String*<br>(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUserPlaybackSeekTrackAsync(position, deviceId)
+
+Seek To Position In Currently Playing Track 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| position | *System.Int32*<br>(Required) The position in milliseconds to seek to. Must be a positive number. Passing in a position that is greater than the length of the track will cause the player to start playing the next song. |
+| deviceId | *System.String*<br>(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUserPlaybackSetRepeatModeAsync(state, deviceId)
+
+Set Repeat Mode On User’s Playback 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| state | *Spotify.NetStandard.Enums.RepeatState*<br>(Required) track, context or off. track will repeat the current track. context will repeat the current context. off will turn repeat off. |
+| deviceId | *System.String*<br>(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUserPlaybackSetVolumeAsync(percent, deviceId)
+
+Set Volume For User's Playback 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| percent | *System.Int32*<br>(Required) The volume to set. Must be a value from 0 to 100 inclusive. |
+| deviceId | *System.String*<br>(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUserPlaybackStartResumeAsync(request, deviceId)
+
+Start/Resume a User's Playback 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| request | *Spotify.NetStandard.Requests.PlaybackRequest*<br>(Optional) Playback Request Object |
+| deviceId | *System.String*<br>(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUserPlaybackToggleShuffleAsync(state, deviceId)
+
+Toggle Shuffle For User’s Playback 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| state | *System.Boolean*<br>(Required) true : Shuffle user’s playback, false : Do not shuffle user’s playback |
+| deviceId | *System.String*<br>(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target. |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthUserPlaybackTransferAsync(request)
+
+Transfer a User's Playback 
+Scopes: ConnectModifyPlaybackState
+
+
+| Name | Description |
+| ---- | ----------- |
+| request | *Spotify.NetStandard.Requests.DevicesRequest*<br>(Required) Devices Request Object |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### DeleteApiAsync\`\`2(tokenType, itemIds, lookupType, request, parameters, successCode)
+
+Delete API
+
+#### Type Parameters
+
+- TRequest - Request Type
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| tokenType | *System.Collections.Generic.List{System.String}*<br>Auth Type |
+| itemIds | *System.String*<br>Spotify IDs of the Items |
+| lookupType | *\`\`0*<br>Lookup Type |
+| request | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Request Object |
+| parameters | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Request Parameters |
+| successCode | *System.Int32*<br>Success Code |
+
+#### Returns
+
+Response Object
+
+### FormatCursorParameters(cursor)
+
+Format Cursor Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>Format Cursor Parameters |
+
+#### Returns
+
+Dictionary of Request Parameters
+
+### FormatIdsParameter(itemIds)
+
+Format Ids Parameter
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>IDs of the Items |
+
+#### Returns
+
+Ids as String
+
+### FormatRequestHeadersAsync(tokenType)
+
+Format Request Headers
+
+| Name | Description |
+| ---- | ----------- |
+| tokenType | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Authentication Token Type |
+
+#### Returns
+
+Dictionary of Headers
+
+### FormatRequestParameters(limit, offset, country, locale)
+
+Format Request Parameters
+
+| Name | Description |
+| ---- | ----------- |
+| limit | *System.Nullable{System.Int32}*<br>Limit |
+| offset | *System.Nullable{System.Int32}*<br>Offset |
+| country | *System.String*<br>Country |
+| locale | *System.String*<br>Locale |
+
+#### Returns
+
+Dictionary of Request Parameters
+
+### GetApiAsync\`\`1(itemIds, lookupType, parameters, tokenType)
+
+Get API
+
+#### Type Parameters
+
+- TResponse - Reponse Type
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>Spotify IDs of the Items |
+| lookupType | *System.String*<br>Lookup Type |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Request Parameters |
+| tokenType | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Token Type |
+
+#### Returns
+
+Response Object
+
+### GetApiAsync\`\`1(itemId, lookupType, parameters, tokenType)
+
+Get API
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| itemId | *System.String*<br>Spotify ID of the Item |
+| lookupType | *System.String*<br>Lookup Type |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Request Parameters |
+| tokenType | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Token Type |
+
+#### Returns
+
+Response Object
+
+### GetAsync\`\`1(hostname, endpoint, parameters)
+
+Get
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| hostname | *System.String*<br>Hostname |
+| endpoint | *System.String*<br>Endpoint |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Parameters |
+
+#### Returns
+
+Response
+
+### GetAsync\`\`1(source)
+
+Get
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| source | *System.Uri*<br>Source Uri |
+
+#### Returns
+
+Response
+
+### GetBrowseAsync(browseCategory, country, locale, parameters, page)
+
+Browse
+
+| Name | Description |
+| ---- | ----------- |
+| browseCategory | *System.String*<br>Category |
+| country | *System.String*<br>Country |
+| locale | *System.String*<br>Locale |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Parameters |
+| page | *Spotify.NetStandard.Requests.Page*<br>Page |
+
+#### Returns
+
+Content Response
+
+### GetResponseAsync\`\`1(hostname, endpoint, parameters, tokenType)
+
+Get Response
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| hostname | *System.String*<br>Hostname |
+| endpoint | *System.String*<br>Endpoint |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Parameters |
+| tokenType | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Token Type |
+
+#### Returns
+
+Response
+
+### GetResponseAsync\`\`1(source, tokenType)
+
+Get Response
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| source | *System.Uri*<br>Source Uri |
+| tokenType | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Token Type |
+
+#### Returns
+
+Response
+
+### GetStatus\`\`1(response, code, successCode)
+
+Get Status
+
+#### Type Parameters
+
+- TResponse - 
+
+| Name | Description |
+| ---- | ----------- |
+| response | *\`\`0*<br> |
+| code | *System.Int32*<br> |
+| successCode | *System.Int32*<br> |
+
+### GetToken
+
+Get Access Token
+
+#### Returns
+
+Access Token
+
+### LookupAllCategoriesAsync(country, locale, page)
+
+Lookup All Categories
+
+| Name | Description |
+| ---- | ----------- |
+| country | *System.String*<br>(Optional) A country: an ISO 3166-1 alpha-2 country code. |
+| locale | *System.String*<br>(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of categories to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0 |
+
+#### Returns
+
+Content Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupApiAsync(itemIds, lookupType, country, page)
+
+Lookup API
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>Spotify IDs of the Items |
+| lookupType | *System.String*<br>Lookup Type |
+| country | *System.String*<br>Country |
+| page | *Spotify.NetStandard.Requests.Page*<br>Page Offset and Limit |
+
+#### Returns
+
+Lookup Response
+
+### LookupApiAsync\`\`1(itemId, lookupType, country, key, value, page)
+
+Lookup API
+
+#### Type Parameters
+
+- TResult - Result Type
+
+| Name | Description |
+| ---- | ----------- |
+| itemId | *System.String*<br>Spotify ID of the Item |
+| lookupType | *System.String*<br>Lookup Type |
+| country | *System.String*<br>Country |
+| key | *System.String*<br>Parameter Key |
+| value | *System.String*<br>Parameter Value |
+| page | *Spotify.NetStandard.Requests.Page*<br>Page Offset and Limit |
+
+#### Returns
+
+Response of Type
+
+### LookupArtistAlbumsAsync(itemId, includeGroup, market, page)
+
+Lookup Artist's Albums
+
+| Name | Description |
+| ---- | ----------- |
+| itemId | *System.String*<br>(Required) The Spotify ID for the artist. |
+| includeGroup | *Spotify.NetStandard.Requests.IncludeGroup*<br>(Optional) Filters the response. If not supplied, all album types will be returned |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50 - Offset: The index of the first album to return. Default: 0 (i.e., the first album). |
+
+#### Returns
+
+Paging List of Album
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupArtistRelatedArtistsAsync(itemId)
+
+Lookup Artist's Related Artists
+
+| Name | Description |
+| ---- | ----------- |
+| itemId | *System.String*<br>(Required) The Spotify ID for the artist. |
+
+#### Returns
+
+Lookup Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupArtistTopTracksAsync(itemId, market)
+
+Lookup Artist's Top Tracks
+
+| Name | Description |
+| ---- | ----------- |
+| itemId | *System.String*<br>(Required) The Spotify ID for the artist. |
+| market | *System.String*<br>(Required) A country: an ISO 3166-1 alpha-2 country code or the string from_token |
+
+#### Returns
+
+Lookup Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupAsync(itemIds, lookupType, market, page)
+
+Lookup
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of Spotify ID for the items |
+| lookupType | *Spotify.NetStandard.Enums.LookupType*<br>(Required) Lookup Item Type |
+| market | *System.String*<br>(Optional) ISO 3166-1 alpha-2 country code or the string from_token |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return |
+
+#### Returns
+
+Lookup Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupAsync\`\`1(itemId, lookupType, market, key, value, page)
+
+Lookup
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| itemId | *System.String*<br>(Required) The Spotify ID for the album. |
+| lookupType | *Spotify.NetStandard.Enums.LookupType*<br>(Required) Item Type |
+| market | *System.String*<br>(Optional) ISO 3166-1 alpha-2 country code or the string from_token |
+| key | *System.String*<br>(Optional) Query Parameter Key |
+| value | *System.String*<br>(Optional) Query Parameter Value |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return |
+
+#### Returns
+
+Lookup Response by Type
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupCategoryAsync(categoryId, country, locale)
+
+Lookup Category
+
+| Name | Description |
+| ---- | ----------- |
+| categoryId | *System.String*<br>The Spotify category ID for the category. |
+| country | *System.String*<br>(Optional) A country: an ISO 3166-1 alpha-2 country code. |
+| locale | *System.String*<br>(Optional) The desired language, consisting of an ISO 639-1 language code and an ISO 3166-1 alpha-2 country code, joined by an underscore. |
+
+#### Returns
+
+Category Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupCursorApiAsync\`\`1(lookupType, key, value, cursor, tokenType)
+
+Lookup Cursor API
+
+#### Type Parameters
+
+- TResult - Result Type
+
+| Name | Description |
+| ---- | ----------- |
+| lookupType | *System.String*<br>Lookup Type |
+| key | *System.String*<br>Key |
+| value | *System.String*<br>Value |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>Cursor Limit and After |
+| tokenType | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Token Type |
+
+#### Returns
+
+Response Object
+
+### LookupFeaturedPlaylistsAsync(country, locale, timestamp, page)
+
+Lookup Featured Playlists
+
+| Name | Description |
+| ---- | ----------- |
+| country | *System.String*<br>(Optional) A country: an ISO 3166-1 alpha-2 country code. |
+| locale | *System.String*<br>(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore |
+| timestamp | *System.Nullable{System.DateTime}*<br>(Optional) Use this parameter to specify the user’s local time to get results tailored for that specific date and time in the day. |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0 |
+
+#### Returns
+
+Content Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupNewReleasesAsync(country, page)
+
+Lookup New Releases
+
+| Name | Description |
+| ---- | ----------- |
+| country | *System.String*<br>(Optional) A country: an ISO 3166-1 alpha-2 country code. |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0 |
+
+#### Returns
+
+Content Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupRecommendationGenres
+
+Lookup Recommendation Genres
+
+#### Returns
+
+Available Genre Seeds Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupRecommendationsAsync(seedArtists, seedGenres, seedTracks, limit, market, minTuneableTrack, maxTuneableTrack, targetTuneableTrack)
+
+Lookup Recommendations
+
+| Name | Description |
+| ---- | ----------- |
+| seedArtists | *System.Collections.Generic.List{System.String}*<br>List of Spotify IDs for seed artists |
+| seedGenres | *System.Collections.Generic.List{System.String}*<br>List of any genres in the set of available genre seeds |
+| seedTracks | *System.Collections.Generic.List{System.String}*<br>List of Spotify IDs for a seed track |
+| limit | *System.Nullable{System.Int32}*<br>The target size of the list of recommended tracks. Default: 20. Minimum: 1. Maximum: 100. |
+| market | *System.String*<br>An ISO 3166-1 alpha-2 country code |
+| minTuneableTrack | *Spotify.NetStandard.Requests.TuneableTrack*<br>Multiple values. For each tunable track attribute, a hard floor on the selected track attribute’s value can be provided |
+| maxTuneableTrack | *Spotify.NetStandard.Requests.TuneableTrack*<br>Multiple values. For each tunable track attribute, a hard ceiling on the selected track attribute’s value can be provided. |
+| targetTuneableTrack | *Spotify.NetStandard.Requests.TuneableTrack*<br>Multiple values. For each of the tunable track attributes a target value may be provided. |
+
+#### Returns
+
+Recommendation Response Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### NavigateAsync\`\`1(paging, navigateType)
+
+Navigate
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| paging | *Spotify.NetStandard.Responses.Paging{\`\`0}*<br>Paging Object |
+| navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
+
+#### Returns
+
+Content Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### PostApiAsync\`\`2(itemIds, lookupType, request, body, parameters, tokenType, successCode)
+
+Post API
+
+#### Type Parameters
+
+- TRequest - Request Type
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>Spotify IDs of the Items |
+| lookupType | *System.String*<br>Lookup Type |
+| request | *\`\`0*<br>Request |
+| body | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Request Body |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Request Parameters |
+| tokenType | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Token Type |
+| successCode | *System.Int32*<br>Success Code |
+
+#### Returns
+
+Response Object
+
+### PostApiAsync\`\`2(itemIds, lookupType, request, body, parameters, tokenType)
+
+Post API
+
+#### Type Parameters
+
+- TRequest - Request Type
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>Spotify IDs of the Items |
+| lookupType | *System.String*<br>Lookup Type |
+| request | *\`\`0*<br>Request Object |
+| body | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Request Body |
+| parameters | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>Request Parameters |
+| tokenType | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Token Type |
+
+#### Returns
+
+Response Object
+
+### PutApiAsync\`\`2(tokenType, itemIds, lookupType, request, fileBytes, parameters, successCode)
+
+Put API
+
+#### Type Parameters
+
+- TRequest - Request Type
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| tokenType | *System.Collections.Generic.List{System.String}*<br>Auth Type |
+| itemIds | *System.String*<br>Spotify IDs of the Items |
+| lookupType | *\`\`0*<br>Lookup Type |
+| request | *System.Byte[]*<br>Request Object |
+| fileBytes | *System.Collections.Generic.Dictionary{System.String,System.String}*<br>File Bytes |
+| parameters | *Spotify.NetStandard.Client.Authentication.Enums.TokenType*<br>Request Parameters |
+| successCode | *System.Int32*<br>Success Code |
+
+#### Returns
+
+Response Object
 
 ### RefreshToken
 
@@ -2819,6 +4259,7 @@ Required For
 
 Upload a Custom Playlist Cover Image
 
+
 ### UserReadEmail
 
 Read access to user’s email address. 
@@ -3053,13 +4494,18 @@ URI Request Object
 Spotify URI
 
 
+## Actions
+
+Actions Object
+
+### Disallows
+
+Allows to update the user interface based on which playback actions are available within the current context
+
+
 ## Album
 
 Album Object
-
-### Artists
-
-The artists of the album. Each artist object includes a link in href to more detailed information about the artist.
 
 ### Copyrights
 
@@ -3263,7 +4709,7 @@ Paging Object of Category
 
 ### Playlists
 
-Paging Object of Playlists
+Paging Object of Simplified Playlists
 
 ### Tracks
 
@@ -3316,12 +4762,12 @@ The device that is currently active
 
 off, track, context
 
-### SuffleState
+### ShuffleState
 
 If shuffle is on or off
 
 
-## CursorPaging
+## CursorPaging\`1
 
 Cursor Paging Object
 
@@ -3332,10 +4778,6 @@ Cursor Paging Object
 ### Constructor
 
 Constructor
-
-### After
-
-The cursor to use as key to find the next page of items.
 
 ### Cursors
 
@@ -3402,6 +4844,51 @@ Devices Object
 ### Items
 
 A list of 0..n Device objects.
+
+
+## Disallows
+
+Disallows Object
+
+### IsInterruptingPlaybackNotAllowed
+
+Interrupting playback not allowed?
+
+### IsPausingNotAllowed
+
+Pausing not allowed?
+
+### IsResumingNotAllowed
+
+Resuming not allowed?
+
+### IsSeekingNotAllowed
+
+Seeking not allowed? Will be set to true while playing an ad track
+
+### IsSkippingNextNotAllowed
+
+Skipping next not allowed? Will be set to true while playing an ad track
+
+### IsSkippingPrevNotAllowed
+
+Skipping previous not allowed? Will be set to true while playing an ad track
+
+### IsTogglingRepeatContextNotAllowed
+
+Toggling repeat context not allowed?
+
+### IsTogglingRepeatTrackNotAllowed
+
+Toggling repeat track not allowed?
+
+### IsTogglingShuffleNotAllowed
+
+Toggling shuffle not allowed?
+
+### IsTransferringPlaybackNotAllowed
+
+Transferring playback not allowed?
 
 
 ## ErrorResponse
@@ -3508,7 +4995,7 @@ List of Audio Feature Object
 List of Track Object
 
 
-## Paging
+## Paging\`1
 
 Paging Object
 
@@ -3570,10 +5057,6 @@ The track the user listened to.
 
 Playlist Object
 
-### Collaborative
-
-true if the owner allows other users to modify the playlist.
-
 ### Description
 
 The playlist description. Only returned for modified, verified playlists, otherwise null.
@@ -3581,26 +5064,6 @@ The playlist description. Only returned for modified, verified playlists, otherw
 ### Followers
 
 Information about the followers of the playlist.
-
-### Images
-
-Images for the playlist.The array may be empty or contain up to three images. The images are returned by size in descending order.
-
-### Owner
-
-The user who owns the playlist
-
-### Public
-
-The playlist’s public/private status: true the playlist is public, false the playlist is private, null the playlist status is not relevant
-
-### SnapshotId
-
-The version identifier for the current playlist.
-
-### Tracks
-
-Information about the tracks of the playlist.
 
 
 ## PlaylistTrack
@@ -3636,6 +5099,10 @@ The country of the user, as set in the user’s account profile.An ISO 3166-1 al
 
 The user’s email address, as entered by the user when creating their account. his field is only available when the current user has granted access to the user-read-email scope
 
+### Product
+
+The user’s Spotify subscription level: “premium”, “free”, etc. This field is only available when the current user has granted access to the user-read-private scope.
+
 
 ## PublicUser
 
@@ -3652,10 +5119,6 @@ Information about the followers of this user.
 ### Images
 
 The user’s profile image.
-
-### Product
-
-The user’s Spotify subscription level: “premium”, “free”, etc. This field is only available when the current user has granted access to the user-read-private scope.
 
 
 ## RecommendationSeed
@@ -3822,6 +5285,10 @@ Simplified Artist Object
 
 Simplified Currently Playing Object
 
+### Actions
+
+Allows to update the user interface based on which playback actions are available within the current context
+
 ### Context
 
 A Context Object. Can be null
@@ -3847,6 +5314,35 @@ The currently playing track. Can be null.
 The object type of the currently playing item. Can be one of track, episode, ad or unknown.
 
 
+## SimplifiedPlaylist
+
+Simplified Playlist Object
+
+### Collaborative
+
+Returns true if the owner allows other users to modify the playlist.
+
+### Images
+
+Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order.
+
+### Owner
+
+The user who owns the playlist
+
+### Public
+
+The playlist’s public/private status: true the playlist is public, false the playlist is private, null the playlist status is not relevant
+
+### SnapshotId
+
+The version identifier for the current playlist.
+
+### Tracks
+
+Information about the tracks of the playlist.
+
+
 ## SimplifiedTrack
 
 Simplified Track Object
@@ -3861,7 +5357,7 @@ A list of the countries in which the track can be played, identified by their IS
 
 ### DiscNumber
 
-The disc number(usually 1 unless the album consists of more than one disc).
+The disc number (usually 1 unless the album consists of more than one disc).
 
 ### Duration
 
@@ -3870,6 +5366,10 @@ The track length in milliseconds.
 ### IsExplicit
 
 Whether or not the track has explicit lyrics ( true = yes it does; false = no it does not OR unknown).
+
+### IsLocal
+
+Whether or not the track is from a local file.
 
 ### IsPlayable
 
@@ -3881,7 +5381,11 @@ Part of the response when Track Relinking is applied and is only part of the res
 
 ### Preview
 
-A link to a 30 second preview(MP3 format) of the track.
+A link to a 30 second preview (MP3 format) of the track.
+
+### Restrictions
+
+Part of the response when Track Relinking is applied, the original track is not available in the given market
 
 ### TrackNumber
 
@@ -3935,10 +5439,6 @@ Track Object
 
 The album on which the track appears.The album object includes a link in href to full information about the album.
 
-### Artists
-
-The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist.
-
 ### ExternalId
 
 Known external IDs for the track.
@@ -3946,10 +5446,6 @@ Known external IDs for the track.
 ### Popularity
 
 The popularity of the track. The value will be between 0 and 100, with 100 being the most popular.
-
-### Restrictions
-
-Part of the response when Track Relinking is applied, the original track is not available in the given market
 
 
 ## TrackRestriction

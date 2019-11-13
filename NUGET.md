@@ -36,6 +36,10 @@ You can get a "client-id" and "client-secret" from [developer.spotify.com/dashbo
 
 ## Change Log
 
+### Version 1.1.5
+
+- Added Actions Object, Disallows Object, Simplified Playlist Object and updated related methods
+
 ### Version 1.1.4
 
 - Fixed Token Storage and Get Playlist Tracks

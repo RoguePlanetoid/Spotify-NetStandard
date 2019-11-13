@@ -27,10 +27,10 @@ namespace Spotify.NetStandard.Responses
         public Paging<Artist> Artists { get; set; }
 
         /// <summary>
-        /// Paging Object of Playlists
+        /// Paging Object of Simplified Playlists
         /// </summary>
         [DataMember(Name = "playlists")]
-        public Paging<Playlist> Playlists { get; set; }
+        public Paging<SimplifiedPlaylist> Playlists { get; set; }
 
         /// <summary>
         /// Paging Object of Tracks

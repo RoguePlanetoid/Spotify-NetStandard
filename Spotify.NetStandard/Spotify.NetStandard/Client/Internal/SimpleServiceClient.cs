@@ -165,6 +165,7 @@ namespace Spotify.NetStandard.Client.Internal
                     HttpStatusCode = message.StatusCode
                 };
             }
+            var test = message.Content.ReadAsStringAsync();
             using (Stream stream = await message.Content.ReadAsStreamAsync())
             {
                 using (StreamReader reader = new StreamReader(stream))

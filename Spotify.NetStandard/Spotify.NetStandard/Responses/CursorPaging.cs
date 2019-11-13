@@ -47,11 +47,6 @@ namespace Spotify.NetStandard.Responses
         public IEnumerable<T> ReadOnlyItems => Items;
 
         /// <summary>
-        /// The cursor to use as key to find the next page of items.
-        /// </summary>
-        public new Cursor After => Cursors;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public CursorPaging()

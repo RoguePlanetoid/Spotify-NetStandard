@@ -22,7 +22,7 @@ namespace Spotify.NetStandard.Responses
         public List<string> AvailableMarkets { get; set; }
 
         /// <summary>
-        /// The disc number(usually 1 unless the album consists of more than one disc).
+        /// The disc number (usually 1 unless the album consists of more than one disc).
         /// </summary>
         [DataMember(Name = "disc_number")]
         public int DiscNumber { get; set; }
@@ -52,7 +52,13 @@ namespace Spotify.NetStandard.Responses
         public LinkedTrack LinkedFrom { get; set; }
 
         /// <summary>
-        /// A link to a 30 second preview(MP3 format) of the track.
+        /// Part of the response when Track Relinking is applied, the original track is not available in the given market
+        /// </summary>
+        [DataMember(Name = "restrictions")]
+        public List<TrackRestriction> Restrictions { get; set; }
+
+        /// <summary>
+        /// A link to a 30 second preview (MP3 format) of the track.
         /// </summary>
         [DataMember(Name = "preview_url")]
         public string Preview { get; set; }
@@ -62,5 +68,11 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         [DataMember(Name = "track_number")]
         public int TrackNumber { get; set; }
+
+        /// <summary>
+        /// Whether or not the track is from a local file.
+        /// </summary>
+        [DataMember(Name = "is_local")]
+        public bool IsLocal { get; set; }
     }
 }

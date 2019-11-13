@@ -1,4 +1,10 @@
-## Spotify.NetStandard
+# Spotify.NetStandard
+
+## Change Log
+
+### Version 1.1.5
+
+- Added Actions Object, Disallows Object, Simplified Playlist Object and updated related methods
 
 ### Version 1.1.4
 
