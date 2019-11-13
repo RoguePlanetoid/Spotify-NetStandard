@@ -119,12 +119,25 @@ namespace Spotify.NetStandard.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task Test_AuthLookupFollowingState()
+        public async Task Test_AuthLookupFollowingState_Artist()
         {
             // "Ariana Grande"
             var result = await _client.AuthLookupFollowingStateAsync(
                 new List<string> { "66CXWjxzNUsdJxJ2JdwvnR" },
                 Enums.FollowType.Artist);
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Get Following State for Artists/Users
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthLookupFollowingState_User()
+        {
+            var result = await _client.AuthLookupFollowingStateAsync(
+                new List<string> { "spotify" },
+                Enums.FollowType.User);
             Assert.IsNotNull(result);
         }
 
@@ -541,7 +554,7 @@ namespace Spotify.NetStandard.Test
             {
                 DeviceIds = new List<string>
                 {
-                    "b361dad0e1a59a3f9b45ed889ebfe79c5660f390"
+                    "070fc10afd54a54572be8c7cf01008476bce0ea5"
                 },
                 Play = true
             });

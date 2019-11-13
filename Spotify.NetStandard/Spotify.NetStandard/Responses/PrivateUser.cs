@@ -19,5 +19,11 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         [DataMember(Name = "email")]
         public string Email { get; set; }
+
+        /// <summary>
+        /// The user’s Spotify subscription level: “premium”, “free”, etc. This field is only available when the current user has granted access to the user-read-private scope.
+        /// </summary>
+        [DataMember(Name = "product")]
+        public string Product { get; set; }
     }
 }

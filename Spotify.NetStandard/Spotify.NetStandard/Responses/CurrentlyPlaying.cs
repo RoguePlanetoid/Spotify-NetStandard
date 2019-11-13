@@ -24,6 +24,6 @@ namespace Spotify.NetStandard.Responses
         /// If shuffle is on or off
         /// </summary>
         [DataMember(Name = "shuffle_state")]
-        public bool SuffleState { get; set; }
+        public bool ShuffleState { get; set; }
     }
 }

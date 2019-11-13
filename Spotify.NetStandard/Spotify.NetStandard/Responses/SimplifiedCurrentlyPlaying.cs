@@ -43,5 +43,11 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         [DataMember(Name = "currently_playing_type")]
         public string Type { get; set; }
+
+        /// <summary>
+        /// Allows to update the user interface based on which playback actions are available within the current context
+        /// </summary>
+        [DataMember(Name = "actions")]
+        public Actions Actions { get; set; }
     }
 }

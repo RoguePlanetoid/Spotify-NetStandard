@@ -156,15 +156,15 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="categoryId">(Required) The Spotify category ID for the category.</param>
         /// <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
-        /// <returns>Paging List of Playlist Object</returns>
+        /// <returns>Paging List of Simplified Playlist Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public async Task<Paging<Playlist>> GetCategoryPlaylistsAsync(
+        public async Task<Paging<SimplifiedPlaylist>> GetCategoryPlaylistsAsync(
             string categoryId,
             string country = null,
             Page page = null) => 
                 (await _client.LookupAsync<ContentResponse>(
                 categoryId, LookupType.CategoriesPlaylists, 
-                country))?.Playlists;
+                country, page: page))?.Playlists;
 
         /// <summary>
         /// Get Recommendations
@@ -221,9 +221,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="locale">(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
         /// <param name="timeStamp">(Optional) Use this parameter to specify the user’s local time to get results tailored for that specific date and time in the day.</param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
-        /// <returns>Paging List of Playlist Object</returns>
+        /// <returns>Paging List of Simplified Playlist Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public async Task<Paging<Playlist>> GetAllFeaturedPlaylistsAsync(
+        public async Task<Paging<SimplifiedPlaylist>> GetAllFeaturedPlaylistsAsync(
             string country = null,
             string locale = null,
             DateTime? timeStamp = null,
@@ -365,18 +365,18 @@ namespace Spotify.NetStandard.Client.Internal
         /// <para>Scopes: PlaylistModifyPublic, PlaylistModifyPrivate</para>
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
-        /// <param name="tracks">(Required) List of Spotify URIs of the tracks to remove</param>
+        /// <param name="uris">(Required) List of Spotify URIs of the tracks to remove</param>
         /// <param name="snapshotId">(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
         /// <returns>Snapshot Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public Task<Snapshot> RemoveTracksFromPlaylistAsync(
             string playlistId,
-            List<string> tracks,
+            List<string> uris,
             string snapshotId = null)
         {
             var request = new PlaylistTracksRequest()
             {
-                Tracks = tracks.Select(uri => 
+                Tracks = uris.Select(uri => 
                 new UriRequest()
                 {
                     Uri = uri
@@ -432,9 +432,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// <para>Scopes: PlaylistReadPrivate, PlaylistReadCollaborative</para>
         /// </summary>
         /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100. Use with limit to get the next set of playlists.</param>
-        /// <returns>CursorPaging of Playlist Object</returns>
+        /// <returns>CursorPaging of Simplified Playlist Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<Playlist>> GetUserPlaylistsAsync(
+        public Task<CursorPaging<SimplifiedPlaylist>> GetUserPlaylistsAsync(
             Cursor cursor = null) => 
             _client.AuthLookupUserPlaylistsAsync(
                 cursor);
@@ -474,9 +474,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <param name="userId">(Required) The user’s Spotify user ID.</param>
         /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
-        /// <returns>CursorPaging of Playlist Object</returns>
+        /// <returns>CursorPaging of Simplified Playlist Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<Playlist>> GetUserPlaylistsAsync(
+        public Task<CursorPaging<SimplifiedPlaylist>> GetUserPlaylistsAsync(
             string userId,
             Cursor cursor = null) => 
             _client.AuthLookupUserPlaylistsAsync(
@@ -545,7 +545,7 @@ namespace Spotify.NetStandard.Client.Internal
             string playlistId,
             int rangeStart,
             int insertBefore,
-            int? rangeLength,
+            int? rangeLength = 1,
             string snapshotId = null)
         {
             var request = new PlaylistReorderRequest()

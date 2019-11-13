@@ -523,7 +523,7 @@
             <param name="categoryId">(Required) The Spotify category ID for the category.</param>
             <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
             <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
-            <returns>Paging List of Playlist Object</returns>
+            <returns>Paging List of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetRecommendationsAsync(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.Nullable{System.Int32},System.String,Spotify.NetStandard.Requests.TuneableTrack,Spotify.NetStandard.Requests.TuneableTrack,Spotify.NetStandard.Requests.TuneableTrack)">
@@ -565,7 +565,7 @@
             <param name="locale">(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
             <param name="timeStamp">(Optional) Use this parameter to specify the user’s local time to get results tailored for that specific date and time in the day.</param>
             <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
-            <returns>Paging List of Playlist Object</returns>
+            <returns>Paging List of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetFollowingStateForArtistsOrUsersAsync(System.Collections.Generic.List{System.String},Spotify.NetStandard.Enums.FollowType)">
@@ -660,7 +660,7 @@
             <para>Scopes: PlaylistModifyPublic, PlaylistModifyPrivate</para>
             </summary>
             <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
-            <param name="tracks">(Required) List of Spotify URIs of the tracks to remove</param>
+            <param name="uris">(Required) List of Spotify URIs of the tracks to remove</param>
             <param name="snapshotId">(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
             <returns>Snapshot Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
@@ -699,7 +699,7 @@
             <para>Scopes: PlaylistReadPrivate, PlaylistReadCollaborative</para>
             </summary>
             <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100. Use with limit to get the next set of playlists.</param>
-            <returns>CursorPaging of Playlist Object</returns>
+            <returns>CursorPaging of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.ChangePlaylistDetailsAsync(System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String)">
@@ -722,7 +722,7 @@
             </summary>
             <param name="userId">(Required) The user’s Spotify user ID.</param>
             <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
-            <returns>CursorPaging of Playlist Object</returns>
+            <returns>CursorPaging of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.ReplacePlaylistTracksAsync(System.String,System.Collections.Generic.List{System.String})">
@@ -1482,7 +1482,7 @@
             <para>Scopes: PlaylistReadPrivate, PlaylistReadCollaborative</para>
             </summary>
             <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100. Use with limit to get the next set of playlists.</param>
-            <returns>CursorPaging of Playlist Object</returns>
+            <returns>CursorPaging of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthChangePlaylistDetailsAsync(System.String,Spotify.NetStandard.Requests.PlaylistRequest)">
@@ -1502,7 +1502,7 @@
             </summary>
             <param name="userId">(Required) The user’s Spotify user ID.</param>
             <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
-            <returns>CursorPaging of Playlist Object</returns>
+            <returns>CursorPaging of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthReplacePlaylistTracksAsync(System.String,Spotify.NetStandard.Requests.UriListRequest)">
@@ -2218,7 +2218,7 @@
             <param name="categoryId">(Required) The Spotify category ID for the category.</param>
             <param name="country">(Optional) A country: an ISO 3166-1 alpha-2 country code. </param>
             <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
-            <returns>Paging List of Playlist Object</returns>
+            <returns>Paging List of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetRecommendationsAsync(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.Nullable{System.Int32},System.String,Spotify.NetStandard.Requests.TuneableTrack,Spotify.NetStandard.Requests.TuneableTrack,Spotify.NetStandard.Requests.TuneableTrack)">
@@ -2260,7 +2260,7 @@
             <param name="locale">(Optional) The desired language, consisting of a lowercase ISO 639-1 language code and an uppercase ISO 3166-1 alpha-2 country code, joined by an underscore</param>
             <param name="timeStamp">(Optional) Use this parameter to specify the user’s local time to get results tailored for that specific date and time in the day.</param>
             <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
-            <returns>Paging List of Playlist Object</returns>
+            <returns>Paging List of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetFollowingStateForArtistsOrUsersAsync(System.Collections.Generic.List{System.String},Spotify.NetStandard.Enums.FollowType)">
@@ -2355,7 +2355,7 @@
             <para>Scopes: PlaylistModifyPublic, PlaylistModifyPrivate</para>
             </summary>
             <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
-            <param name="tracks">(Required) List of Spotify URIs of the tracks to remove</param>
+            <param name="uris">(Required) List of Spotify URIs of the tracks to remove</param>
             <param name="snapshotId">(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
             <returns>Snapshot Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
@@ -2394,7 +2394,7 @@
             <para>Scopes: PlaylistReadPrivate, PlaylistReadCollaborative</para>
             </summary>
             <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100. Use with limit to get the next set of playlists.</param>
-            <returns>CursorPaging of Playlist Object</returns>
+            <returns>CursorPaging of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.ChangePlaylistDetailsAsync(System.String,System.String,System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.String)">
@@ -2417,7 +2417,7 @@
             </summary>
             <param name="userId">(Required) The user’s Spotify user ID.</param>
             <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
-            <returns>CursorPaging of Playlist Object</returns>
+            <returns>CursorPaging of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.ReplacePlaylistTracksAsync(System.String,System.Collections.Generic.List{System.String})">
@@ -3369,7 +3369,7 @@
             <para>Scopes: PlaylistReadPrivate, PlaylistReadCollaborative</para>
             </summary>
             <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100. Use with limit to get the next set of playlists.</param>
-            <returns>CursorPaging of Playlist Object</returns>
+            <returns>CursorPaging of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthChangePlaylistDetailsAsync(System.String,Spotify.NetStandard.Requests.PlaylistRequest)">
@@ -3389,7 +3389,7 @@
             </summary>
             <param name="userId">(Required) The user’s Spotify user ID.</param>
             <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
-            <returns>CursorPaging of Playlist Object</returns>
+            <returns>CursorPaging of Simplified Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthReplacePlaylistTracksAsync(System.String,Spotify.NetStandard.Requests.UriListRequest)">
@@ -4430,14 +4430,19 @@
             Spotify URI
             </summary>
         </member>
+        <member name="T:Spotify.NetStandard.Responses.Actions">
+            <summary>
+            Actions Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Actions.Disallows">
+            <summary>
+            Allows to update the user interface based on which playback actions are available within the current context
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.Album">
             <summary>
             Album Object
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.Album.Artists">
-            <summary>
-            The artists of the album. Each artist object includes a link in href to more detailed information about the artist.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.Album.Copyrights">
@@ -4682,7 +4687,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.ContentResponse.Playlists">
             <summary>
-            Paging Object of Playlists
+            Paging Object of Simplified Playlists
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.ContentResponse.Tracks">
@@ -4745,7 +4750,7 @@
             off, track, context
             </summary>
         </member>
-        <member name="P:Spotify.NetStandard.Responses.CurrentlyPlaying.SuffleState">
+        <member name="P:Spotify.NetStandard.Responses.CurrentlyPlaying.ShuffleState">
             <summary>
             If shuffle is on or off
             </summary>
@@ -4784,11 +4789,6 @@
         <member name="P:Spotify.NetStandard.Responses.CursorPaging`1.ReadOnlyItems">
             <summary>
             IEnumerable of Type
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.CursorPaging`1.After">
-            <summary>
-            The cursor to use as key to find the next page of items.
             </summary>
         </member>
         <member name="M:Spotify.NetStandard.Responses.CursorPaging`1.#ctor">
@@ -4844,6 +4844,61 @@
         <member name="P:Spotify.NetStandard.Responses.Devices.Items">
             <summary>
             A list of 0..n Device objects.
+            </summary>
+        </member>
+        <member name="T:Spotify.NetStandard.Responses.Disallows">
+            <summary>
+            Disallows Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsInterruptingPlaybackNotAllowed">
+            <summary>
+            Interrupting playback not allowed?
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsPausingNotAllowed">
+            <summary>
+            Pausing not allowed?
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsResumingNotAllowed">
+            <summary>
+            Resuming not allowed?
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsSeekingNotAllowed">
+            <summary>
+            Seeking not allowed? Will be set to true while playing an ad track
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsSkippingNextNotAllowed">
+            <summary>
+            Skipping next not allowed? Will be set to true while playing an ad track
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsSkippingPrevNotAllowed">
+            <summary>
+            Skipping previous not allowed? Will be set to true while playing an ad track
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsTogglingRepeatContextNotAllowed">
+            <summary>
+            Toggling repeat context not allowed?
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsTogglingShuffleNotAllowed">
+            <summary>
+            Toggling shuffle not allowed?
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsTogglingRepeatTrackNotAllowed">
+            <summary>
+            Toggling repeat track not allowed?
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Disallows.IsTransferringPlaybackNotAllowed">
+            <summary>
+            Transferring playback not allowed?
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.ErrorResponse">
@@ -5037,11 +5092,6 @@
             Playlist Object
             </summary>
         </member>
-        <member name="P:Spotify.NetStandard.Responses.Playlist.Collaborative">
-            <summary>
-            true if the owner allows other users to modify the playlist.
-            </summary>
-        </member>
         <member name="P:Spotify.NetStandard.Responses.Playlist.Description">
             <summary>
             The playlist description. Only returned for modified, verified playlists, otherwise null.
@@ -5050,31 +5100,6 @@
         <member name="P:Spotify.NetStandard.Responses.Playlist.Followers">
             <summary>
             Information about the followers of the playlist.
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.Playlist.Images">
-            <summary>
-            Images for the playlist.The array may be empty or contain up to three images. The images are returned by size in descending order.
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.Playlist.Owner">
-            <summary>
-            The user who owns the playlist
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.Playlist.Public">
-            <summary>
-            The playlist’s public/private status: true the playlist is public, false the playlist is private, null the playlist status is not relevant
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.Playlist.SnapshotId">
-            <summary>
-            The version identifier for the current playlist.
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.Playlist.Tracks">
-            <summary>
-            Information about the tracks of the playlist.
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.PlaylistTrack">
@@ -5117,6 +5142,11 @@
             The user’s email address, as entered by the user when creating their account. his field is only available when the current user has granted access to the user-read-email scope
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Responses.PrivateUser.Product">
+            <summary>
+            The user’s Spotify subscription level: “premium”, “free”, etc. This field is only available when the current user has granted access to the user-read-private scope.
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.PublicUser">
             <summary>
             Public User Object
@@ -5135,11 +5165,6 @@
         <member name="P:Spotify.NetStandard.Responses.PublicUser.Images">
             <summary>
             The user’s profile image.
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.PublicUser.Product">
-            <summary>
-            The user’s Spotify subscription level: “premium”, “free”, etc. This field is only available when the current user has granted access to the user-read-private scope.
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.RecommendationSeed">
@@ -5367,6 +5392,46 @@
             The object type of the currently playing item. Can be one of track, episode, ad or unknown.
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedCurrentlyPlaying.Actions">
+            <summary>
+            Allows to update the user interface based on which playback actions are available within the current context
+            </summary>
+        </member>
+        <member name="T:Spotify.NetStandard.Responses.SimplifiedPlaylist">
+            <summary>
+            Simplified Playlist Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedPlaylist.Collaborative">
+            <summary>
+            Returns true if the owner allows other users to modify the playlist.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedPlaylist.Images">
+            <summary>
+            Images for the playlist. The array may be empty or contain up to three images. The images are returned by size in descending order.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedPlaylist.Owner">
+            <summary>
+            The user who owns the playlist
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedPlaylist.Public">
+            <summary>
+            The playlist’s public/private status: true the playlist is public, false the playlist is private, null the playlist status is not relevant
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedPlaylist.SnapshotId">
+            <summary>
+            The version identifier for the current playlist.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedPlaylist.Tracks">
+            <summary>
+            Information about the tracks of the playlist.
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.SimplifiedTrack">
             <summary>
             Simplified Track Object
@@ -5384,7 +5449,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.SimplifiedTrack.DiscNumber">
             <summary>
-            The disc number(usually 1 unless the album consists of more than one disc).
+            The disc number (usually 1 unless the album consists of more than one disc).
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.SimplifiedTrack.Duration">
@@ -5407,14 +5472,24 @@
             Part of the response when Track Relinking is applied and is only part of the response if the track linking, in fact, exists
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedTrack.Restrictions">
+            <summary>
+            Part of the response when Track Relinking is applied, the original track is not available in the given market
+            </summary>
+        </member>
         <member name="P:Spotify.NetStandard.Responses.SimplifiedTrack.Preview">
             <summary>
-            A link to a 30 second preview(MP3 format) of the track.
+            A link to a 30 second preview (MP3 format) of the track.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.SimplifiedTrack.TrackNumber">
             <summary>
             The number of the track. If an album has several discs, the track number is the number on the specified disc.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedTrack.IsLocal">
+            <summary>
+            Whether or not the track is from a local file.
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.Snapshot">
@@ -5472,19 +5547,9 @@
             The album on which the track appears.The album object includes a link in href to full information about the album.
             </summary>
         </member>
-        <member name="P:Spotify.NetStandard.Responses.Track.Artists">
-            <summary>
-            The artists who performed the track. Each artist object includes a link in href to more detailed information about the artist.
-            </summary>
-        </member>
         <member name="P:Spotify.NetStandard.Responses.Track.ExternalId">
             <summary>
             Known external IDs for the track.
-            </summary>
-        </member>
-        <member name="P:Spotify.NetStandard.Responses.Track.Restrictions">
-            <summary>
-            Part of the response when Track Relinking is applied, the original track is not available in the given market
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.Track.Popularity">

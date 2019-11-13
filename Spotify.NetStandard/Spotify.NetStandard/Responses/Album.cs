@@ -10,12 +10,6 @@ namespace Spotify.NetStandard.Responses
     public class Album : SimplifiedAlbum
     {
         /// <summary>
-        /// The artists of the album. Each artist object includes a link in href to more detailed information about the artist.
-        /// </summary>
-        [DataMember(Name = "artists")]
-        public new List<Artist> Artists { get; set; }
-
-        /// <summary>
         /// The copyright statements of the album.
         /// </summary>
         [DataMember(Name = "copyrights")]

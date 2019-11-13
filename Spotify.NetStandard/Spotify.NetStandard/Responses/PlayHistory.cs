@@ -12,7 +12,7 @@ namespace Spotify.NetStandard.Responses
         /// The track the user listened to.
         /// </summary>
         [DataMember(Name = "track")]
-        public SimplifiedTrack Track { get; set; }
+        public Track Track { get; set; }
 
         /// <summary>
         /// The date and time the track was played. Format yyyy-MM-ddTHH:mm:ss

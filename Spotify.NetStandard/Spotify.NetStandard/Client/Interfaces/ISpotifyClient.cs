@@ -478,9 +478,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <para>Scopes: PlaylistReadPrivate, PlaylistReadCollaborative</para>
         /// </summary>
         /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100. Use with limit to get the next set of playlists.</param>
-        /// <returns>CursorPaging of Playlist Object</returns>
+        /// <returns>CursorPaging of Simplified Playlist Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<CursorPaging<Playlist>> AuthLookupUserPlaylistsAsync(
+        Task<CursorPaging<SimplifiedPlaylist>> AuthLookupUserPlaylistsAsync(
             Cursor cursor = null);
 
         /// <summary>
@@ -501,9 +501,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// </summary>
         /// <param name="userId">(Required) The user’s Spotify user ID.</param>
         /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
-        /// <returns>CursorPaging of Playlist Object</returns>
+        /// <returns>CursorPaging of Simplified Playlist Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<CursorPaging<Playlist>> AuthLookupUserPlaylistsAsync(
+        Task<CursorPaging<SimplifiedPlaylist>> AuthLookupUserPlaylistsAsync(
             string userId,
             Cursor cursor = null);
 
