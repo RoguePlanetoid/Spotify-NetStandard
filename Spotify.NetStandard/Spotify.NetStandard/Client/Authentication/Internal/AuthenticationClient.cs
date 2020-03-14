@@ -76,8 +76,15 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             {
                 { grant_type, client_credentials }
             };
-            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(host_name,
-                token_uri, null, cancellationToken, request, null, headers, true);
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
+                host_name,
+                token_uri, 
+                null, 
+                cancellationToken, 
+                request, 
+                null, 
+                headers, 
+                true);
         }
 
         /// <summary>
@@ -99,10 +106,17 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             {
                 { grant_type, authorization_code },
                 { code_value, accessCode.Code },
-                { redirect_uri, accessCode.RedirectUri.ToString() }
+                { redirect_uri, $"{accessCode.RedirectUri}" }
             };
-            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(host_name,
-                token_uri, null, cancellationToken, request, null, headers, true);
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
+                host_name,
+                token_uri, 
+                null, 
+                cancellationToken, 
+                request, 
+                null, 
+                headers, 
+                true);
         }
 
         /// <summary>
@@ -125,8 +139,15 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 { grant_type, refresh_token },
                 { refresh_token, refreshToken },
             };
-            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(host_name,
-                token_uri, null, cancellationToken, request, null, headers, true);
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
+                host_name,
+                token_uri, 
+                null, 
+                cancellationToken, 
+                request, 
+                null, 
+                headers, 
+                true);
         }
 
         /// <summary>
@@ -152,7 +173,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 { scope_value, scopes },
                 { state_value, HttpUtility.UrlEncode(state) },
                 { redirect_uri, HttpUtility.UrlEncode(redirectUrl) },
-                { show_dialog, showDialog.ToString().ToLower() }
+                { show_dialog, $"{showDialog}".ToLower() }
             };
             return GetUri(host_name, auth_uri, request);
         }
@@ -180,7 +201,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 { scope_value, scopes },
                 { state_value, HttpUtility.UrlEncode(state) },
                 { redirect_uri, HttpUtility.UrlEncode(redirectUrl) },
-                { show_dialog, showDialog.ToString().ToLower() }
+                { show_dialog, $"{showDialog}".ToLower() }
             };
             return GetUri(host_name, auth_uri, request);
         }

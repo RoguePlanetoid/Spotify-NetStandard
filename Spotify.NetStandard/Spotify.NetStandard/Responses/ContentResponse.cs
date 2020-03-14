@@ -9,6 +9,12 @@ namespace Spotify.NetStandard.Responses
     public class ContentResponse : BaseResponse
     {
         /// <summary>
+        /// Message
+        /// </summary>
+        [DataMember(Name = "message")]
+        public string Message { get; set; }
+
+        /// <summary>
         /// Paging Object of Albums
         /// </summary>
         [DataMember(Name = "albums")]

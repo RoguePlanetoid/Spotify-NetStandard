@@ -590,6 +590,18 @@ namespace Spotify.NetStandard.Test
 
         #region Player API
         /// <summary>
+        /// Add an Item to the User's Playback Queue
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_UserPlaybackAddToQueueAsync()
+        {
+            var result = await _client.Api.UserPlaybackAddToQueueAsync(
+                "spotify:track:73SpzrcaHk0RQPFP73vqVR");
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
         /// Skip User’s Playback To Next Track
         /// </summary>
         /// <returns></returns>
@@ -647,7 +659,7 @@ namespace Spotify.NetStandard.Test
             var result = await _client.Api.UserPlaybackTransferAsync(
                 new List<string>
                 {
-                   "070fc10afd54a54572be8c7cf01008476bce0ea5"
+                   "d7ed7af587669fea18d47a54fdfd2759e896c1e8"
                 },
                 true);
             Assert.IsTrue(result.Success);

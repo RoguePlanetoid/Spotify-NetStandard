@@ -6,7 +6,7 @@ namespace Spotify.NetStandard.Responses
     /// Status Response
     /// </summary>
     [DataContract]
-    public class Status
+    public class Status : BaseResponse
     {
         /// <summary>
         /// Code

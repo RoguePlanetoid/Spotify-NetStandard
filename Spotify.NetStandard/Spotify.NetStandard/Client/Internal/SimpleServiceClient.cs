@@ -74,18 +74,15 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="requestPayload">Request Payload</param>
         /// <returns>HttpContent</returns>
         private HttpContent GetJsonContent<TRequest>(
-            TRequest requestPayload)
-        {
-            if (requestPayload == null) return null;
-            return new StringContent(
-                JsonConvert.SerializeObject(requestPayload,
-                Formatting.None,
-                new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore
-                }), 
-                Encoding.UTF8, type_json);
-        }
+            TRequest requestPayload) => 
+                requestPayload == null ? null
+                : new StringContent(JsonConvert.SerializeObject(requestPayload,
+                    Formatting.None,
+                    new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    }),
+                    Encoding.UTF8, type_json);
 
         /// <summary>
         /// Get Json Content
@@ -93,16 +90,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="requestBody">Dictionary of String, String</param>
         /// <returns>HttpContent</returns>
         private HttpContent GetJsonContent(
-            Dictionary<string, string> requestBody)
-        {
-            if (requestBody == null) return null;
-            return new StringContent(
-                JsonConvert.SerializeObject(
+            Dictionary<string, string> requestBody) => 
+                requestBody == null ? null
+                : new StringContent(JsonConvert.SerializeObject(
                     requestBody.ToDictionary(
-                    item => item.Key.ToString(), 
-                    item => item.Value.ToString())), 
-                Encoding.UTF8, type_json);
-        }
+                    item => item.Key.ToString(),
+                    item => item.Value.ToString())),
+                    Encoding.UTF8, type_json);
 
         /// <summary>
         /// Get Jpeg Content
@@ -110,11 +104,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="fileBytes">File Bytes</param>
         /// <returns>Http Content</returns>
         private HttpContent GetJpegContent(
-            byte[] fileBytes)
-        {
-            return new StringContent(Convert.ToBase64String(fileBytes), 
-                Encoding.UTF8, type_jpeg);
-        }
+            byte[] fileBytes) => 
+                new StringContent(Convert.ToBase64String(fileBytes),
+                    Encoding.UTF8, type_jpeg);
 
         /// <summary>
         /// Create Http Request
@@ -132,9 +124,7 @@ namespace Spotify.NetStandard.Client.Internal
         {
             HttpRequestMessage message = new HttpRequestMessage(method, uri);
             if (content != null)
-            {
                 message.Content = content;
-            }
             if (extraHeaders != null)
             {
                 foreach (var header in extraHeaders)
@@ -165,7 +155,6 @@ namespace Spotify.NetStandard.Client.Internal
                     HttpStatusCode = message.StatusCode
                 };
             }
-            var test = message.Content.ReadAsStringAsync();
             using (Stream stream = await message.Content.ReadAsStreamAsync())
             {
                 using (StreamReader reader = new StreamReader(stream))
@@ -206,10 +195,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// <summary>
         /// Clear Client Headers
         /// </summary>
-        private void ClearClientHeaders()
-        {
+        private void ClearClientHeaders() => 
             _httpClient.Value.DefaultRequestHeaders.Clear();
-        }
 
         /// <summary>
         /// Get Content
@@ -219,14 +206,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="requestBody">Request Body</param>
         /// <returns></returns>
         private HttpContent GetContent<TRequest>(TRequest request,
-            Dictionary<string, string> requestBody = null)
-        {
-            return requestBody == null ?
+            Dictionary<string, string> requestBody = null) => 
+                requestBody == null ?
                 request == null ?
                 null :
                 GetJsonContent(request) :
                 GetJsonContent(requestBody);
-        }
 
         /// <summary>
         /// HTTP Request
@@ -294,9 +279,7 @@ namespace Spotify.NetStandard.Client.Internal
         public virtual void Dispose()
         {
             if (_httpClient.IsValueCreated)
-            {
                 _httpClient.Value.Dispose();
-            }
         }
         #endregion Public Methods
 
@@ -321,14 +304,14 @@ namespace Spotify.NetStandard.Client.Internal
             where TResponse : class
         {
             var result =
-            await GetRequestAsync<TResponse, TResponse, TResponse>(
-            hostname,
-            relativeUri,
-            null,
-            cancellationToken,
-            parameters,
-            headers);
-            return result.Result ?? result.ErrorResult;
+            await GetRequestWithErrorAsync<TResponse, TResponse, TResponse>(
+                hostname,
+                relativeUri,
+                null,
+                cancellationToken,
+                parameters,
+                headers);
+                return result.Result ?? result.ErrorResult;
         }
 
         /// <summary>
@@ -355,18 +338,46 @@ namespace Spotify.NetStandard.Client.Internal
             where TResponse : class
         {
             var result =
-            await GetRequestAsync<TRequest, TResponse, TResponse>(
-            hostname,
-            relativeUri,
-            request,
-            cancellationToken,
-            parameters,
-            headers);
-            return result.Result ?? result.ErrorResult;
+            await GetRequestWithErrorAsync<TRequest, TResponse, TResponse>(
+                hostname,
+                relativeUri,
+                request,
+                cancellationToken,
+                parameters,
+                headers);
+                return result.Result ?? result.ErrorResult;
         }
 
         /// <summary>
-        /// HTTP GET Request
+        /// GET Request with Error
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <typeparam name="TErrorResponse">Error Response</typeparam>
+        /// <param name="hostname">The HTTP host</param>
+        /// <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <param name="parameters">Optional query string parameters</param>
+        /// <param name="headers">Optional HTTP headers</param>
+        /// <returns>Response and Status Code</returns>
+        /// <returns></returns>
+        public Task<SimpleServiceResult<TResponse, TErrorResponse>> GetRequestWithErrorAsync<TResponse, TErrorResponse>(
+            Uri hostname,
+            string relativeUri,
+            CancellationToken cancellationToken,
+            Dictionary<string, string> parameters = null,
+            Dictionary<string, string> headers = null)
+            where TResponse : class
+            where TErrorResponse : class =>
+                GetRequestWithErrorAsync<TResponse, TResponse, TErrorResponse>(
+                hostname,
+                relativeUri,
+                null,
+                cancellationToken,
+                parameters,
+                headers);
+
+        /// <summary>
+        /// HTTP GET Request with Error
         /// </summary>
         /// <typeparam name="TRequest">The request data type</typeparam>
         /// <typeparam name="TResult">The result data contract type</typeparam>
@@ -379,7 +390,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="extraHeaders">Optional HTTP headers</param>
         /// <returns>SimpleServiceResult</returns>
         public Task<SimpleServiceResult<TResult, TErrorResult>>
-            GetRequestAsync<TRequest, TResult, TErrorResult>(
+            GetRequestWithErrorAsync<TRequest, TResult, TErrorResult>(
             Uri hostname,
             string relativeUri,
             TRequest request,
@@ -429,15 +440,15 @@ namespace Spotify.NetStandard.Client.Internal
         {
             var result =
             await PostRequestAsync<TRequest, TResponse, TResponse>(
-            hostname,
-            relativeUri,
-            request,
-            cancellationToken,
-            body,
-            parameters,
-            headers,
-            useFormContent);
-            return result.Result ?? result.ErrorResult;
+                hostname,
+                relativeUri,
+                request,
+                cancellationToken,
+                body,
+                parameters,
+                headers,
+                useFormContent);
+                return result.Result ?? result.ErrorResult;
         }
 
         /// <summary>
@@ -468,15 +479,14 @@ namespace Spotify.NetStandard.Client.Internal
         {
             var result =
             await PostRequestAsync<TRequest, TResponse, TResponse>(
-            hostname,
-            relativeUri,
-            request,
-            cancellationToken,
-            body,
-            parameters,
-            headers);
-            return (result.Result ?? result.ErrorResult, 
-                result.HttpStatusCode);
+                hostname,
+                relativeUri,
+                request,
+                cancellationToken,
+                body,
+                parameters,
+                headers);
+                return (result.Result ?? result.ErrorResult, result.HttpStatusCode);
         }
 
         /// <summary>
@@ -620,8 +630,7 @@ namespace Spotify.NetStandard.Client.Internal
             fileBytes,
             parameters,
             headers);
-            return (result.Result ?? result.ErrorResult,
-                result.HttpStatusCode);
+            return (result.Result ?? result.ErrorResult, result.HttpStatusCode);
         }
 
         /// <summary>
@@ -652,15 +661,14 @@ namespace Spotify.NetStandard.Client.Internal
         {
             var result = 
             await PutRequestAsync<TRequest, TResponse, TResponse>(
-            hostname,
-            relativeUri,
-            request,
-            cancellationToken,
-            fileBytes,
-            parameters,
-            headers);
-            return (result.Result ?? result.ErrorResult, 
-                result.HttpStatusCode);
+                hostname,
+                relativeUri,
+                request,
+                cancellationToken,
+                fileBytes,
+                parameters,
+                headers);
+                return (result.Result ?? result.ErrorResult, result.HttpStatusCode);
         }
 
         /// <summary>
