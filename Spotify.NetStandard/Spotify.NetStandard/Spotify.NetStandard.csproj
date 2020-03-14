@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>1.2.0</Version>
-    <Authors>Comentsys</Authors>
+    <Authors>RoguePlanetoid</Authors>
     <Company>Comentsys</Company>
     <Description>Spotify API .NET Standard Library from Comentsys by RoguePlanetoid with contributions from parkeradam</Description>
     <RepositoryUrl>https://github.com/RoguePlanetoid/Spotify-NetStandard</RepositoryUrl>
