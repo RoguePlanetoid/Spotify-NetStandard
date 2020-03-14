@@ -646,11 +646,12 @@
             <returns>Snapshot Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetPlaylistAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetPlaylistAsync(System.String,System.String)">
             <summary>
             Get a Playlist
             </summary>
             <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+            <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
             <returns>Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
@@ -665,13 +666,14 @@
             <returns>Snapshot Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetPlaylistTracksAsync(System.String,System.String,Spotify.NetStandard.Requests.Page)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetPlaylistTracksAsync(System.String,System.String,Spotify.NetStandard.Requests.Page,System.String)">
             <summary>
             Get a Playlist's Tracks
             </summary>
             <param name="id">(Required) The Spotify ID for the playlist.</param>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
             <param name="page">(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0</param>
+            <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
             <returns>Paging List of Playlist Track Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
@@ -877,6 +879,16 @@
             <param name="id">(Requird) The Spotify ID for the artist.</param>
             <returns>List of Artist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.UserPlaybackAddToQueueAsync(System.String,System.String)">
+            <summary>
+            Add an Item to the User's Playback Queue
+            <para>Scopes: ConnectModifyPlaybackState</para>
+            </summary>
+            <param name="uri">(Required) The uri of the item to add to the queue. Must be a track or an episode uri.</param>
+            <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.UserPlaybackNextTrackAsync(System.String)">
             <summary>
@@ -1138,6 +1150,13 @@
             </summary>
             <returns>Access Token</returns>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.RefreshToken(Spotify.NetStandard.Client.Authentication.AccessToken)">
+            <summary>
+            Refresh Token
+            </summary>
+            <param name="value">Access Token</param>
+            <returns>Access Token</returns>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthGetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Authenticated Get
@@ -1206,7 +1225,7 @@
             <returns>Content Response</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.LookupAsync``1(System.String,Spotify.NetStandard.Enums.LookupType,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.LookupAsync``1(System.String,Spotify.NetStandard.Enums.LookupType,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
             <summary>
             Lookup
             </summary>
@@ -1214,6 +1233,7 @@
             <param name="itemId">(Required) The Spotify ID for the album.</param>
             <param name="lookupType">(Required) Item Type</param>
             <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+            <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType, if omitted, all fields are returned</param>
             <param name="key">(Optional) Query Parameter Key</param>
             <param name="value">(Optional) Query Parameter Value</param>
             <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
@@ -1608,6 +1628,16 @@
             <returns>List of true or false values</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserPlaybackAddToQueueAsync(System.String,System.String)">
+            <summary>
+            Add an Item to the User's Playback Queue
+            <para>Scopes: ConnectModifyPlaybackState</para>
+            </summary>
+            <param name="uri">(Required) The uri of the item to add to the queue. Must be a track or an episode uri.</param>
+            <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserPlaybackNextTrackAsync(System.String)">
             <summary>
             Skip User’s Playback To Next Track
@@ -1973,9 +2003,23 @@
             <returns>Response and Status Code</returns>
             <returns></returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SimpleServiceClient.GetRequestAsync``3(System.Uri,System.String,``0,System.Threading.CancellationToken,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:Spotify.NetStandard.Client.Internal.SimpleServiceClient.GetRequestWithErrorAsync``2(System.Uri,System.String,System.Threading.CancellationToken,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
-            HTTP GET Request
+            GET Request with Error
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <typeparam name="TErrorResponse">Error Response</typeparam>
+            <param name="hostname">The HTTP host</param>
+            <param name="relativeUri">A relative URL to append at the end of the HTTP host</param>
+            <param name="cancellationToken">Cancellation Token</param>
+            <param name="parameters">Optional query string parameters</param>
+            <param name="headers">Optional HTTP headers</param>
+            <returns>Response and Status Code</returns>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SimpleServiceClient.GetRequestWithErrorAsync``3(System.Uri,System.String,``0,System.Threading.CancellationToken,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            HTTP GET Request with Error
             </summary>
             <typeparam name="TRequest">The request data type</typeparam>
             <typeparam name="TResult">The result data contract type</typeparam>
@@ -2341,11 +2385,12 @@
             <returns>Snapshot Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetPlaylistAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetPlaylistAsync(System.String,System.String)">
             <summary>
             Get a Playlist
             </summary>
             <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+            <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
             <returns>Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
@@ -2360,13 +2405,14 @@
             <returns>Snapshot Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetPlaylistTracksAsync(System.String,System.String,Spotify.NetStandard.Requests.Page)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetPlaylistTracksAsync(System.String,System.String,Spotify.NetStandard.Requests.Page,System.String)">
             <summary>
             Get a Playlist's Tracks
             </summary>
             <param name="id">(Required) The Spotify ID for the playlist.</param>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
             <param name="page">(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0</param>
+            <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
             <returns>Paging List of Playlist Track Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
@@ -2572,6 +2618,16 @@
             <param name="id">(Requird) The Spotify ID for the artist.</param>
             <returns>List of Artist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.UserPlaybackAddToQueueAsync(System.String,System.String)">
+            <summary>
+            Add an Item to the User's Playback Queue
+            <para>Scopes: ConnectModifyPlaybackState</para>
+            </summary>
+            <param name="uri">(Required) The uri of the item to add to the queue. Must be a track or an episode uri.</param>
+            <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.UserPlaybackNextTrackAsync(System.String)">
             <summary>
@@ -2817,7 +2873,7 @@
             <param name="tokenType">Authentication Token Type</param>
             <returns>Dictionary of Headers</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.FormatRequestParameters(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.FormatRequestParameters(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String)">
             <summary>
             Format Request Parameters
             </summary>
@@ -2825,6 +2881,7 @@
             <param name="offset">Offset</param>
             <param name="country">Country</param>
             <param name="locale">Locale</param>
+            <param name="fields">Fields</param>
             <returns>Dictionary of Request Parameters</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.FormatIdsParameter(System.Collections.Generic.List{System.String})">
@@ -2861,7 +2918,7 @@
             <param name="page">Page</param>
             <returns>Content Response</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.LookupApiAsync``1(System.String,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.LookupApiAsync``1(System.String,System.String,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
             <summary>
             Lookup API
             </summary>
@@ -2869,6 +2926,7 @@
             <param name="itemId">Spotify ID of the Item</param>
             <param name="lookupType">Lookup Type</param>
             <param name="country">Country</param>
+            <param name="fields">Fields</param>
             <param name="key">Parameter Key</param>
             <param name="value">Parameter Value</param>
             <param name="page">Page Offset and Limit</param>
@@ -2902,30 +2960,28 @@
             </summary>
             <typeparam name="TResponse">Response Type</typeparam>
             <param name="itemId">Spotify ID of the Item</param>
-            <param name="lookupType">Lookup Type</param>
+            <param name="requestType">Request Type</param>
             <param name="parameters">Request Parameters</param>
             <param name="tokenType">Token Type</param>
             <returns>Response Object</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetApiAsync``1(System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetBoolsAsync(System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType)">
             <summary>
-            Get API
+            Get Bools
             </summary>
-            <typeparam name="TResponse">Reponse Type</typeparam>
             <param name="itemIds">Spotify IDs of the Items</param>
-            <param name="lookupType">Lookup Type</param>
+            <param name="requestType">Request Type</param>
             <param name="parameters">Request Parameters</param>
             <param name="tokenType">Token Type</param>
             <returns>Response Object</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PostApiAsync``2(System.Collections.Generic.List{System.String},System.String,``0,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Int32)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PostApiStatusAsync``2(System.String,``0,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Int32)">
             <summary>
-            Post API
+            Post API Status
             </summary>
             <typeparam name="TRequest">Request Type</typeparam>
             <typeparam name="TResponse">Response Type</typeparam>
-            <param name="itemIds">Spotify IDs of the Items</param>
-            <param name="lookupType">Lookup Type</param>
+            <param name="requestType">Request Type</param>
             <param name="request">Request</param>
             <param name="body">Request Body</param>
             <param name="parameters">Request Parameters</param>
@@ -2933,14 +2989,13 @@
             <param name="successCode">Success Code</param>
             <returns>Response Object</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PostApiAsync``2(System.Collections.Generic.List{System.String},System.String,``0,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PostApiAsync``2(System.String,``0,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType)">
             <summary>
             Post API
             </summary>
             <typeparam name="TRequest">Request Type</typeparam>
             <typeparam name="TResponse">Response Type</typeparam>
-            <param name="itemIds">Spotify IDs of the Items</param>
-            <param name="lookupType">Lookup Type</param>
+            <param name="requestType">Request Type</param>
             <param name="request">Request Object</param>
             <param name="body">Request Body</param>
             <param name="parameters">Request Parameters</param>
@@ -2955,7 +3010,7 @@
             <typeparam name="TResponse">Response Type</typeparam>
             <param name="tokenType">Auth Type</param>
             <param name="itemIds">Spotify IDs of the Items</param>
-            <param name="lookupType">Lookup Type</param>
+            <param name="requestType">Request Type</param>
             <param name="request">Request Object</param>
             <param name="fileBytes">File Bytes</param>
             <param name="parameters">Request Parameters</param>
@@ -2970,7 +3025,7 @@
             <typeparam name="TResponse">Response Type</typeparam>
             <param name="tokenType">Auth Type</param>
             <param name="itemIds">Spotify IDs of the Items</param>
-            <param name="lookupType">Lookup Type</param>
+            <param name="requestType">Request Type</param>
             <param name="request">Request Object</param>
             <param name="parameters">Request Parameters</param>
             <param name="successCode">Success Code</param>
@@ -2995,6 +3050,13 @@
             <param name="source">Source Uri</param>
             <param name="tokenType">Token Type</param>
             <returns>Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.HasFieldsParameter(Spotify.NetStandard.Enums.LookupType)">
+            <summary>
+            Has Fields Parameter
+            </summary>
+            <param name="lookupType">Lookup Type</param>
+            <returns>True if LookupType Supports Fields Parameter</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.#ctor(Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache)">
             <summary>
@@ -3023,6 +3085,13 @@
             <summary>
             Refresh Token
             </summary>
+            <returns>Access Token</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.RefreshToken(Spotify.NetStandard.Client.Authentication.AccessToken)">
+            <summary>
+            Refresh Token
+            </summary>
+            <param name="value">Access Token</param>
             <returns>Access Token</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthGetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
@@ -3093,7 +3162,7 @@
             <returns>Content Response</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.LookupAsync``1(System.String,Spotify.NetStandard.Enums.LookupType,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.LookupAsync``1(System.String,Spotify.NetStandard.Enums.LookupType,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
             <summary>
             Lookup
             </summary>
@@ -3101,6 +3170,7 @@
             <param name="itemId">(Required) The Spotify ID for the album.</param>
             <param name="lookupType">(Required) Item Type</param>
             <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+            <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType if omitted, all fields are returned</param>
             <param name="key">(Optional) Query Parameter Key</param>
             <param name="value">(Optional) Query Parameter Value</param>
             <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
@@ -3493,6 +3563,16 @@
             </summary>
             <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
             <returns>List of true or false values</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserPlaybackAddToQueueAsync(System.String,System.String)">
+            <summary>
+            Add an Item to the User's Playback Queue
+            <para>Scopes: ConnectModifyPlaybackState</para>
+            </summary>
+            <param name="uri">(Required) The uri of the item to add to the queue. Must be a track or an episode uri.</param>
+            <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+            <returns>Status Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserPlaybackNextTrackAsync(System.String)">
@@ -4640,6 +4720,27 @@
             Error Object
             </summary>
         </member>
+        <member name="T:Spotify.NetStandard.Responses.Bools">
+            <summary>
+            List of true or false values
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Responses.Bools.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Responses.Bools.#ctor(Spotify.NetStandard.Responses.ErrorResponse)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="errorResponse"></param>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Bools.Error">
+            <summary>
+            Error Object
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.Category">
             <summary>
             Category Object
@@ -4668,6 +4769,11 @@
         <member name="T:Spotify.NetStandard.Responses.ContentResponse">
             <summary>
             Content Response
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.ContentResponse.Message">
+            <summary>
+            Message
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.ContentResponse.Albums">

@@ -41,6 +41,13 @@ namespace Spotify.NetStandard.Client.Interfaces
         Task<AccessToken> RefreshToken();
 
         /// <summary>
+        /// Refresh Token
+        /// </summary>
+        /// <param name="value">Access Token</param>
+        /// <returns>Access Token</returns>
+        Task<AccessToken> RefreshToken(AccessToken value);
+
+        /// <summary>
         /// Authenticated Get
         /// </summary>
         /// <typeparam name="TResponse">Response Type</typeparam>
@@ -132,6 +139,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="itemId">(Required) The Spotify ID for the album.</param>
         /// <param name="lookupType">(Required) Item Type</param>
         /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType, if omitted, all fields are returned</param>
         /// <param name="key">(Optional) Query Parameter Key</param>
         /// <param name="value">(Optional) Query Parameter Value</param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
@@ -141,6 +149,7 @@ namespace Spotify.NetStandard.Client.Interfaces
             string itemId,
             LookupType lookupType,
             string market = null,
+            string fields = null,
             string key = null,
             string value = null,
             Page page = null)
@@ -352,7 +361,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="followType">(Required) Either artist or user.</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<List<bool>> AuthLookupFollowingStateAsync(
+        Task<Bools> AuthLookupFollowingStateAsync(
             List<string> itemIds,
             FollowType followType);
 
@@ -364,7 +373,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="playlistId">(Required) The Spotify ID of the playlist.</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<List<bool>> AuthLookupUserFollowingPlaylistAsync(
+        Task<Bools> AuthLookupUserFollowingPlaylistAsync(
             List<string> itemIds,
             string playlistId);
 
@@ -551,7 +560,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<List<bool>> AuthLookupCheckUserSavedAlbumsAsync(
+        Task<Bools> AuthLookupCheckUserSavedAlbumsAsync(
             List<string> itemIds);
 
         /// <summary>
@@ -625,11 +634,22 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<List<bool>> AuthLookupCheckUserSavedTracksAsync(
+        Task<Bools> AuthLookupCheckUserSavedTracksAsync(
             List<string> itemIds);
         #endregion Authenticated Library API
 
         #region Authenticated Player API
+        /// <summary>
+        /// Add an Item to the User's Playback Queue
+        /// <para>Scopes: ConnectModifyPlaybackState</para>
+        /// </summary>
+        /// <param name="uri">(Required) The uri of the item to add to the queue. Must be a track or an episode uri.</param>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<Status> AuthUserPlaybackAddToQueueAsync(
+            string uri, string deviceId = null);
+
         /// <summary>
         /// Skip User’s Playback To Next Track
         /// <para>Scopes: ConnectModifyPlaybackState</para>

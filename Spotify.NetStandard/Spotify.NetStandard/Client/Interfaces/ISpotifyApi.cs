@@ -202,7 +202,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="ids">(Required) List of the artist or the user Spotify IDs to check.</param>
         /// <param name="followType">(Required) Either artist or user.</param>
         /// <returns>List of true or false values</returns>
-        Task<List<bool>> GetFollowingStateForArtistsOrUsersAsync(
+        Task<Bools> GetFollowingStateForArtistsOrUsersAsync(
             List<string> ids,
             FollowType followType);
 
@@ -214,7 +214,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="playlistId">(Required) The Spotify ID of the playlist.</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<List<bool>> CheckUsersFollowingPlaylistAsync(
+        Task<Bools> CheckUsersFollowingPlaylistAsync(
             List<string> ids,
             string playlistId);
 
@@ -294,9 +294,11 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// Get a Playlist
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
         /// <returns>Playlist Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        Task<Playlist> GetPlaylistAsync(string playlistId);
+        Task<Playlist> GetPlaylistAsync(
+            string playlistId, string fields = null);
 
         /// <summary>
         /// Remove Tracks from a Playlist
@@ -318,12 +320,14 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="id">(Required) The Spotify ID for the playlist.</param>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0</param>
+        /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
         /// <returns>Paging List of Playlist Track Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
         Task<Paging<PlaylistTrack>> GetPlaylistTracksAsync(
             string id,
             string market = null,
-            Page page = null);
+            Page page = null,
+            string fields = null);
 
         /// <summary>
         /// Get a Playlist Cover Image
@@ -442,7 +446,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<List<bool>> CheckUserSavedAlbumsAsync(
+        Task<Bools> CheckUserSavedAlbumsAsync(
             List<string> itemIds);
 
         /// <summary>
@@ -516,7 +520,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        Task<List<bool>> CheckUserSavedTracksAsync(
+        Task<Bools> CheckUserSavedTracksAsync(
             List<string> itemIds);
         #endregion Library API
 
@@ -576,6 +580,17 @@ namespace Spotify.NetStandard.Client.Interfaces
         #endregion Artists API
 
         #region Player API
+        /// <summary>
+        /// Add an Item to the User's Playback Queue
+        /// <para>Scopes: ConnectModifyPlaybackState</para>
+        /// </summary>
+        /// <param name="uri">(Required) The uri of the item to add to the queue. Must be a track or an episode uri.</param>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<Status> UserPlaybackAddToQueueAsync(
+            string uri, string deviceId = null);
+
         /// <summary>
         /// Skip User’s Playback To Next Track
         /// <para>Scopes: ConnectModifyPlaybackState</para>

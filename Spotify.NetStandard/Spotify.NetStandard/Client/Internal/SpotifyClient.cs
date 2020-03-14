@@ -21,6 +21,10 @@ namespace Spotify.NetStandard.Client.Internal
     internal class SpotifyClient : SimpleServiceClient, ISpotifyClient
     {
         #region Private Members
+        private const int http_ok = 200; // HTTP Status 200 OK
+        private const int http_created = 201; // HTTP Status 201 CREATED
+        private const int http_accepted = 202; // HTTP Status 202 ACCEPTED
+        private const int http_nocontent = 204; // HTTP Status 204 NO CONTENT
         private static readonly Uri _hostName = new Uri("https://api.spotify.com");
         // Members
         private static ISpotifyApi _api;
@@ -40,7 +44,7 @@ namespace Spotify.NetStandard.Client.Internal
             var access = await
                 _authenticationCache.CheckAndRenewTokenAsync(
                 tokenType, new CancellationToken(false));
-            headers.Add("Authorization", "Bearer " + access.Token);
+            headers.Add("Authorization", $"Bearer {access.Token}");
             return headers;
         }
 
@@ -51,27 +55,26 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="offset">Offset</param>
         /// <param name="country">Country</param>
         /// <param name="locale">Locale</param>
+        /// <param name="fields">Fields</param>
         /// <returns>Dictionary of Request Parameters</returns>
         private Dictionary<string, string> FormatRequestParameters(
             int? limit = null,
             int? offset = null,
             string country = null,
-            string locale = null)
+            string locale = null,
+            string fields = null)
         {
             var parameters = new Dictionary<string, string>();
-
             if (limit != null)
-                parameters.Add("limit", limit.Value.ToString());
-
+                parameters.Add(nameof(limit), $"{limit.Value}");
             if (offset != null)
-                parameters.Add("offset", offset.Value.ToString());
-
+                parameters.Add(nameof(offset), $"{offset.Value}");
             if (!string.IsNullOrEmpty(country))
-                parameters.Add("country", country);
-
+                parameters.Add(nameof(country), country);
             if (!string.IsNullOrEmpty(locale))
-                parameters.Add("locale", locale);
-
+                parameters.Add(nameof(locale), locale);
+            if (!string.IsNullOrEmpty(fields))
+                parameters.Add(nameof(fields), fields);
             return parameters;
         }
 
@@ -80,12 +83,11 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <param name="itemIds">IDs of the Items</param>
         /// <returns>Ids as String</returns>
-        private string FormatIdsParameter(List<string> itemIds)
-        {
-            return itemIds.Aggregate(string.Empty,
-                (current, id) => current +
-                (!string.IsNullOrEmpty(current) ? "," : string.Empty) + id);
-        }
+        private string FormatIdsParameter(List<string> itemIds) => 
+            itemIds.Aggregate(string.Empty,
+            (current, id) => current +
+            (!string.IsNullOrEmpty(current) ? 
+            "," : string.Empty) + id);
 
         /// <summary>
         /// Format Cursor Parameters
@@ -96,21 +98,15 @@ namespace Spotify.NetStandard.Client.Internal
         { 
             if (cursor?.Next != null)
                 return new Uri(cursor.Next).Query.QueryStringAsDictionary();
-
             var parameters = new Dictionary<string, string>();
-
             if (cursor?.Offset != null)
-                parameters.Add("offset", cursor.Offset.Value.ToString());
-
+                parameters.Add("offset", $"{cursor.Offset.Value}");
             if (cursor?.Limit != null)
-                parameters.Add("limit", cursor.Limit.Value.ToString());
-
+                parameters.Add("limit", $"{cursor.Limit.Value}");
             if (cursor?.After != null)
                 parameters.Add("after", cursor?.After);
-
             if (cursor?.Before != null)
                 parameters.Add("before", cursor?.Before);
-
             return parameters;
         }
 
@@ -173,6 +169,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemId">Spotify ID of the Item</param>
         /// <param name="lookupType">Lookup Type</param>
         /// <param name="country">Country</param>
+        /// <param name="fields">Fields</param>
         /// <param name="key">Parameter Key</param>
         /// <param name="value">Parameter Value</param>
         /// <param name="page">Page Offset and Limit</param>
@@ -181,6 +178,7 @@ namespace Spotify.NetStandard.Client.Internal
             string itemId,
             string lookupType = null,
             string country = null,
+            string fields = null,
             string key = null,
             string value = null,
             Page page = null)
@@ -188,11 +186,10 @@ namespace Spotify.NetStandard.Client.Internal
         {
             var headers = await FormatRequestHeadersAsync();
             var parameters = FormatRequestParameters(
-                offset: page?.Offset, limit: page?.Limit, country: country);
+                offset: page?.Offset, limit: page?.Limit, 
+                country: country, fields: fields);
             if (key != null && value != null)
-            {
                 parameters.Add(key, value);
-            }
             var source = new string[] { lookupType };
             source = source[0].Contains("_") ?
                 source[0].Split('_') :
@@ -269,40 +266,38 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <typeparam name="TResponse">Response Type</typeparam>
         /// <param name="itemId">Spotify ID of the Item</param>
-        /// <param name="lookupType">Lookup Type</param>
+        /// <param name="requestType">Request Type</param>
         /// <param name="parameters">Request Parameters</param>
         /// <param name="tokenType">Token Type</param>
         /// <returns>Response Object</returns>
         private async Task<TResponse> GetApiAsync<TResponse>(
             string itemId = null,
-            string lookupType = null,
+            string requestType = null,
             Dictionary<string, string> parameters = null,
             TokenType tokenType = TokenType.Access)
             where TResponse : class
         {
             var headers = await FormatRequestHeadersAsync(tokenType);
             var relativeUri = (itemId == null) ?
-                $"/v1/{lookupType}" :
-                $"/v1/{lookupType}/{itemId}";
+                $"/v1/{requestType}" :
+                $"/v1/{requestType}/{itemId}";
             return await GetRequestAsync<TResponse>(_hostName, relativeUri,
-            new CancellationToken(false), parameters, headers);
+                new CancellationToken(false), parameters, headers);
         }
 
         /// <summary>
-        /// Get API
+        /// Get Bools
         /// </summary>
-        /// <typeparam name="TResponse">Reponse Type</typeparam>
         /// <param name="itemIds">Spotify IDs of the Items</param>
-        /// <param name="lookupType">Lookup Type</param>
+        /// <param name="requestType">Request Type</param>
         /// <param name="parameters">Request Parameters</param>
         /// <param name="tokenType">Token Type</param>
         /// <returns>Response Object</returns>
-        private async Task<TResponse> GetApiAsync<TResponse>(
+        private async Task<Bools> GetBoolsAsync(
             List<string> itemIds,
-            string lookupType,
+            string requestType,
             Dictionary<string, string> parameters = null,
             TokenType tokenType = TokenType.Access)
-            where TResponse : class
         {
             var headers = await FormatRequestHeadersAsync(tokenType);
             if (itemIds != null)
@@ -311,44 +306,37 @@ namespace Spotify.NetStandard.Client.Internal
                     parameters = new Dictionary<string, string>();
                 parameters.Add("ids", FormatIdsParameter(itemIds));
             }
-            return await GetRequestAsync<TResponse>(
-                _hostName, $"/v1/{lookupType}",
+            var response = await GetRequestWithErrorAsync<Bools, InternalResponse>(
+                _hostName, $"/v1/{requestType}",
                 new CancellationToken(false),
                 parameters, headers);
+            return response.Result ?? new Bools(response?.ErrorResult?.Error);
         }
 
         /// <summary>
-        /// Post API
+        /// Post API Status
         /// </summary>
         /// <typeparam name="TRequest">Request Type</typeparam>
         /// <typeparam name="TResponse">Response Type</typeparam>
-        /// <param name="itemIds">Spotify IDs of the Items</param>
-        /// <param name="lookupType">Lookup Type</param>
+        /// <param name="requestType">Request Type</param>
         /// <param name="request">Request</param>
         /// <param name="body">Request Body</param>
         /// <param name="parameters">Request Parameters</param>
         /// <param name="tokenType">Token Type</param>
         /// <param name="successCode">Success Code</param>
         /// <returns>Response Object</returns>
-        private async Task<TResponse> PostApiAsync<TRequest, TResponse>(
-            List<string> itemIds,
-            string lookupType,
-            TRequest request,
-            Dictionary<string, string> body,
-            Dictionary<string, string> parameters,
-            TokenType tokenType,
-            int successCode)
+        private async Task<TResponse> PostApiStatusAsync<TRequest, TResponse>(
+            string requestType = null,
+            TRequest request = null,
+            Dictionary<string, string> body = null,
+            Dictionary<string, string> parameters = null,
+            TokenType tokenType = TokenType.Access,
+            int successCode = http_ok)
             where TRequest : class
             where TResponse : Status
         {
             var headers = await FormatRequestHeadersAsync(tokenType);
-            if (itemIds != null)
-            {
-                if (parameters == null)
-                    parameters = new Dictionary<string, string>();
-                parameters.Add("ids", FormatIdsParameter(itemIds));
-            }
-            var relativeUri = $"/v1/{lookupType}";
+            var relativeUri = $"/v1/{requestType}";
             var (response, statusCode) =
                 await PostRequestAsync<TRequest, TResponse>(
                 _hostName,
@@ -366,32 +354,24 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <typeparam name="TRequest">Request Type</typeparam>
         /// <typeparam name="TResponse">Response Type</typeparam>
-        /// <param name="itemIds">Spotify IDs of the Items</param>
-        /// <param name="lookupType">Lookup Type</param>
+        /// <param name="requestType">Request Type</param>
         /// <param name="request">Request Object</param>
         /// <param name="body">Request Body</param>
         /// <param name="parameters">Request Parameters</param>
         /// <param name="tokenType">Token Type</param>
         /// <returns>Response Object</returns>
         private async Task<TResponse> PostApiAsync<TRequest, TResponse>(
-            List<string> itemIds,
-            string lookupType,
-            TRequest request,
-            Dictionary<string, string> body,
-            Dictionary<string, string> parameters,
-            TokenType tokenType)
+            string requestType = null,
+            TRequest request = null,
+            Dictionary<string, string> body = null,
+            Dictionary<string, string> parameters = null,
+            TokenType tokenType = TokenType.Access)
             where TRequest : class
             where TResponse : class
         {
             var headers = await FormatRequestHeadersAsync(tokenType);
-            if (itemIds != null)
-            {
-                if (parameters == null)
-                    parameters = new Dictionary<string, string>();
-                parameters.Add("ids", FormatIdsParameter(itemIds));
-            }
-            var relativeUri = $"/v1/{lookupType}";
-            var (response, statusCode) =
+            var relativeUri = $"/v1/{requestType}";
+            var (response, _) =
                 await PostRequestAsync<TRequest, TResponse>(
                 _hostName,
                 relativeUri,
@@ -410,20 +390,20 @@ namespace Spotify.NetStandard.Client.Internal
         /// <typeparam name="TResponse">Response Type</typeparam>
         /// <param name="tokenType">Auth Type</param>
         /// <param name="itemIds">Spotify IDs of the Items</param>
-        /// <param name="lookupType">Lookup Type</param>
+        /// <param name="requestType">Request Type</param>
         /// <param name="request">Request Object</param>
         /// <param name="fileBytes">File Bytes</param>
         /// <param name="parameters">Request Parameters</param>
         /// <param name="successCode">Success Code</param>
         /// <returns>Response Object</returns>
         private async Task<TResponse> PutApiAsync<TRequest, TResponse>(
-            List<string> itemIds,
-            string lookupType,
-            TRequest request,
-            byte[] fileBytes,
-            Dictionary<string, string> parameters,
-            TokenType tokenType,
-            int successCode)
+            List<string> itemIds = null,
+            string requestType = null,
+            TRequest request = null,
+            byte[] fileBytes = null,
+            Dictionary<string, string> parameters = null,
+            TokenType tokenType = TokenType.Access,
+            int successCode = http_ok)
             where TRequest : class
             where TResponse : Status
         {
@@ -434,15 +414,10 @@ namespace Spotify.NetStandard.Client.Internal
                     parameters = new Dictionary<string, string>();
                 parameters.Add("ids", FormatIdsParameter(itemIds));
             }
-            var source = new string[] { lookupType };
-            source = source[0].Contains("_") ?
-                source[0].Split('_') :
-                source;
-            var relativeUri = $"/v1/{lookupType}";
             var (response, statusCode) =
                 await PutRequestAsync<TRequest, TResponse>(
                 _hostName,
-                relativeUri,
+                $"/v1/{requestType}",
                 request,
                 new CancellationToken(false),
                 fileBytes,
@@ -458,18 +433,18 @@ namespace Spotify.NetStandard.Client.Internal
         /// <typeparam name="TResponse">Response Type</typeparam>
         /// <param name="tokenType">Auth Type</param>
         /// <param name="itemIds">Spotify IDs of the Items</param>
-        /// <param name="lookupType">Lookup Type</param>
+        /// <param name="requestType">Request Type</param>
         /// <param name="request">Request Object</param>
         /// <param name="parameters">Request Parameters</param>
         /// <param name="successCode">Success Code</param>
         /// <returns>Response Object</returns>
         private async Task<TResponse> DeleteApiAsync<TRequest, TResponse>(
-            List<string> itemIds,
-            string lookupType,
-            TRequest request,
-            Dictionary<string, string> parameters,
-            TokenType tokenType,
-            int successCode)
+            List<string> itemIds = null,
+            string requestType = null,
+            TRequest request = null,
+            Dictionary<string, string> parameters = null,
+            TokenType tokenType = TokenType.Access,
+            int successCode = http_ok)
             where TRequest : class
             where TResponse : Status
         {
@@ -480,15 +455,10 @@ namespace Spotify.NetStandard.Client.Internal
                     parameters = new Dictionary<string, string>();
                 parameters.Add("ids", FormatIdsParameter(itemIds));
             }
-            var source = new string[] { lookupType };
-            source = source[0].Contains("_") ?
-                source[0].Split('_') :
-                source;
-            var relativeUri = $"/v1/{lookupType}";
             var (response, statusCode) =
                 await DeleteRequestAsync<TRequest, TResponse>(
                 _hostName,
-                relativeUri,
+                $"/v1/{requestType}",
                 request,
                 new CancellationToken(false),
                 parameters,
@@ -528,12 +498,20 @@ namespace Spotify.NetStandard.Client.Internal
             Uri source, 
             TokenType tokenType)
             where TResponse : class =>
-            await GetRequestAsync<TResponse>(
-            new Uri($"{source.Scheme}://{source.Host}"),
-            source.AbsolutePath,
-            new CancellationToken(false),
-            source.Query.QueryStringAsDictionary(),
-            await FormatRequestHeadersAsync(tokenType));
+                await GetRequestAsync<TResponse>(
+                new Uri($"{source.Scheme}://{source.Host}"),
+                source.AbsolutePath,
+                new CancellationToken(false),
+                source.Query.QueryStringAsDictionary(),
+                await FormatRequestHeadersAsync(tokenType));
+
+        /// <summary>
+        /// Has Fields Parameter
+        /// </summary>
+        /// <param name="lookupType">Lookup Type</param>
+        /// <returns>True if LookupType Supports Fields Parameter</returns>
+        private bool HasFieldsParameter(LookupType lookupType) =>
+            lookupType == LookupType.Playlist || lookupType == LookupType.PlaylistTracks;
         #endregion Private Methods
 
         #region Constructors
@@ -574,10 +552,20 @@ namespace Spotify.NetStandard.Client.Internal
         /// Refresh Token
         /// </summary>
         /// <returns>Access Token</returns>
-        public Task<AccessToken> RefreshToken() => 
-            _authenticationCache.CheckAndRenewTokenAsync(
-               _authenticationCache?.AccessToken?.TokenType 
-            ?? TokenType.Access, new CancellationToken());
+        public async Task<AccessToken> RefreshToken() => 
+            await _authenticationCache.CheckAndRenewTokenAsync(
+                _authenticationCache?.AccessToken?.TokenType ?? 
+                TokenType.Access, new CancellationToken());
+
+        /// <summary>
+        /// Refresh Token
+        /// </summary>
+        /// <param name="value">Access Token</param>
+        /// <returns>Access Token</returns>
+        public async Task<AccessToken> RefreshToken(AccessToken value) => 
+            await _authenticationCache.GetRefreshTokenAsync(
+                value.Refresh, value?.TokenType ?? 
+                TokenType.Access, new CancellationToken());
 
         /// <summary>
         /// Authenticated Get
@@ -592,7 +580,8 @@ namespace Spotify.NetStandard.Client.Internal
             Dictionary<string, string> parameters)
             where TResponse : class =>
                 await GetResponseAsync<TResponse>(
-                    hostname, endpoint, parameters, TokenType.User);
+                    hostname, endpoint, parameters, 
+                    TokenType.User);
 
         /// <summary>
         /// Authenticated Get
@@ -603,7 +592,8 @@ namespace Spotify.NetStandard.Client.Internal
         public async Task<TResponse> AuthGetAsync<TResponse>(Uri source)
             where TResponse : class =>
             await GetResponseAsync<TResponse>(
-                source, TokenType.User);
+                source, 
+                TokenType.User);
 
         /// <summary>
         /// Authenticated Navigate 
@@ -613,7 +603,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="navigateType">Navigate Type</param>
         /// <returns>Content Response</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<TResponse>> AuthNavigateAsync<TResponse>(
+        public async Task<CursorPaging<TResponse>> AuthNavigateAsync<TResponse>(
             CursorPaging<TResponse> cursor,
             NavigateType navigateType)
         {
@@ -633,7 +623,8 @@ namespace Spotify.NetStandard.Client.Internal
                         source = new Uri(cursor.Next ?? cursor?.Cursors?.After);
                     break;
             }
-            return source != null ? AuthGetAsync<CursorPaging<TResponse>>(source) : null;
+            return source != null ? 
+                await AuthGetAsync<CursorPaging<TResponse>>(source) : null;
         }
 
         /// <summary>
@@ -649,7 +640,8 @@ namespace Spotify.NetStandard.Client.Internal
             Dictionary<string, string> parameters)
             where TResponse : class => 
                 await GetResponseAsync<TResponse>(
-                    hostname, endpoint, parameters, TokenType.Access);
+                    hostname, endpoint, parameters, 
+                    TokenType.Access);
 
         /// <summary>
         /// Get
@@ -660,7 +652,8 @@ namespace Spotify.NetStandard.Client.Internal
         public async Task<TResponse> GetAsync<TResponse>(Uri source) 
             where TResponse : class =>
             await GetResponseAsync<TResponse>(
-                source, TokenType.Access);
+                source, 
+                TokenType.Access);
 
         /// <summary>
         /// Navigate 
@@ -670,7 +663,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="navigateType">Navigate Type</param>
         /// <returns>Content Response</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<ContentResponse> NavigateAsync<TResponse>(
+        public async Task<ContentResponse> NavigateAsync<TResponse>(
             Paging<TResponse> paging,
             NavigateType navigateType)
         {
@@ -690,7 +683,8 @@ namespace Spotify.NetStandard.Client.Internal
                         source = new Uri(paging.Next);
                     break;
             }
-            return source != null ? GetAsync<ContentResponse>(source) : null;
+            return source != null ? 
+                await GetAsync<ContentResponse>(source) : null;
         }
 
         /// <summary>
@@ -716,17 +710,15 @@ namespace Spotify.NetStandard.Client.Internal
                 FormatRequestParameters(
                     offset: page?.Offset, limit: page?.Limit, country: country);
             if (searchType != null)
-            {
                 parameters.Add("type", searchType.Get()?.AsDelimitedString());
-            }
             if (!string.IsNullOrEmpty(query))
                 parameters.Add("q", Uri.EscapeDataString(query));
             if (external == true)
                 parameters.Add("include_external", "audio");
             return await GetRequestAsync<ContentResponse>(
-                    _hostName, $"/v1/search/",
-                    new CancellationToken(false),
-                    parameters, headers);
+                _hostName, $"/v1/search/",
+                new CancellationToken(false),
+                parameters, headers);
         }
 
         /// <summary>
@@ -736,22 +728,29 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemId">(Required) The Spotify ID for the album.</param>
         /// <param name="lookupType">(Required) Item Type</param>
         /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType if omitted, all fields are returned</param>
         /// <param name="key">(Optional) Query Parameter Key</param>
         /// <param name="value">(Optional) Query Parameter Value</param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
         /// <returns>Lookup Response by Type</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<TResponse> LookupAsync<TResponse>(
+        public async Task<TResponse> LookupAsync<TResponse>(
             string itemId,
             LookupType lookupType,
             string market = null,
+            string fields = null,
             string key = null,
             string value = null,
             Page page = null)
             where TResponse : class => 
-                LookupApiAsync<TResponse>(
-                itemId, lookupType.GetDescription(),
-                market, key, value, page);
+                await LookupApiAsync<TResponse>(
+                itemId, 
+                lookupType.GetDescription(),
+                market, 
+                HasFieldsParameter(lookupType) ? fields : null, 
+                key, 
+                value, 
+                page);
 
         /// <summary>
         /// Lookup
@@ -762,14 +761,14 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
         /// <returns>Lookup Response</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<LookupResponse> LookupAsync(
+        public async Task<LookupResponse> LookupAsync(
             List<string> itemIds,
             LookupType lookupType,
             string market = null,
             Page page = null) => 
-                LookupApiAsync(
-                itemIds, lookupType.GetDescription(),
-                market, page);
+                await LookupApiAsync(
+                    itemIds, lookupType.GetDescription(),
+                    market, page);
 
         /// <summary>
         /// Lookup Featured Playlists
@@ -780,7 +779,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
         /// <returns>Content Response</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<ContentResponse> LookupFeaturedPlaylistsAsync(
+        public async Task<ContentResponse> LookupFeaturedPlaylistsAsync(
             string country = null,
             string locale = null,
             DateTime? timestamp = null,
@@ -790,11 +789,12 @@ namespace Spotify.NetStandard.Client.Internal
                 new Dictionary<string, string>();
             if (timestamp != null)
             {
-                parameters.Add("timestamp",
+                parameters.Add(nameof(timestamp),
                     timestamp.Value.ToString("yyyy-MM-ddTHH:mm:ss"));
             }
-            return GetBrowseAsync(
-                "featured-playlists", country, locale,
+            return await GetBrowseAsync(
+                "featured-playlists", 
+                country, locale,
                 parameters, page);
         }
 
@@ -805,12 +805,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
         /// <returns>Content Response</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<ContentResponse> LookupNewReleasesAsync(
+        public async Task<ContentResponse> LookupNewReleasesAsync(
             string country = null,
             Page page = null) => 
-                GetBrowseAsync(
-                "new-releases", country: country,
-                page: page);
+                await GetBrowseAsync(
+                    "new-releases", 
+                    country: country,
+                    page: page);
 
         /// <summary>
         /// Lookup Artist's Albums
@@ -821,7 +822,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="page">(Optional) Limit: The number of album objects to return. Default: 20. Minimum: 1. Maximum: 50 - Offset: The index of the first album to return. Default: 0 (i.e., the first album).</param>
         /// <returns>Paging List of Album</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<Paging<Album>> LookupArtistAlbumsAsync(
+        public async Task<Paging<Album>> LookupArtistAlbumsAsync(
             string itemId,
             IncludeGroup includeGroup = null,
             string market = null,
@@ -834,9 +835,9 @@ namespace Spotify.NetStandard.Client.Internal
                 key = "include_groups";
                 value = includeGroup.Get()?.AsDelimitedString();
             }
-            return LookupAsync<Paging<Album>>(
-                itemId, LookupType.ArtistAlbums, market,
-                key, value, page);
+            return await LookupAsync<Paging<Album>>(
+                itemId, LookupType.ArtistAlbums, market: market,
+                key: key, value: value, page: page);
         }
 
         /// <summary>
@@ -846,12 +847,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="market">(Required) A country: an ISO 3166-1 alpha-2 country code or the string from_token</param>
         /// <returns>Lookup Response</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<LookupResponse> LookupArtistTopTracksAsync(
+        public async Task<LookupResponse> LookupArtistTopTracksAsync(
             string itemId,
             string market) => 
-                LookupApiAsync<LookupResponse>(
-                itemId, "artists_top-tracks",
-                country: market);
+                await LookupApiAsync<LookupResponse>(
+                    itemId, "artists_top-tracks",
+                    country: market);
 
         /// <summary>
         /// Lookup Artist's Related Artists
@@ -859,10 +860,10 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemId">(Required) The Spotify ID for the artist.</param>
         /// <returns>Lookup Response</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<LookupResponse> LookupArtistRelatedArtistsAsync(
+        public async Task<LookupResponse> LookupArtistRelatedArtistsAsync(
             string itemId) => 
-                LookupApiAsync<LookupResponse>(
-                itemId, "artists_related-artists");
+                await LookupApiAsync<LookupResponse>(
+                    itemId, "artists_related-artists");
 
         /// <summary>
         /// Lookup All Categories
@@ -872,13 +873,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="page">(Optional) Limit: The maximum number of categories to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first item to return. Default: 0</param>
         /// <returns>Content Response</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<ContentResponse> LookupAllCategoriesAsync(
+        public async Task<ContentResponse> LookupAllCategoriesAsync(
             string country = null,
             string locale = null,
             Page page = null) => 
-                GetBrowseAsync(
-                "categories", country: country, locale: locale,
-                page: page);
+                await GetBrowseAsync(
+                "categories", 
+                    country: country, locale: locale, page: page);
 
         /// <summary>
         /// Lookup Category 
@@ -888,7 +889,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="locale">(Optional) The desired language, consisting of an ISO 639-1 language code and an ISO 3166-1 alpha-2 country code, joined by an underscore.</param>
         /// <returns>Category Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<Category> LookupCategoryAsync(
+        public async Task<Category> LookupCategoryAsync(
             string categoryId,
             string country = null,
             string locale = null)
@@ -897,12 +898,12 @@ namespace Spotify.NetStandard.Client.Internal
             string value = null;
             if (locale != null)
             {
-                key = "locale";
+                key = nameof(locale);
                 value = locale;
             }
-            return LookupAsync<Category>(
-                categoryId, LookupType.Categories, country,
-                key, value);
+            return await LookupAsync<Category>(
+                categoryId, LookupType.Categories, 
+                market: country, key: key, value: value);
         }
 
         /// <summary>
@@ -918,7 +919,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="targetTuneableTrack">Multiple values. For each of the tunable track attributes a target value may be provided.</param>
         /// <returns>Recommendation Response Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<RecommendationsResponse> LookupRecommendationsAsync(
+        public async Task<RecommendationsResponse> LookupRecommendationsAsync(
             List<string> seedArtists = null,
             List<string> seedGenres = null,
             List<string> seedTracks = null,
@@ -928,39 +929,29 @@ namespace Spotify.NetStandard.Client.Internal
             TuneableTrack maxTuneableTrack = null,
             TuneableTrack targetTuneableTrack = null)
         {
-            Dictionary<string, string> parameters =
-                new Dictionary<string, string>();
-
+            var parameters = new Dictionary<string, string>();
             if (seedArtists != null)
                 parameters.Add("seed_artists",
                     seedArtists.ToArray().AsDelimitedString());
-
             if (seedGenres != null)
                 parameters.Add("seed_genres",
                     seedGenres.ToArray().AsDelimitedString());
-
             if (seedTracks != null)
                 parameters.Add("seed_tracks",
                     seedTracks.ToArray().AsDelimitedString());
-
             if (limit != null)
-                parameters.Add("limit",
-                    limit.Value.ToString());
-
+                parameters.Add(nameof(limit), $"{limit.Value}");
             if (market != null)
-                parameters.Add("market", market);
-
+                parameters.Add(nameof(market), market);
             if (minTuneableTrack != null)
                 minTuneableTrack.SetParameter(parameters, "min");
-
             if (maxTuneableTrack != null)
                 maxTuneableTrack.SetParameter(parameters, "max");
-
             if (targetTuneableTrack != null)
                 targetTuneableTrack.SetParameter(parameters, "target");
-
-            return GetApiAsync<RecommendationsResponse>(
-                lookupType: "recommendations", parameters: parameters);
+            return await GetApiAsync<RecommendationsResponse>(
+                requestType: "recommendations", 
+                parameters: parameters);
         }
 
         /// <summary>
@@ -968,9 +959,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <returns>Available Genre Seeds Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
-        public Task<AvailableGenreSeeds> LookupRecommendationGenres() => 
-            GetApiAsync<AvailableGenreSeeds>(
-                lookupType: "recommendations/available-genre-seeds");
+        public async Task<AvailableGenreSeeds> LookupRecommendationGenres() => 
+            await GetApiAsync<AvailableGenreSeeds>(
+                requestType: "recommendations/available-genre-seeds");
         #endregion Public Methods
 
         #region Authenticate
@@ -988,7 +979,7 @@ namespace Spotify.NetStandard.Client.Internal
             Scope scope,
             bool showDialog = false) => 
                 _authenticationCache.GetAccessCodeAuth(
-                redirectUri, state, scope.Get(), showDialog);
+                    redirectUri, state, scope.Get(), showDialog);
 
         /// <summary>
         /// Auth User - Authorisation Code Flow
@@ -999,19 +990,20 @@ namespace Spotify.NetStandard.Client.Internal
         /// <returns>AccessToken on Success, Null if Not</returns>
         /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
         /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
-        public Task<AccessToken> AuthUserAsync(
+        public async Task<AccessToken> AuthUserAsync(
             Uri responseUri,
             Uri redirectUri,
             string state) => 
-                _authenticationCache.GetAccessCodeAuthAsync(
-                responseUri, redirectUri, state);
+                await _authenticationCache.GetAccessCodeAuthAsync(
+                    responseUri, redirectUri, state);
 
         /// <summary>
         /// Auth - Client Credentials Flow
         /// </summary>
         /// <returns>AccessToken on Success, Null if Not</returns>
-        public Task<AccessToken> AuthAsync() =>
-            _authenticationCache.GetClientCredentialsTokenAsync(new CancellationToken(false));
+        public async Task<AccessToken> AuthAsync() =>
+            await _authenticationCache.GetClientCredentialsTokenAsync(
+                new CancellationToken(false));
 
         /// <summary>
         /// Auth User Implicit - Implicit Grant Flow
@@ -1027,7 +1019,7 @@ namespace Spotify.NetStandard.Client.Internal
             Scope scope,
             bool showDialog = false) =>
                 _authenticationCache.GetImplicitGrantAuth(
-                redirectUri, state, scope.Get(), showDialog);
+                    redirectUri, state, scope.Get(), showDialog);
 
         /// <summary>
         /// Auth User Implicit - Implicit Grant Flow
@@ -1043,7 +1035,7 @@ namespace Spotify.NetStandard.Client.Internal
             Uri redirectUri,
             string state) =>
                 _authenticationCache.GetImplicitGrantAuth(
-                responseUri, redirectUri, state);
+                    responseUri, redirectUri, state);
         #endregion Authenticate
 
         #region Authenticated Follow API
@@ -1055,18 +1047,19 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="followType">(Required) Either artist or user.</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<List<bool>> AuthLookupFollowingStateAsync(
+        public async Task<Bools> AuthLookupFollowingStateAsync(
             List<string> itemIds,
             FollowType followType)
         {
-            var parameters =
-            new Dictionary<string, string>()
+            var parameters = new Dictionary<string, string>()
             {
                 { "type", followType.GetDescription() }
             };
-            return GetApiAsync<List<bool>>(itemIds,
+            return await GetBoolsAsync(
+                itemIds,
                 "me/following/contains",
-                parameters, TokenType.User);
+                parameters, 
+                TokenType.User);
         }
 
         /// <summary>
@@ -1077,12 +1070,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="playlistId">(Required) The Spotify ID of the playlist.</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<List<bool>> AuthLookupUserFollowingPlaylistAsync(
+        public async Task<Bools> AuthLookupUserFollowingPlaylistAsync(
             List<string> itemIds,
             string playlistId) => 
-                GetApiAsync<List<bool>>(itemIds,
-                $"playlists/{playlistId}/followers/contains",
-                null, TokenType.User);
+                await GetBoolsAsync(
+                    itemIds,
+                    requestType: $"playlists/{playlistId}/followers/contains",
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Follow Artists or Users
@@ -1092,18 +1086,20 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="followType">(Required) Either artist or user</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthFollowAsync(
+        public async Task<Status> AuthFollowAsync(
             List<string> itemIds,
             FollowType followType)
         {
-            var parameters =
-            new Dictionary<string, string>()
+            var parameters = new Dictionary<string, string>()
             {
                 { "type", followType.GetDescription() }
             };
-            return PutApiAsync<Status, Status>(itemIds,
-            "me/following",
-            null, null, parameters, TokenType.User, 204);
+            return await PutApiAsync<Status, Status>(
+                itemIds: itemIds,
+                requestType: "me/following",
+                parameters: parameters, 
+                tokenType: TokenType.User,
+                successCode: http_nocontent);
         }
 
         /// <summary>
@@ -1114,7 +1110,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="isPublic">(Optional) Defaults to true. If true the playlist will be included in user’s public playlists, if false it will remain private. To be able to follow playlists privately, the user must have granted the playlist-modify-private scope.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthFollowPlaylistAsync(
+        public async Task<Status> AuthFollowPlaylistAsync(
             string playlistId,
             bool isPublic = true)
         {
@@ -1122,9 +1118,10 @@ namespace Spotify.NetStandard.Client.Internal
             {
                 IsPublic = isPublic
             };
-            return PutApiAsync<PublicRequest, Status>(null,
-                $"playlists/{playlistId}/followers",
-                request, null, null, TokenType.User, 200);
+            return await PutApiAsync<PublicRequest, Status>(
+                requestType: $"playlists/{playlistId}/followers",
+                request: request, 
+                tokenType: TokenType.User);
         }
 
         /// <summary>
@@ -1137,8 +1134,11 @@ namespace Spotify.NetStandard.Client.Internal
         public async Task<CursorPaging<Artist>> AuthLookupFollowedArtistsAsync(
             Cursor cursor = null) => 
                 (await LookupCursorApiAsync<ContentCursorResponse>(
-                $"me/following",
-                "type", "artist", cursor, TokenType.User)).Artists;
+                    $"me/following",
+                    "type", 
+                    "artist", 
+                    cursor, 
+                    TokenType.User))?.Artists;
 
         /// <summary>
         /// Unfollow Artists or Users
@@ -1148,18 +1148,18 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="followType">(Required) Either artist or user</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUnfollowAsync(
+        public async Task<Status> AuthUnfollowAsync(
             List<string> itemIds,
             FollowType followType)
         {
-            var parameters =
-            new Dictionary<string, string>()
+            var parameters = new Dictionary<string, string>()
             {
                 { "type", followType.GetDescription() }
             };
-            return DeleteApiAsync<Status, Status>(itemIds,
+            return await DeleteApiAsync<Status, Status>(itemIds,
                 "me/following",
-                null, parameters, TokenType.User, 204);
+                null, parameters, 
+                TokenType.User, http_nocontent);
         }
 
         /// <summary>
@@ -1169,11 +1169,11 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="playlistId">(Required) The Spotify ID of the playlist that is to be no longer followed.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUnfollowPlaylistAsync(
+        public async Task<Status> AuthUnfollowPlaylistAsync(
             string playlistId) => 
-                DeleteApiAsync<Status, Status>(null,
-                $"playlists/{playlistId}/followers",
-                null, null, TokenType.User, 200);
+                await DeleteApiAsync<Status, Status>(
+                    requestType: $"playlists/{playlistId}/followers",
+                    tokenType: TokenType.User);
         #endregion Authenticated Follow API
 
         #region Authenticated Playlists API
@@ -1186,17 +1186,20 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="position">(Optional) The position to insert the tracks, a zero-based index.</param>
         /// <returns>Snapshot Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Snapshot> AuthAddTracksToPlaylistAsync(
+        public async Task<Snapshot> AuthAddTracksToPlaylistAsync(
             string playlistId,
             UriListRequest uris = null,
             int? position = null)
         {
             var parameters = new Dictionary<string, string>();
             if (position != null)
-                parameters.Add("position", position.ToString());
-            return PostApiAsync<UriListRequest, Snapshot>(null,
-                $"playlists/{playlistId}/tracks",
-                uris, null, parameters, TokenType.User, 201);
+                parameters.Add(nameof(position), $"{position}");
+            return await PostApiStatusAsync<UriListRequest, Snapshot>(
+                requestType: $"playlists/{playlistId}/tracks",
+                request: uris, 
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_created);
         }
 
         /// <summary>
@@ -1207,12 +1210,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="request">(Optional) Tracks: An array of objects containing Spotify URIs of the tracks to remove. Snapshot ID : The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
         /// <returns>Snapshot Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Snapshot> AuthRemoveTracksFromPlaylistAsync(
+        public async Task<Snapshot> AuthRemoveTracksFromPlaylistAsync(
             string playlistId,
             PlaylistTracksRequest request = null) => 
-                DeleteApiAsync<PlaylistTracksRequest, Snapshot>(null,
-                $"playlists/{playlistId}/tracks",
-                request, null, TokenType.User, 200);
+                await DeleteApiAsync<PlaylistTracksRequest, Snapshot>(
+                    requestType: $"playlists/{playlistId}/tracks",
+                    request: request, 
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Get a Playlist Cover Image
@@ -1222,9 +1226,9 @@ namespace Spotify.NetStandard.Client.Internal
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public async Task<List<Image>> AuthGetPlaylistCoverImageAsync(
             string playlistId) => 
-            (await GetApiAsync<List<Image>>((string)null,
-                $"playlists/{playlistId}/images",
-                null, TokenType.User));
+                await GetApiAsync<List<Image>>(
+                    requestType: $"playlists/{playlistId}/images",
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Upload a Custom Playlist Cover Image
@@ -1234,12 +1238,14 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="file">(Required) JPEG Image File Bytes</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUploadCustomPlaylistImageAsync(
+        public async Task<Status> AuthUploadCustomPlaylistImageAsync(
             string playlistId,
             byte[] file) => 
-                PutApiAsync<Status, Status>(null,
-                $"playlists/{playlistId}/images",
-                null, file, null, TokenType.User, 202);
+                await PutApiAsync<Status, Status>(
+                    requestType: $"playlists/{playlistId}/images",
+                    fileBytes: file, 
+                    tokenType: TokenType.User, 
+                    successCode: http_accepted);
 
         /// <summary>
         /// Get a List of Current User's Playlists
@@ -1248,11 +1254,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100. Use with limit to get the next set of playlists.</param>
         /// <returns>CursorPaging of Simplified Playlist Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<SimplifiedPlaylist>> AuthLookupUserPlaylistsAsync(
+        public async Task<CursorPaging<SimplifiedPlaylist>> AuthLookupUserPlaylistsAsync(
             Cursor cursor = null) => 
-                LookupCursorApiAsync<CursorPaging<SimplifiedPlaylist>>(
-                "me/playlists",
-                null, null, cursor, TokenType.User);
+                await LookupCursorApiAsync<CursorPaging<SimplifiedPlaylist>>(
+                    "me/playlists",
+                    null, null, 
+                    cursor, 
+                    TokenType.User);
 
         /// <summary>
         /// Change a Playlist's Details
@@ -1262,12 +1270,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="request">(Optional) Playlist Request Object</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthChangePlaylistDetailsAsync(
+        public async Task<Status> AuthChangePlaylistDetailsAsync(
             string playlistId,
             PlaylistRequest request) => 
-                PutApiAsync<PlaylistRequest, Status>(null,
-                $"playlists/{playlistId}", request,
-                null, null, TokenType.User, 200);
+                await PutApiAsync<PlaylistRequest, Status>(
+                    requestType: $"playlists/{playlistId}", 
+                    request: request, 
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Get a List of a User's Playlists
@@ -1277,12 +1286,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cursor">(Optional) Limit: The maximum number of playlists to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first playlist to return. Default: 0 (the first object). Maximum offset: 100</param>
         /// <returns>CursorPaging of Simplified Playlist Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<SimplifiedPlaylist>> AuthLookupUserPlaylistsAsync(
+        public async Task<CursorPaging<SimplifiedPlaylist>> AuthLookupUserPlaylistsAsync(
             string userId,
             Cursor cursor = null) => 
-                LookupCursorApiAsync<CursorPaging<SimplifiedPlaylist>>(
-                $"users/{userId}/playlists",
-                null, null, cursor, TokenType.User);
+                await LookupCursorApiAsync<CursorPaging<SimplifiedPlaylist>>(
+                    lookupType: $"users/{userId}/playlists",
+                    cursor: cursor, 
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Replace a Playlist's Tracks
@@ -1291,12 +1301,14 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
         /// <param name="uris">(Optional) Uri List Request.</param>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthReplacePlaylistTracksAsync(
+        public async Task<Status> AuthReplacePlaylistTracksAsync(
             string playlistId,
             UriListRequest uris) => 
-                PutApiAsync<UriListRequest, Status>(null,
-                $"playlists/{playlistId}/tracks",
-                uris, null, null, TokenType.User, 201);
+                await PutApiAsync<UriListRequest, Status>(
+                    requestType: $"playlists/{playlistId}/tracks",
+                    request: uris, 
+                    tokenType: TokenType.User, 
+                    successCode: http_created);
 
         /// <summary>
         /// Create a Playlist
@@ -1306,12 +1318,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="request">(Required) Playlist Request</param>
         /// <returns>Playlist Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Playlist> AuthCreatePlaylistAsync(
+        public async Task<Playlist> AuthCreatePlaylistAsync(
             string userId,
             PlaylistRequest request) => 
-            PostApiAsync<PlaylistRequest, Playlist>(null,
-            $"users/{userId}/playlists",
-            request, null, null, TokenType.User);
+                await PostApiAsync<PlaylistRequest, Playlist>(
+                    requestType: $"users/{userId}/playlists",
+                    request: request, 
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Reorder a Playlist's Tracks
@@ -1321,12 +1334,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="request">(Required) Playlist Reorder Request</param>
         /// <returns>Snapshot Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Snapshot> AuthReorderPlaylistTracksAsync(
+        public async Task<Snapshot> AuthReorderPlaylistTracksAsync(
             string playlistId,
             PlaylistReorderRequest request) => 
-            PutApiAsync<PlaylistReorderRequest, Snapshot>(null,
-                $"playlists/{playlistId}/tracks",
-                request, null, null, TokenType.User, 200);
+                await PutApiAsync<PlaylistReorderRequest, Snapshot>(
+                    requestType: $"playlists/{playlistId}/tracks",
+                    request: request,
+                    tokenType: TokenType.User);
         #endregion Authenticated Playlists API 
 
         #region Authenticated Library API
@@ -1337,11 +1351,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<List<bool>> AuthLookupCheckUserSavedAlbumsAsync(
+        public async Task<Bools> AuthLookupCheckUserSavedAlbumsAsync(
             List<string> itemIds) => 
-            GetApiAsync<List<bool>>(itemIds,
-             "me/albums/contains",
-             null, TokenType.User);
+                await GetBoolsAsync(
+                    itemIds: itemIds,
+                    requestType: "me/albums/contains",
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Save Tracks for User
@@ -1350,11 +1365,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthSaveUserTracksAsync(
+        public async Task<Status> AuthSaveUserTracksAsync(
             List<string> itemIds) => 
-            PutApiAsync<Status, Status>(itemIds,
-            "me/tracks",
-            null, null, null, TokenType.User, 200);
+                await PutApiAsync<Status, Status>(
+                    itemIds: itemIds,
+                    requestType: "me/tracks",
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Remove Albums for Current User
@@ -1363,11 +1379,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthRemoveUserAlbumsAsync(
-             List<string> itemIds) => 
-            DeleteApiAsync<Status, Status>(itemIds,
-            "me/albums",
-             null, null, TokenType.User, 200);
+        public async Task<Status> AuthRemoveUserAlbumsAsync(
+            List<string> itemIds) => 
+                await DeleteApiAsync<Status, Status>(
+                    itemIds: itemIds,
+                    requestType: "me/albums",
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Save Albums for Current User
@@ -1376,11 +1393,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemIds">(Required) List of the Spotify IDs for the albums</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthSaveUserAlbumsAsync(
-             List<string> itemIds) => 
-            PutApiAsync<Status, Status>(itemIds,
-            "me/albums",
-            null, null, null, TokenType.User, 200);
+        public async Task<Status> AuthSaveUserAlbumsAsync(
+            List<string> itemIds) => 
+                await PutApiAsync<Status, Status>(
+                    itemIds: itemIds,
+                    requestType: "me/albums",
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Remove User's Saved Tracks
@@ -1389,11 +1407,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthRemoveUserTracksAsync(
-             List<string> itemIds) => 
-            DeleteApiAsync<Status, Status>(itemIds,
-            "me/tracks",
-            null, null, TokenType.User, 200);
+        public async Task<Status> AuthRemoveUserTracksAsync(
+            List<string> itemIds) => 
+                await DeleteApiAsync<Status, Status>(
+                    itemIds: itemIds,
+                    requestType: "me/tracks",
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Get User's Saved Albums
@@ -1403,13 +1422,15 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
         /// <returns>Cursor Paging of Saved Album Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<SavedAlbum>> AuthLookupUserSavedAlbumsAsync(
+        public async Task<CursorPaging<SavedAlbum>> AuthLookupUserSavedAlbumsAsync(
             string market = null,
             Cursor cursor = null) => 
-                LookupCursorApiAsync<CursorPaging<SavedAlbum>>(
-                "me/albums", 
-                "market", market, 
-                cursor, TokenType.User);
+                await LookupCursorApiAsync<CursorPaging<SavedAlbum>>(
+                    "me/albums", 
+                    "market", 
+                    market, 
+                    cursor, 
+                    TokenType.User);
 
         /// <summary>
         /// Get User's Saved Tracks
@@ -1419,13 +1440,15 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
         /// <returns>Cursor Paging of Saved Track Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<SavedTrack>> AuthLookupUserSavedTracksAsync(
+        public async Task<CursorPaging<SavedTrack>> AuthLookupUserSavedTracksAsync(
             string market = null,
             Cursor cursor = null) => 
-                LookupCursorApiAsync<CursorPaging<SavedTrack>>(
-                "me/tracks", 
-                "market", market, 
-                cursor, TokenType.User);
+                await LookupCursorApiAsync<CursorPaging<SavedTrack>>(
+                    "me/tracks", 
+                    "market", 
+                    market, 
+                    cursor, 
+                    TokenType.User);
 
         /// <summary>
         /// Check User's Saved Tracks
@@ -1434,14 +1457,39 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="itemIds">(Required) List of the Spotify IDs for the tracks</param>
         /// <returns>List of true or false values</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<List<bool>> AuthLookupCheckUserSavedTracksAsync(
+        public async Task<Bools> AuthLookupCheckUserSavedTracksAsync(
             List<string> itemIds) => 
-            GetApiAsync<List<bool>>(itemIds,
-             "me/tracks/contains",
-             null, TokenType.User);
+            await GetBoolsAsync(
+                itemIds,
+                requestType: "me/tracks/contains",
+                tokenType: TokenType.User);
         #endregion Authenticated Library API
 
         #region Authenticated Player API
+        /// <summary>
+        /// Add an Item to the User's Playback Queue
+        /// <para>Scopes: ConnectModifyPlaybackState</para>
+        /// </summary>
+        /// <param name="uri">(Required) The uri of the item to add to the queue. Must be a track or an episode uri.</param>
+        /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        public async Task<Status> AuthUserPlaybackAddToQueueAsync(
+            string uri, string deviceId = null)
+        {
+            var parameters = new Dictionary<string, string>
+            {
+                { "uri", uri }
+            };
+            if (deviceId != null)
+                parameters.Add("device_id", deviceId);
+            return await PostApiStatusAsync<Status, Status>(
+                requestType: "me/player/queue",
+                parameters: parameters,
+                tokenType: TokenType.User,
+                successCode: http_nocontent);
+        }
+
         /// <summary>
         /// Skip User’s Playback To Next Track
         /// <para>Scopes: ConnectModifyPlaybackState</para>
@@ -1449,15 +1497,17 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackNextTrackAsync(
+        public async Task<Status> AuthUserPlaybackNextTrackAsync(
             string deviceId = null)
         {
             var parameters = new Dictionary<string, string>();
             if (deviceId != null)
                 parameters.Add("device_id", deviceId);
-            return PostApiAsync<Status, Status>(null,
-                "me/player/next",
-                null, null, parameters, TokenType.User, 204);
+            return await PostApiStatusAsync<Status, Status>(
+                requestType: "me/player/next",
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
         }
 
         /// <summary>
@@ -1468,7 +1518,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackSeekTrackAsync(
+        public async Task<Status> AuthUserPlaybackSeekTrackAsync(
              int position,
              string deviceId = null)
         {
@@ -1478,9 +1528,11 @@ namespace Spotify.NetStandard.Client.Internal
             };
             if (deviceId != null)
                 parameters.Add("device_id", deviceId);
-            return PutApiAsync<Status, Status>(null,
-            "me/player/seek",
-            null, null, parameters, TokenType.User, 204);
+            return await PutApiAsync<Status, Status>(
+                requestType: "me/player/seek", 
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
         }
 
         /// <summary>
@@ -1489,10 +1541,10 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <returns>Devices Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Devices> AuthLookupUserPlaybackDevicesAsync() => 
-            GetApiAsync<Devices>((string)null,
-             "me/player/devices",
-             null, TokenType.User);
+        public async Task<Devices> AuthLookupUserPlaybackDevicesAsync() => 
+            await GetApiAsync<Devices>(
+             requestType: "me/player/devices",
+             tokenType: TokenType.User);
 
         /// <summary>
         /// Toggle Shuffle For User’s Playback
@@ -1502,7 +1554,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackToggleShuffleAsync(
+        public async Task<Status> AuthUserPlaybackToggleShuffleAsync(
              bool state,
              string deviceId = null)
         {
@@ -1512,9 +1564,11 @@ namespace Spotify.NetStandard.Client.Internal
             };
             if (deviceId != null)
                 parameters.Add("device_id", deviceId);
-            return PutApiAsync<Status, Status>(null,
-            "me/player/shuffle",
-            null, null, parameters, TokenType.User, 204);
+            return await PutApiAsync<Status, Status>(
+                requestType: "me/player/shuffle",
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
         }
 
         /// <summary>
@@ -1524,11 +1578,13 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="request">(Required) Devices Request Object</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackTransferAsync(
+        public async Task<Status> AuthUserPlaybackTransferAsync(
              DevicesRequest request) => 
-            PutApiAsync<DevicesRequest, Status>(null,
-            "me/player",
-            request, null, null, TokenType.User, 204);
+            await PutApiAsync<DevicesRequest, Status>(
+                requestType: "me/player",
+                request: request, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
 
         /// <summary>
         /// Get Current User's Recently Played Tracks
@@ -1537,11 +1593,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cursor">(Optional) Limit: The maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50. - After: A Unix timestamp in milliseconds. Returns all items after (but not including) this cursor position. If after is specified, before must not be specified. Before - (Optional) A Unix timestamp in milliseconds. Returns all items before (but not including) this cursor position. If before is specified, after must not be specified.</param>
         /// <returns>Cursor Paging of Play History Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<PlayHistory>> AuthLookupUserRecentlyPlayedTracksAsync(
+        public async Task<CursorPaging<PlayHistory>> AuthLookupUserRecentlyPlayedTracksAsync(
             Cursor cursor = null) => 
-            LookupCursorApiAsync<CursorPaging<PlayHistory>>(
-             "me/player/recently-played",
-             null, null, cursor, TokenType.User);
+            await LookupCursorApiAsync<CursorPaging<PlayHistory>>(
+                lookupType: "me/player/recently-played",
+                cursor: cursor, 
+                tokenType: TokenType.User);
 
         /// <summary>
         /// Start/Resume a User's Playback
@@ -1551,16 +1608,19 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackStartResumeAsync(
+        public async Task<Status> AuthUserPlaybackStartResumeAsync(
             PlaybackRequest request = null,
             string deviceId = null)
         {
             var parameters = new Dictionary<string, string>();
             if (deviceId != null)
                 parameters.Add("device_id", deviceId);
-            return PutApiAsync<PlaybackRequest, Status>(null,
-            "me/player/play",
-            request, null, parameters, TokenType.User, 204);
+            return await PutApiAsync<PlaybackRequest, Status>(
+                requestType : "me/player/play",
+                request: request, 
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
         }
 
         /// <summary>
@@ -1571,7 +1631,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackSetRepeatModeAsync(
+        public async Task<Status> AuthUserPlaybackSetRepeatModeAsync(
             RepeatState state,
             string deviceId = null)
         {
@@ -1581,9 +1641,11 @@ namespace Spotify.NetStandard.Client.Internal
             };
             if (deviceId != null)
                 parameters.Add("device_id", deviceId);
-            return PutApiAsync<Status, Status>(null,
-            "me/player/repeat",
-            null, null, parameters, TokenType.User, 204);
+            return await PutApiAsync<Status, Status>(
+                requestType: "me/player/repeat",
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
         }
 
         /// <summary>
@@ -1593,15 +1655,17 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackPauseAsync(
+        public async Task<Status> AuthUserPlaybackPauseAsync(
             string deviceId = null)
         {
             var parameters = new Dictionary<string, string>();
             if (deviceId != null)
                 parameters.Add("device_id", deviceId);
-            return PutApiAsync<Status, Status>(null,
-                "me/player/pause",
-                null, null, parameters, TokenType.User, 204);
+            return await PutApiAsync<Status, Status>(
+                requestType: "me/player/pause",
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
         }
 
         /// <summary>
@@ -1611,15 +1675,17 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackPreviousTrackAsync(
+        public async Task<Status> AuthUserPlaybackPreviousTrackAsync(
             string deviceId = null)
         {
             var parameters = new Dictionary<string, string>();
             if (deviceId != null)
                 parameters.Add("device_id", deviceId);
-            return PostApiAsync<Status, Status>(null,
-                "me/player/previous",
-                null, null, parameters, TokenType.User, 204);
+            return await PostApiStatusAsync<Status, Status>(
+                requestType: "me/player/previous",
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
         }
 
         /// <summary>
@@ -1629,15 +1695,16 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
         /// <returns>Currently Playing Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CurrentlyPlaying> AuthLookupUserPlaybackCurrentAsync(
+        public async Task<CurrentlyPlaying> AuthLookupUserPlaybackCurrentAsync(
             string market = null)
         {
             var parameters = new Dictionary<string, string>();
             if (market != null)
-                parameters.Add("market", market);
-            return GetApiAsync<CurrentlyPlaying>((string)null,
-             "me/player",
-             parameters, TokenType.User);
+                parameters.Add(nameof(market), market);
+            return await GetApiAsync<CurrentlyPlaying>(
+                requestType: "me/player",
+                parameters: parameters, 
+                tokenType: TokenType.User);
         }
 
         /// <summary>
@@ -1647,15 +1714,16 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
         /// <returns>Simplified Currently Playing Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<SimplifiedCurrentlyPlaying> AuthLookupUserPlaybackCurrentTrackAsync(
+        public async Task<SimplifiedCurrentlyPlaying> AuthLookupUserPlaybackCurrentTrackAsync(
             string market = null)
         {
             var parameters = new Dictionary<string, string>();
             if (market != null)
-                parameters.Add("market", market);
-            return GetApiAsync<SimplifiedCurrentlyPlaying>((string)null,
-             "me/player/currently-playing",
-             parameters, TokenType.User);
+                parameters.Add(nameof(market), market);
+            return await GetApiAsync<SimplifiedCurrentlyPlaying>(
+                requestType: "me/player/currently-playing",
+                parameters: parameters, 
+                tokenType: TokenType.User);
         }
 
         /// <summary>
@@ -1666,19 +1734,21 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="deviceId">(Optional) The id of the device this command is targeting. If not supplied, the user’s currently active device is the target.</param>
         /// <returns>Status Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<Status> AuthUserPlaybackSetVolumeAsync(
+        public async Task<Status> AuthUserPlaybackSetVolumeAsync(
              int percent,
              string deviceId = null)
         {
             var parameters = new Dictionary<string, string>
             {
-                { "volume_percent", percent.ToString() }
+                { "volume_percent", $"{percent}" }
             };
             if (deviceId != null)
                 parameters.Add("device_id", deviceId);
-            return PutApiAsync<Status, Status>(null,
-            "me/player/volume",
-            null, null, parameters, TokenType.User, 204);
+            return await PutApiAsync<Status, Status>(
+                requestType: "me/player/volume",
+                parameters: parameters, 
+                tokenType: TokenType.User, 
+                successCode: http_nocontent);
         }
         #endregion Authenticated Player API
 
@@ -1691,7 +1761,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
         /// <returns>Cursor Paging of Artist Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<Artist>> AuthLookupUserTopArtistsAsync(
+        public async Task<CursorPaging<Artist>> AuthLookupUserTopArtistsAsync(
             TimeRange? timeRange = null,
             Cursor cursor = null)
         {
@@ -1702,9 +1772,12 @@ namespace Spotify.NetStandard.Client.Internal
                 key = "time_range";
                 value = timeRange.Value.GetDescription();
             }
-            return LookupCursorApiAsync<CursorPaging<Artist>>(
+            return await LookupCursorApiAsync<CursorPaging<Artist>>(
                 "me/top/artists",
-                key, value, cursor, TokenType.User);
+                key, 
+                value, 
+                cursor, 
+                TokenType.User);
         }
 
         /// <summary>
@@ -1715,7 +1788,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="cursor">(Optional) Limit: The number of entities to return. Default: 20. Minimum: 1. Maximum: 50. For example - Offset: he index of the first entity to return. Default: 0. Use with limit to get the next set of entities.</param>
         /// <returns>Cursor Paging of Track Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<CursorPaging<Track>> AuthLookupUserTopTracksAsync(
+        public async Task<CursorPaging<Track>> AuthLookupUserTopTracksAsync(
             TimeRange? timeRange = null,
             Cursor cursor = null)
         {
@@ -1726,9 +1799,12 @@ namespace Spotify.NetStandard.Client.Internal
                 key = "time_range";
                 value = timeRange.Value.GetDescription();
             }
-            return LookupCursorApiAsync<CursorPaging<Track>>(
+            return await LookupCursorApiAsync<CursorPaging<Track>>(
                 "me/top/tracks",
-                key, value, cursor, TokenType.User);
+                key, 
+                value, 
+                cursor, 
+                TokenType.User);
         }
         #endregion Authenticated Personalisation API
 
@@ -1739,11 +1815,12 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="userId">The user’s Spotify user ID.</param>
         /// <returns>Public User Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<PublicUser> AuthLookupUserProfileAsync(
+        public async Task<PublicUser> AuthLookupUserProfileAsync(
             string userId) => 
-            GetApiAsync<PublicUser>(userId,
-            "users",
-            null, TokenType.User);
+                await GetApiAsync<PublicUser>(
+                    userId,
+                    requestType: "users",
+                    tokenType: TokenType.User);
 
         /// <summary>
         /// Get Current User's Profile
@@ -1751,10 +1828,10 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <returns>Private User Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
-        public Task<PrivateUser> AuthLookupUserProfileAsync() => 
-            GetApiAsync<PrivateUser>((string)null,
-            "me",
-            null, TokenType.User);
+        public async Task<PrivateUser> AuthLookupUserProfileAsync() => 
+            await GetApiAsync<PrivateUser>(
+                requestType: "me", 
+                tokenType: TokenType.User);
         #endregion Authenticated User Profile API
     }
 }
