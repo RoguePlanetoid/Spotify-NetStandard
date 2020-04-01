@@ -30,5 +30,17 @@ namespace Spotify.NetStandard.Requests
         /// </summary>
         [Description("track")]
         public bool? Track { get; set; }
+
+        /// <summary>
+        /// Show
+        /// </summary>
+        [Description("show")]
+        public bool? Show { get; set; }
+
+        /// <summary>
+        /// Episode
+        /// </summary>
+        [Description("episode")]
+        public bool? Episode { get; set; }
     }
 }

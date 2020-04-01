@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 1.5.0
+
+- Added Save Shows for Current User, Get User's Saved Shows, Remove User's Saved Shows, Get an Episode, Get Multiple Episodes, Get a Show, Get Multiple Shows and Get a Show's Episodes plus PlaybackPositionRead Scope. Updated Get the User's Currently Playing Track, Get Information About The User's Current Playback and Search for an Item
+
 ### Version 1.2.0
 
 - Added Add an Item to the User's Playback Queue, Updated Get a Playlist and Get Playlist's Tracks to support Fields Parameter and Fixed Check/Lookup Methods Return Error Status Correctly
@@ -44,8 +48,6 @@ Spotify API .NET Standard Library
 ### Version 1.0.0
 
 - Initial Release
-
-# Spotify.NetStandard
 
 ## AccessToken
 
@@ -88,117 +90,17 @@ Access Token
 
 User Token
 
-## AuthenticationResponse
-
-Authentication Response
-
-### AccessToken
-
-An access token that can be provided in subsequent calls
-
-### Error
-
-The reason authorisation failed, for example: “access_denied”.
-
-### ExpiresIn
-
-The time period (in seconds) for which the access token is valid.
-
-### RefreshToken
-
-A token that can be sent to the Spotify Accounts service in place of an authorization code
-
-### Scope
-
-A space-separated list of scopes which have been granted for this access token
-
-### TokenType
-
-How the access token may be used: always “Bearer”.
-
 ## AuthAccessTokenRequiredException
 
 Auth Access Token Expired or Required Error
-
-
-## AuthCodeStateException
-
-Auth Code State Error
-
-### Constructor(message)
-
-Constructor
-
-| Name | Description |
-| ---- | ----------- |
-| message | *System.String*<br>Message |
-
-
-## AuthCodeValueException
-
-Auth Code Value Error
-
-### Constructor(message)
-
-Constructor
-
-| Name | Description |
-| ---- | ----------- |
-| message | *System.String*<br>Message |
-
-
-## AuthException
-
-Auth Exception
-
-### Constructor
-
-Constructor
-
-### Constructor(message)
-
-Constructor
-
-| Name | Description |
-| ---- | ----------- |
-| message | *System.String*<br>Error Message |
-
-
-## AuthTokenRequiredException
-
-Auth Token Expired or Required Error
-
 
 ## AuthTokenStateException
 
 Auth Token State Error
 
-### Constructor(message)
-
-Constructor
-
-| Name | Description |
-| ---- | ----------- |
-| message | *System.String*<br>Message |
-
-
-## AuthTokenValueException
-
-Auth Token Value Error
-
-### Constructor(message)
-
-Constructor
-
-| Name | Description |
-| ---- | ----------- |
-| message | *System.String*<br>Message |
-
-
 ## AuthUserTokenRequiredException
 
 Auth User Token Expired or Required Error
-
 
 ## ISpotifyApi
 
@@ -251,6 +153,22 @@ Scopes: LibraryRead
 | Name | Description |
 | ---- | ----------- |
 | itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the albums |
+
+#### Returns
+
+List of true or false values
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### CheckUserSavedShowsAsync(itemIds)
+
+Check User's Saved Shows 
+Scopes: LibraryRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the shows |
 
 #### Returns
 
@@ -557,6 +475,23 @@ Get Client Credentials Auth Token - Client Credentials Flow
 
 AccessToken on Success, Null if Not
 
+### GetEpisodeAsync(id, market)
+
+Get an Episode 
+(Optional) Scopes: PlaybackPositionRead for ResumePoint
+
+
+| Name | Description |
+| ---- | ----------- |
+| id | *System.String*<br>(Required) The Spotify ID for the episode. |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter. |
+
+#### Returns
+
+Episode Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
 ### GetFollowingStateForArtistsOrUsersAsync(ids, followType)
 
 Get Following State for Artists/Users 
@@ -631,6 +566,40 @@ Get Multiple Artists
 #### Returns
 
 List of Artist Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### GetMultipleEpisodesAsync(ids, market)
+
+Get Multiple Episodes 
+(Optional) Scopes: PlaybackPositionRead for ResumePoint
+
+
+| Name | Description |
+| ---- | ----------- |
+| ids | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the episodes. Maximum: 50 ID |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter. |
+
+#### Returns
+
+List of Episode Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### GetMultipleShowsAsync(ids, market)
+
+Get Multiple Shows 
+(Optional) Scopes: PlaybackPositionRead for ResumePoint
+
+
+| Name | Description |
+| ---- | ----------- |
+| ids | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the shows. Maximum: 50 IDs. |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter. |
+
+#### Returns
+
+List of Show Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
@@ -740,6 +709,41 @@ List of Audio Features Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
+### GetShowAsync(id, market)
+
+Get a Show 
+(Optional) Scopes: PlaybackPositionRead for ResumePoint
+
+
+| Name | Description |
+| ---- | ----------- |
+| id | *System.String*<br>(Required) The Spotify ID for the show. |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter. |
+
+#### Returns
+
+Show Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### GetShowEpisodesAsync(id, market, page)
+
+Get a Show's Episodes 
+(Optional) Scopes: PlaybackPositionRead for ResumePoint
+
+
+| Name | Description |
+| ---- | ----------- |
+| id | *System.String*<br>(Required) The Spotify ID for the show |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter. |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of tracks to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first track to return |
+
+#### Returns
+
+Paging of Episode Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
 ### GetTrackAsync(id, market)
 
 Get a Track
@@ -783,7 +787,7 @@ Audio Features Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### GetUserPlaybackCurrentAsync(market)
+### GetUserPlaybackCurrentAsync(market, additionalTypes)
 
 Get Information About The User's Current Playback 
 Scopes: ConnectReadPlaybackState
@@ -792,6 +796,7 @@ Scopes: ConnectReadPlaybackState
 | Name | Description |
 | ---- | ----------- |
 | market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. |
+| additionalTypes | *System.Collections.Generic.List{System.String}*<br>(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. |
 
 #### Returns
 
@@ -799,7 +804,7 @@ Currently Playing Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### GetUserPlaybackCurrentTrackAsync(market)
+### GetUserPlaybackCurrentTrackAsync(market, additionalTypes)
 
 Get the User's Currently Playing Track 
 Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState
@@ -808,6 +813,7 @@ Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState
 | Name | Description |
 | ---- | ----------- |
 | market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. |
+| additionalTypes | *System.Collections.Generic.List{System.String}*<br>(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. |
 
 #### Returns
 
@@ -919,6 +925,22 @@ Cursor Paging of Saved Album Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
+### GetUserSavedShowsAsync(cursor)
+
+Get User's Saved Shows 
+Scopes: LibraryRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects. |
+
+#### Returns
+
+Cursor Paging of Saved Show Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
 ### GetUserSavedTracksAsync(market, cursor)
 
 Get User's Saved Tracks 
@@ -1020,6 +1042,23 @@ Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
+### RemoveUserShowsAsync(itemIds, market)
+
+Remove User's Saved Shows 
+Scopes: LibraryModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the shows |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
 ### RemoveUserTracksAsync(itemIds)
 
 Remove User's Saved Tracks 
@@ -1078,6 +1117,22 @@ Scopes: LibraryModify
 | Name | Description |
 | ---- | ----------- |
 | itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the albums |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### SaveUserShowsAsync(itemIds)
+
+Save Shows for Current User 
+Scopes: LibraryModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the shows |
 
 #### Returns
 
@@ -1507,6 +1562,22 @@ List of true or false values
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
+### AuthLookupCheckUserSavedShowsAsync(itemIds)
+
+Check User's Saved Shows 
+Scopes: LibraryRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the shows |
+
+#### Returns
+
+List of true or false values
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
 ### AuthLookupCheckUserSavedTracksAsync(itemIds)
 
 Check User's Saved Tracks 
@@ -1573,7 +1644,7 @@ List of true or false values
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### AuthLookupUserPlaybackCurrentAsync(market)
+### AuthLookupUserPlaybackCurrentAsync(market, additionalTypes)
 
 Get Information About The User's Current Playback 
 Scopes: ConnectReadPlaybackState
@@ -1582,6 +1653,7 @@ Scopes: ConnectReadPlaybackState
 | Name | Description |
 | ---- | ----------- |
 | market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. |
+| additionalTypes | *System.Collections.Generic.List{System.String}*<br>(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. |
 
 #### Returns
 
@@ -1589,7 +1661,7 @@ Currently Playing Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### AuthLookupUserPlaybackCurrentTrackAsync(market)
+### AuthLookupUserPlaybackCurrentTrackAsync(market, additionalTypes)
 
 Get the User's Currently Playing Track 
 Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState
@@ -1598,6 +1670,7 @@ Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState
 | Name | Description |
 | ---- | ----------- |
 | market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking. |
+| additionalTypes | *System.Collections.Generic.List{System.String}*<br>(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. |
 
 #### Returns
 
@@ -1709,6 +1782,22 @@ Cursor Paging of Saved Album Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
+### AuthLookupUserSavedShowsAsync(cursor)
+
+Get User's Saved Shows 
+Scopes: LibraryRead
+
+
+| Name | Description |
+| ---- | ----------- |
+| cursor | *Spotify.NetStandard.Requests.Cursor*<br>(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects. |
+
+#### Returns
+
+Cursor Paging of Saved Show Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
 ### AuthLookupUserSavedTracksAsync(market, cursor)
 
 Get User's Saved Tracks 
@@ -1812,6 +1901,23 @@ Status Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
+### AuthRemoveUserShowsAsync(itemIds, market)
+
+Remove User's Saved Shows 
+Scopes: LibraryModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the shows |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
 ### AuthRemoveUserTracksAsync(itemIds)
 
 Remove User's Saved Tracks 
@@ -1867,6 +1973,22 @@ Scopes: LibraryModify
 | Name | Description |
 | ---- | ----------- |
 | itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the albums |
+
+#### Returns
+
+Status Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
+
+### AuthSaveUserShowsAsync(itemIds)
+
+Save Shows for Current User 
+Scopes: LibraryModify
+
+
+| Name | Description |
+| ---- | ----------- |
+| itemIds | *System.Collections.Generic.List{System.String}*<br>(Required) List of the Spotify IDs for the shows |
 
 #### Returns
 
@@ -2542,6 +2664,10 @@ Categories
 
 Category Playlists
 
+### Episodes
+
+Episodes
+
 ### Playlist
 
 Playlists
@@ -2549,6 +2675,14 @@ Playlists
 ### PlaylistTracks
 
 Playlist Tracks
+
+### ShowEpisodes
+
+Show Episodes
+
+### Shows
+
+Shows
 
 ### Tracks
 
@@ -2892,6 +3026,14 @@ Returns a new Scope object with all scopes within the confines of Playback set t
 
 Remote control playback of Spotify.
 
+### PlaybackPositionRead
+
+Read access to a user’s playback position in a content 
+Optional For
+
+Get an Episodes, Get Multiple Episodes, Get a Show, Get Multiple Shows, Get a Show's Episodes
+
+
 ### PlaybackStreaming
 
 Control playback of a Spotify track. The user must have a Spotify Premium account.
@@ -3102,9 +3244,17 @@ Album
 
 Artist
 
+### Episode
+
+Episode
+
 ### Playlist
 
 Playlist
+
+### Show
+
+Show
 
 ### Track
 
@@ -3229,7 +3379,7 @@ The date the album was first released, for example 1981. Depending on the precis
 
 ### ReleaseDatePrecision
 
-The precision with which release_date value is known: year , month , or day.
+The precision with which ReleaseDate value is known: year , month , or day.
 
 ### Tracks
 
@@ -3424,6 +3574,10 @@ Paging Object of Artists
 
 Paging Object of Category
 
+### Episodes
+
+Paging Object of Simplified Episode Objects
+
 ### Message
 
 Message
@@ -3431,6 +3585,10 @@ Message
 ### Playlists
 
 Paging Object of Simplified Playlists
+
+### Shows
+
+Paging Object of Simplified Show Objects
 
 ### Tracks
 
@@ -3612,6 +3770,15 @@ Toggling shuffle not allowed?
 Transferring playback not allowed?
 
 
+## Episode
+
+Episode Object
+
+### Show
+
+The show on which the episode belongs.
+
+
 ## ErrorResponse
 
 Error Object
@@ -3710,6 +3877,14 @@ List of Artist Object
 ### AudioFeatures
 
 List of Audio Feature Object
+
+### Episodes
+
+List of Episode Object
+
+### Shows
+
+List of Show Object
 
 ### Tracks
 
@@ -3872,17 +4047,43 @@ An array of recommendation seed objects.
 An array of track object (simplified) ordered according to the parameters supplied.
 
 
+## ResumePoint
+
+Resume Point Object
+
+### FullyPlayed
+
+Whether or not the episode has been fully played by the user
+
+### ResumePosition
+
+The user’s most recent position in the episode in milliseconds
+
+
 ## SavedAlbum
 
 Saved Album Object
 
 ### AddedAt
 
-The date and time the album was saved Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.
+The date and time the album was saved Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, ReleaseDate in an album object.
 
 ### Album
 
 Information about the album.
+
+
+## SavedShow
+
+Saved Show Object
+
+### AddedAt
+
+The date and time the show was saved. Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an show release), an additional field indicates the precision; see for example, ReleaseDate in a show object.
+
+### Show
+
+Information about the show
 
 
 ## SavedTrack
@@ -3968,6 +4169,15 @@ A “chroma” vector representing the pitch content of the segment, correspondi
 Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices.
 
 
+## Show
+
+Show Object
+
+### Episodes
+
+A list of the show’s episodes.
+
+
 ## SimplifiedAlbum
 
 Simplified Album Object
@@ -4014,9 +4224,17 @@ Allows to update the user interface based on which playback actions are availabl
 
 A Context Object. Can be null
 
+### Episode
+
+The currently playing episode. Can be null.
+
 ### IsPlaying
 
 If something is currently playing, return true.
+
+### Item
+
+The currently playing item. Can be null.
 
 ### Progress
 
@@ -4033,6 +4251,55 @@ The currently playing track. Can be null.
 ### Type
 
 The object type of the currently playing item. Can be one of track, episode, ad or unknown.
+
+
+## SimplifiedEpisode
+
+Simplified Episode Object
+
+### Description
+
+The description of the episode
+
+### Duration
+
+The episode length in milliseconds
+
+### Images
+
+The cover art for the episode in various sizes, widest first
+
+### IsExplicit
+
+Whether or not the episode has explicit content ( true = yes it does; false = no it does not OR unknown)
+
+### IsExternallyHosted
+
+True if the episode is hosted outside of Spotify's CDN
+
+### IsPlayable
+
+True if the episode is playable in the given market. Otherwise false
+
+### Languages
+
+A list of the languages used in the episode, identified by their ISO 639 code
+
+### Preview
+
+A URL to a 30 second preview (MP3 format) of the episode - null if not available
+
+### ReleaseDate
+
+The date the episode was first released, for example 1981-12-15. Depending on the precision, it might be shown as 1981 or 1981-12
+
+### ReleaseDatePrecision
+
+The precision with which ReleaseDate value is known: year, month, or day
+
+### ResumePoint
+
+The user's most recent position in the episode. Set if the supplied access token is a user token and has the scope user-read-playback-position
 
 
 ## SimplifiedPlaylist
@@ -4062,6 +4329,47 @@ The version identifier for the current playlist.
 ### Tracks
 
 Information about the tracks of the playlist.
+
+
+## SimplifiedShow
+
+Simplified Show Object
+
+### AvailableMarkets
+
+A list of the countries in which the show can be played, identified by their ISO 3166-1 alpha-2 code
+
+### Copyrights
+
+The copyright statements of the show
+
+### Description
+
+A description of the show
+
+### Images
+
+The cover art for the show in various sizes, widest first
+
+### IsExplicit
+
+Whether or not the show has explicit content ( true = yes it does; false = no it does not OR unknown)
+
+### IsExternallyHosted
+
+True if all of the show's episodes are hosted outside of Spotify’s CDN
+
+### Languages
+
+A list of the languages used in the show, identified by their ISO 639 code
+
+### MediaType
+
+The media type of the show
+
+### Publisher
+
+The publisher of the show
 
 
 ## SimplifiedTrack
@@ -4129,6 +4437,10 @@ Status Response
 ### Code
 
 Code
+
+### StatusCode
+
+Status Code
 
 ### Success
 

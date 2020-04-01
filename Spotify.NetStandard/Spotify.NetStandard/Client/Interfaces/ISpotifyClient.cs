@@ -636,6 +636,47 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         Task<Bools> AuthLookupCheckUserSavedTracksAsync(
             List<string> itemIds);
+
+        /// <summary>
+        /// Get User's Saved Shows
+        /// <para>Scopes: LibraryRead</para>
+        /// </summary>
+        /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+        /// <returns>Cursor Paging of Saved Show Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<CursorPaging<SavedShow>> AuthLookupUserSavedShowsAsync(
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Check User's Saved Shows
+        /// <para>Scopes: LibraryRead</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<Bools> AuthLookupCheckUserSavedShowsAsync(
+            List<string> itemIds);
+
+        /// <summary>
+        /// Save Shows for Current User
+        /// <para>Scopes: LibraryModify</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<Status> AuthSaveUserShowsAsync(
+            List<string> itemIds);
+
+        /// <summary>
+        /// Remove User's Saved Shows
+        /// <para>Scopes: LibraryModify</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<Status> AuthRemoveUserShowsAsync(
+            List<string> itemIds, string market = null);
         #endregion Authenticated Library API
 
         #region Authenticated Player API
@@ -761,20 +802,22 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <para>Scopes: ConnectReadPlaybackState</para>
         /// </summary>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Currently Playing Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         Task<CurrentlyPlaying> AuthLookupUserPlaybackCurrentAsync(
-            string market = null);
+            string market = null, List<string> additionalTypes = null);
 
         /// <summary>
         /// Get the User's Currently Playing Track
         /// <para>Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState</para>
         /// </summary>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Simplified Currently Playing Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         Task<SimplifiedCurrentlyPlaying> AuthLookupUserPlaybackCurrentTrackAsync(
-            string market = null);
+            string market = null, List<string> additionalTypes = null);
 
         /// <summary>
         /// Set Volume For User's Playback

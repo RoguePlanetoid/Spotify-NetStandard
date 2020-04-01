@@ -517,6 +517,59 @@ namespace Spotify.NetStandard.Test
                 });
             Assert.IsNotNull(result);
         }
+
+        /// <summary>
+        /// Get User's Saved Shows
+        /// </summary>
+        [TestMethod]
+        public async Task Test_GetUserSavedShowsAsync()
+        {
+            var result = await _client.Api.GetUserSavedShowsAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Check User's Saved Shows
+        /// </summary>
+        [TestMethod]
+        public async Task Test_CheckUserSavedShows()
+        {
+            var result = await _client.Api.CheckUserSavedShowsAsync(
+                new List<string>
+                {
+                    "4r157jjrIV0bzS6UxhN07i"
+                });
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Save Shows for Current User
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_SaveUserShows()
+        {
+            var result = await _client.Api.SaveUserShowsAsync(new List<string>
+            {
+                "5tz9eGgXtNHmq3WVD3EwYx"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Remove User's Saved Shows
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_RemoveUserShows()
+        {
+            var result = await _client.Api.RemoveUserShowsAsync(new List<string>
+            {
+                "5tz9eGgXtNHmq3WVD3EwYx"
+            });
+            Assert.IsTrue(result.Success);
+        }
         #endregion Library API
 
         #region Artists API
@@ -730,7 +783,9 @@ namespace Spotify.NetStandard.Test
         [TestMethod]
         public async Task Test_GetUserPlaybackCurrent()
         {
-            var result = await _client.Api.GetUserPlaybackCurrentAsync();
+            var result = await _client.Api.GetUserPlaybackCurrentAsync(
+                additionalTypes:
+                    new List<string> { "track", "episode" });
             Assert.IsNotNull(result);
         }
 
@@ -741,7 +796,9 @@ namespace Spotify.NetStandard.Test
         [TestMethod]
         public async Task Test_GetUserPlaybackCurrentTrack()
         {
-            var result = await _client.Api.GetUserPlaybackCurrentTrackAsync();
+            var result = await _client.Api.GetUserPlaybackCurrentTrackAsync(
+                additionalTypes:
+                    new List<string> { "track", "episode" });
             Assert.IsNotNull(result);
         }
 
@@ -916,5 +973,80 @@ namespace Spotify.NetStandard.Test
             Assert.IsTrue(result.Count == ids.Count);
         }
         #endregion Tracks API
+
+        #region Episodes API
+        /// <summary>
+        /// Get an Episode
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetEpisode()
+        {
+            var result = await _client.Api.GetEpisodeAsync(
+                "79hCFrLsRSD7VlDYXcrCVt");
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Get Multiple Episodes
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetMultipleEpisodes()
+        {
+            List<string> ids = new List<string>
+            {
+                "79hCFrLsRSD7VlDYXcrCVt",
+                "6EbtlqXrvhCBic2TpeaalK"
+            };
+            var result = await _client.Api.GetMultipleEpisodesAsync(ids);
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Count == ids.Count);
+        }
+        #endregion Episodes API
+
+        #region Shows API
+        /// <summary>
+        /// Get a Show
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetShow()
+        {
+            var result = await _client.Api.GetShowAsync(
+                "4r157jjrIV0bzS6UxhN07i");
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Get Multiple Shows
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetMultipleShows()
+        {
+            List<string> ids = new List<string>
+            {
+                "4r157jjrIV0bzS6UxhN07i",
+                "2GmNzw8t4uG70rn4XG9zcC"
+            };
+            var result = await _client.Api.GetMultipleShowsAsync(ids);
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Count == ids.Count);
+        }
+
+        /// <summary>
+        /// Get a Show's Episodes
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_GetShowEpisodes()
+        {
+            var results = await _client.Api.GetShowEpisodesAsync(
+                "4r157jjrIV0bzS6UxhN07i");
+            Assert.IsNotNull(results);
+            Assert.IsTrue(results.Items.Count > 0);
+        }
+        #endregion Shows API
     }
 }

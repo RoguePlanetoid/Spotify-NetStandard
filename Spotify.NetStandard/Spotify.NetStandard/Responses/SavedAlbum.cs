@@ -9,7 +9,7 @@ namespace Spotify.NetStandard.Responses
     public class SavedAlbum : BaseResponse
     {
         /// <summary>
-        /// The date and time the album was saved Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.
+        /// The date and time the album was saved Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, ReleaseDate in an album object.
         /// </summary>
         [DataMember(Name = "added_at")]
         public string AddedAt { get; set; }

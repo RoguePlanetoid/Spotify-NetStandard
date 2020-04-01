@@ -32,5 +32,17 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         [DataMember(Name = "audio_features")]
         public List<AudioFeatures> AudioFeatures { get; set; }
+
+        /// <summary>
+        /// List of Episode Object
+        /// </summary>
+        [DataMember(Name = "episodes")]
+        public List<Episode> Episodes { get; set; }
+
+        /// <summary>
+        /// List of Show Object
+        /// </summary>
+        [DataMember(Name = "shows")]
+        public List<Show> Shows { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using Spotify.NetStandard.Client.Internal;
+using System.Runtime.Serialization;
 
 namespace Spotify.NetStandard.Responses
 {
@@ -33,10 +34,22 @@ namespace Spotify.NetStandard.Responses
         public bool IsPlaying { get; set; }
 
         /// <summary>
-        /// The currently playing track. Can be null.
+        /// The currently playing item. Can be null.
         /// </summary>
         [DataMember(Name = "item")]
-        public Track Track { get; set; }
+        public object Item { get; set; }
+
+        /// <summary>
+        /// The currently playing track. Can be null.
+        /// </summary>
+        [IgnoreDataMember]
+        public Track Track => Item.AsType<Track>();
+
+        /// <summary>
+        /// The currently playing episode. Can be null.
+        /// </summary>
+        [IgnoreDataMember]
+        public Episode Episode => Item.AsType<Episode>();
 
         /// <summary>
         /// The object type of the currently playing item. Can be one of track, episode, ad or unknown.

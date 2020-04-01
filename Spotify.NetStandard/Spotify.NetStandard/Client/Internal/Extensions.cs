@@ -1,4 +1,5 @@
-﻿using Spotify.NetStandard.Requests;
+﻿using Newtonsoft.Json;
+using Spotify.NetStandard.Requests;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -21,11 +22,11 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="info">Property Info</param>
         /// <returns>Description as String</returns>
         private static string GetPropertyDescription(
-            this PropertyInfo info)
-        {
-            return info.GetCustomAttributes(typeof(DescriptionAttribute), false)
-            .Cast<DescriptionAttribute>().Select(x => x.Description).FirstOrDefault();
-        }
+            this PropertyInfo info) => 
+            info.GetCustomAttributes(typeof(DescriptionAttribute), false)
+                .Cast<DescriptionAttribute>()
+                .Select(x => x.Description)
+                .FirstOrDefault();
 
         /// <summary>
         /// From Bools
@@ -95,10 +96,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <param name="items">Array of Strings</param>
         /// <returns>Comma delimited String of Strings</returns>
-        public static string AsDelimitedString(this string[] items)
-        {
-            return string.Join(",", items);
-        }
+        public static string AsDelimitedString(this string[] items) => 
+            string.Join(",", items);
 
         /// <summary>
         /// Get QueryString As Dictionary
@@ -117,33 +116,24 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <param name="scope">Scope</param>
         /// <returns>Results</returns>
-        public static string Get(
-            this Scope scope)
-        {
-            return FromBools(scope)?.AsDelimitedString();
-        }
+        public static string Get(this Scope scope) => 
+            FromBools(scope)?.AsDelimitedString();
 
         /// <summary>
         /// Get Include Group
         /// </summary>
         /// <param name="includeGroup">Include Group Object</param>
         /// <returns>Results</returns>
-        public static string[] Get(
-            this IncludeGroup includeGroup)
-        {
-            return FromBools(includeGroup)?.ToArray();
-        }
+        public static string[] Get(this IncludeGroup includeGroup) => 
+            FromBools(includeGroup)?.ToArray();
 
         /// <summary>
         /// Get Search Type
         /// </summary>
         /// <param name="searchType">Search Type Object</param>
         /// <returns>Results</returns>
-        public static string[] Get(
-            this SearchType searchType)
-        {
-            return FromBools(searchType)?.ToArray();
-        }
+        public static string[] Get(this SearchType searchType) => 
+            FromBools(searchType)?.ToArray();
 
         /// <summary>
         /// Set Parameter
@@ -172,6 +162,17 @@ namespace Spotify.NetStandard.Client.Internal
                 }
             }
         }
+
+        /// <summary>
+        /// Object as Type
+        /// </summary>
+        /// <typeparam name="TObject">Object Type</typeparam>
+        /// <param name="obj">Object</param>
+        /// <returns>Type</returns>
+        public static TObject AsType<TObject>(this object obj) =>
+            obj != null 
+            ? JsonConvert.DeserializeObject<TObject>(obj.ToString()) :
+            default;
         #endregion Public Methods
     }
 }
