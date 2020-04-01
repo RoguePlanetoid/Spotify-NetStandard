@@ -522,6 +522,47 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         Task<Bools> CheckUserSavedTracksAsync(
             List<string> itemIds);
+
+        /// <summary>
+        /// Get User's Saved Shows
+        /// <para>Scopes: LibraryRead</para>
+        /// </summary>
+        /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+        /// <returns>Cursor Paging of Saved Show Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<CursorPaging<SavedShow>> GetUserSavedShowsAsync(
+            Cursor cursor = null);
+
+        /// <summary>
+        /// Check User's Saved Shows
+        /// <para>Scopes: LibraryRead</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<Bools> CheckUserSavedShowsAsync(
+            List<string> itemIds);
+
+        /// <summary>
+        /// Save Shows for Current User
+        /// <para>Scopes: LibraryModify</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<Status> SaveUserShowsAsync(
+            List<string> itemIds);
+
+        /// <summary>
+        /// Remove User's Saved Shows
+        /// <para>Scopes: LibraryModify</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        Task<Status> RemoveUserShowsAsync(
+            List<string> itemIds, string market = null);
         #endregion Library API
 
         #region Artists API
@@ -712,20 +753,22 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <para>Scopes: ConnectReadPlaybackState</para>
         /// </summary>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Currently Playing Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         Task<CurrentlyPlaying> GetUserPlaybackCurrentAsync(
-            string market = null);
+            string market = null, List<string> additionalTypes = null);
 
         /// <summary>
         /// Get the User's Currently Playing Track
         /// <para>Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState</para>
         /// </summary>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Simplified Currently Playing Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         Task<SimplifiedCurrentlyPlaying> GetUserPlaybackCurrentTrackAsync(
-            string market = null);
+            string market = null, List<string> additionalTypes = null);
 
         /// <summary>
         /// Set Volume For User's Playback
@@ -872,5 +915,71 @@ namespace Spotify.NetStandard.Client.Interfaces
             List<string> ids,
             string market = null);
         #endregion Tracks API
+
+        #region Episodes API
+        /// <summary>
+        /// Get an Episode
+        /// <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+        /// </summary>
+        /// <param name="id">(Required) The Spotify ID for the episode.</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+        /// <returns>Episode Object</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        Task<Episode> GetEpisodeAsync(
+            string id,
+            string market = null);
+
+        /// <summary>
+        /// Get Multiple Episodes
+        /// <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+        /// </summary>
+        /// <param name="ids">(Required) List of the Spotify IDs for the episodes. Maximum: 50 ID</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+        /// <returns>List of Episode Object</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        Task<List<Episode>> GetMultipleEpisodesAsync(
+            List<string> ids,
+            string market = null);
+        #endregion Episodes API
+
+        #region Shows API
+        /// <summary>
+        /// Get a Show
+        /// <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+        /// </summary>
+        /// <param name="id">(Required) The Spotify ID for the show.</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+        /// <returns>Show Object</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        Task<Show> GetShowAsync(
+            string id,
+            string market = null);
+
+        /// <summary>
+        /// Get Multiple Shows
+        /// <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+        /// </summary>
+        /// <param name="ids">(Required) List of the Spotify IDs for the shows. Maximum: 50 IDs.</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+        /// <returns>List of Show Object</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        Task<List<Show>> GetMultipleShowsAsync(
+            List<string> ids,
+            string market = null);
+
+        /// <summary>
+        /// Get a Show's Episodes
+        /// <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+        /// </summary>
+        /// <param name="id">(Required) The Spotify ID for the show</param>      
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+        /// <param name="page">(Optional) Limit: The maximum number of tracks to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first track to return</param>
+        /// <returns>Paging of Episode Object</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        Task<Paging<SimplifiedEpisode>> GetShowEpisodesAsync(
+            string id,
+            string market = null,
+            Page page = null);
+        #endregion Shows API
     }
 }

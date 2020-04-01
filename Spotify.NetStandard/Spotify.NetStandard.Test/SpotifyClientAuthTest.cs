@@ -97,7 +97,8 @@ namespace Spotify.NetStandard.Test
                 FollowModify = true,
                 PlaylistModifyPublic = true,
                 PlaylistModifyPrivate = true,
-                UserGeneratedContentImageUpload = true
+                UserGeneratedContentImageUpload = true,
+                PlaybackPositionRead = true,
             });
             Assert.IsNotNull(uri);
         }
@@ -110,6 +111,18 @@ namespace Spotify.NetStandard.Test
         {
             var token = await _client.AuthAsync();
             Assert.IsNotNull(token);
+        }
+
+        /// <summary>
+        /// Test Refresh
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_TestRefresh()
+        {
+            var oldToken = _client.GetToken();
+            var newToken = await _client.RefreshToken(oldToken);
+            Assert.AreNotEqual(oldToken.Token, newToken.Token);
         }
         #endregion Authenticate
 
@@ -491,6 +504,59 @@ namespace Spotify.NetStandard.Test
                 });
             Assert.IsNotNull(result);
         }
+
+        /// <summary>
+        /// Get User's Saved Shows
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthLookupUserSavedShows()
+        {
+            var result = await _client.AuthLookupUserSavedShowsAsync();
+            Assert.IsNotNull(result?.Items);
+            Assert.IsTrue(result.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Check User's Saved Shows
+        /// </summary>
+        [TestMethod]
+        public async Task Test_AuthLookupCheckUserSavedShows()
+        {
+            var result = await _client.AuthLookupCheckUserSavedShowsAsync(
+                new List<string>
+                {
+                    "4r157jjrIV0bzS6UxhN07i"
+                });
+            Assert.IsNotNull(result);
+        }
+
+        /// <summary>
+        /// Save Shows for Current User
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthSaveUserShows()
+        {
+            var result = await _client.AuthSaveUserShowsAsync(new List<string>
+            {
+                "5tz9eGgXtNHmq3WVD3EwYx"
+            });
+            Assert.IsTrue(result.Success);
+        }
+
+        /// <summary>
+        /// Remove Shows for Current User
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_AuthRemoveUserShows()
+        {
+            var result = await _client.AuthRemoveUserShowsAsync(new List<string>
+            {
+                "5tz9eGgXtNHmq3WVD3EwYx"
+            });
+            Assert.IsTrue(result.Success);
+        }
         #endregion Library
 
         #region Player
@@ -645,7 +711,9 @@ namespace Spotify.NetStandard.Test
         [TestMethod]
         public async Task Test_AuthLookupUserPlaybackCurrent()
         {
-            var result = await _client.AuthLookupUserPlaybackCurrentAsync();
+            var result = await _client.AuthLookupUserPlaybackCurrentAsync(
+                additionalTypes:
+                    new List<string> { "track", "episode" });
             Assert.IsNotNull(result);
         }
 
@@ -656,7 +724,9 @@ namespace Spotify.NetStandard.Test
         [TestMethod]
         public async Task Test_AuthLookupUserPlaybackCurrentTrack()
         {
-            var result = await _client.AuthLookupUserPlaybackCurrentTrackAsync();
+            var result = await _client.AuthLookupUserPlaybackCurrentTrackAsync(
+                additionalTypes:
+                    new List<string> { "track", "episode" });
             Assert.IsNotNull(result);
         }
 

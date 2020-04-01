@@ -43,5 +43,17 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         [DataMember(Name = "tracks")]
         public Paging<Track> Tracks { get; set; }
+
+        /// <summary>
+        /// Paging Object of Simplified Show Objects
+        /// </summary>
+        [DataMember(Name = "shows")]
+        public Paging<SimplifiedShow> Shows { get; set; }
+
+        /// <summary>
+        /// Paging Object of Simplified Episode Objects
+        /// </summary>
+        [DataMember(Name = "episodes")]
+        public Paging<SimplifiedEpisode> Episodes { get; set; }
     }
 }

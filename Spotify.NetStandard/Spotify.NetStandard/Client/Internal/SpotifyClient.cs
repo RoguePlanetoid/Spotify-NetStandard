@@ -10,6 +10,7 @@ using Spotify.NetStandard.Responses.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,10 +22,6 @@ namespace Spotify.NetStandard.Client.Internal
     internal class SpotifyClient : SimpleServiceClient, ISpotifyClient
     {
         #region Private Members
-        private const int http_ok = 200; // HTTP Status 200 OK
-        private const int http_created = 201; // HTTP Status 201 CREATED
-        private const int http_accepted = 202; // HTTP Status 202 ACCEPTED
-        private const int http_nocontent = 204; // HTTP Status 204 NO CONTENT
         private static readonly Uri _hostName = new Uri("https://api.spotify.com");
         // Members
         private static ISpotifyApi _api;
@@ -115,18 +112,18 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="response"></param>
-        /// <param name="code"></param>
+        /// <param name="statusCode"></param>
         /// <param name="successCode"></param>
         private TResponse GetStatus<TResponse>(
             TResponse response,
-            int code,
-            int successCode)
+            HttpStatusCode statusCode,
+            HttpStatusCode successCode)
             where TResponse : Status
         {
-            var success = code == successCode;
+            var success = statusCode == successCode;
             if (response == null)
                 response = (TResponse)new Status();
-            response.Code = code;
+            response.StatusCode = statusCode;
             response.Success = success;
             return response;
         }
@@ -331,7 +328,7 @@ namespace Spotify.NetStandard.Client.Internal
             Dictionary<string, string> body = null,
             Dictionary<string, string> parameters = null,
             TokenType tokenType = TokenType.Access,
-            int successCode = http_ok)
+            HttpStatusCode successCode = HttpStatusCode.OK)
             where TRequest : class
             where TResponse : Status
         {
@@ -346,7 +343,7 @@ namespace Spotify.NetStandard.Client.Internal
                 body,
                 parameters,
                 headers);
-            return GetStatus(response, (int)statusCode, successCode);
+            return GetStatus(response, statusCode, successCode);
         }
 
         /// <summary>
@@ -403,7 +400,7 @@ namespace Spotify.NetStandard.Client.Internal
             byte[] fileBytes = null,
             Dictionary<string, string> parameters = null,
             TokenType tokenType = TokenType.Access,
-            int successCode = http_ok)
+            HttpStatusCode successCode = HttpStatusCode.OK)
             where TRequest : class
             where TResponse : Status
         {
@@ -423,7 +420,7 @@ namespace Spotify.NetStandard.Client.Internal
                 fileBytes,
                 parameters,
                 headers);
-            return GetStatus(response, (int)statusCode, successCode);
+            return GetStatus(response, statusCode, successCode);
         }
 
         /// <summary>
@@ -444,7 +441,7 @@ namespace Spotify.NetStandard.Client.Internal
             TRequest request = null,
             Dictionary<string, string> parameters = null,
             TokenType tokenType = TokenType.Access,
-            int successCode = http_ok)
+            HttpStatusCode successCode = HttpStatusCode.OK)
             where TRequest : class
             where TResponse : Status
         {
@@ -463,7 +460,7 @@ namespace Spotify.NetStandard.Client.Internal
                 new CancellationToken(false),
                 parameters,
                 headers);
-            return GetStatus(response, (int)statusCode, successCode);
+            return GetStatus(response, statusCode, successCode);
         }
 
         /// <summary>
@@ -1099,7 +1096,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/following",
                 parameters: parameters, 
                 tokenType: TokenType.User,
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1159,7 +1156,7 @@ namespace Spotify.NetStandard.Client.Internal
             return await DeleteApiAsync<Status, Status>(itemIds,
                 "me/following",
                 null, parameters, 
-                TokenType.User, http_nocontent);
+                TokenType.User, HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1199,7 +1196,7 @@ namespace Spotify.NetStandard.Client.Internal
                 request: uris, 
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_created);
+                successCode: HttpStatusCode.Created);
         }
 
         /// <summary>
@@ -1245,7 +1242,7 @@ namespace Spotify.NetStandard.Client.Internal
                     requestType: $"playlists/{playlistId}/images",
                     fileBytes: file, 
                     tokenType: TokenType.User, 
-                    successCode: http_accepted);
+                    successCode: HttpStatusCode.Accepted);
 
         /// <summary>
         /// Get a List of Current User's Playlists
@@ -1308,7 +1305,7 @@ namespace Spotify.NetStandard.Client.Internal
                     requestType: $"playlists/{playlistId}/tracks",
                     request: uris, 
                     tokenType: TokenType.User, 
-                    successCode: http_created);
+                    successCode: HttpStatusCode.Created);
 
         /// <summary>
         /// Create a Playlist
@@ -1463,6 +1460,69 @@ namespace Spotify.NetStandard.Client.Internal
                 itemIds,
                 requestType: "me/tracks/contains",
                 tokenType: TokenType.User);
+
+        /// <summary>
+        /// Get User's Saved Shows
+        /// <para>Scopes: LibraryRead</para>
+        /// </summary>
+        /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+        /// <returns>Cursor Paging of Saved Show Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        public async Task<CursorPaging<SavedShow>> AuthLookupUserSavedShowsAsync(
+            Cursor cursor = null) =>
+                await LookupCursorApiAsync<CursorPaging<SavedShow>>(
+                    lookupType: "me/shows",
+                    cursor: cursor,
+                    tokenType: TokenType.User);
+
+        /// <summary>
+        /// Check User's Saved Shows
+        /// <para>Scopes: LibraryRead</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <returns>List of true or false values</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        public async Task<Bools> AuthLookupCheckUserSavedShowsAsync(
+            List<string> itemIds) =>
+            await GetBoolsAsync(
+                itemIds,
+                requestType: "me/shows/contains",
+                tokenType: TokenType.User);
+
+        /// <summary>
+        /// Save Shows for Current User
+        /// <para>Scopes: LibraryModify</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        public async Task<Status> AuthSaveUserShowsAsync(
+            List<string> itemIds) =>
+                await PutApiAsync<Status, Status>(
+                    itemIds: itemIds,
+                    requestType: "me/shows",
+                    tokenType: TokenType.User);
+
+        /// <summary>
+        /// Remove User's Saved Shows
+        /// <para>Scopes: LibraryModify</para>
+        /// </summary>
+        /// <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+        /// <returns>Status Object</returns>
+        /// <exception cref="AuthUserTokenRequiredException"></exception>
+        public async Task<Status> AuthRemoveUserShowsAsync(
+            List<string> itemIds, string market = null)
+        {
+            var parameters = new Dictionary<string, string>();
+            if (market != null)
+                parameters.Add(nameof(market), market);
+            return await DeleteApiAsync<Status, Status>(
+                itemIds: itemIds,
+                parameters: parameters,
+                requestType: "me/shows",
+                tokenType: TokenType.User);
+        }
         #endregion Authenticated Library API
 
         #region Authenticated Player API
@@ -1487,7 +1547,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player/queue",
                 parameters: parameters,
                 tokenType: TokenType.User,
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1507,7 +1567,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player/next",
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1532,7 +1592,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player/seek", 
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1568,7 +1628,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player/shuffle",
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1584,7 +1644,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player",
                 request: request, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
 
         /// <summary>
         /// Get Current User's Recently Played Tracks
@@ -1620,7 +1680,7 @@ namespace Spotify.NetStandard.Client.Internal
                 request: request, 
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1645,7 +1705,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player/repeat",
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1665,7 +1725,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player/pause",
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1685,7 +1745,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player/previous",
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -1693,14 +1753,17 @@ namespace Spotify.NetStandard.Client.Internal
         /// <para>Scopes: ConnectReadPlaybackState</para>
         /// </summary>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Currently Playing Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public async Task<CurrentlyPlaying> AuthLookupUserPlaybackCurrentAsync(
-            string market = null)
+            string market = null, List<string> additionalTypes = null)
         {
             var parameters = new Dictionary<string, string>();
             if (market != null)
                 parameters.Add(nameof(market), market);
+            if (additionalTypes != null)
+                parameters.Add("additional_types", additionalTypes?.ToArray()?.AsDelimitedString());
             return await GetApiAsync<CurrentlyPlaying>(
                 requestType: "me/player",
                 parameters: parameters, 
@@ -1712,14 +1775,17 @@ namespace Spotify.NetStandard.Client.Internal
         /// <para>Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState</para>
         /// </summary>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Simplified Currently Playing Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public async Task<SimplifiedCurrentlyPlaying> AuthLookupUserPlaybackCurrentTrackAsync(
-            string market = null)
+            string market = null, List<string> additionalTypes = null)
         {
             var parameters = new Dictionary<string, string>();
             if (market != null)
                 parameters.Add(nameof(market), market);
+            if (additionalTypes != null)
+                parameters.Add("additional_types", additionalTypes?.ToArray()?.AsDelimitedString());
             return await GetApiAsync<SimplifiedCurrentlyPlaying>(
                 requestType: "me/player/currently-playing",
                 parameters: parameters, 
@@ -1748,7 +1814,7 @@ namespace Spotify.NetStandard.Client.Internal
                 requestType: "me/player/volume",
                 parameters: parameters, 
                 tokenType: TokenType.User, 
-                successCode: http_nocontent);
+                successCode: HttpStatusCode.NoContent);
         }
         #endregion Authenticated Player API
 

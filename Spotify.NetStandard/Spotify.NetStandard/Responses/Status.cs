@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Net;
+using System.Runtime.Serialization;
 
 namespace Spotify.NetStandard.Responses
 {
@@ -9,9 +10,14 @@ namespace Spotify.NetStandard.Responses
     public class Status : BaseResponse
     {
         /// <summary>
+        /// Status Code
+        /// </summary>
+        public HttpStatusCode StatusCode { get; set; }
+
+        /// <summary>
         /// Code
         /// </summary>
-        public int Code { get; set; }
+        public int Code => (int)StatusCode;
 
         /// <summary>
         /// Success

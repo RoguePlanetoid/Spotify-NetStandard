@@ -46,7 +46,7 @@ namespace Spotify.NetStandard.Responses
         public string ReleaseDate { get; set; }
 
         /// <summary>
-        /// The precision with which release_date value is known: year , month , or day.
+        /// The precision with which ReleaseDate value is known: year , month , or day.
         /// </summary>
         [DataMember(Name = "release_date_precision")]
         public string ReleaseDatePrecision { get; set; }

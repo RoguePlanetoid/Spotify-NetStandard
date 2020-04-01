@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.2.0</Version>
+    <Version>1.5.0</Version>
     <Authors>RoguePlanetoid</Authors>
     <Company>Comentsys</Company>
-    <Description>Spotify API .NET Standard Library from Comentsys by RoguePlanetoid with contributions from parkeradam</Description>
+    <Description>Spotify API .NET Standard Library</Description>
     <RepositoryUrl>https://github.com/RoguePlanetoid/Spotify-NetStandard</RepositoryUrl>
     <PackageReleaseNotes>1.0.0 Initial Release
 1.0.1 Added Multi Scope Helpers by parkeradam
@@ -16,9 +16,10 @@
 1.1.3 Removed User Birthdate Value and Scope
 1.1.4 Fixed Token Storage and Get Playlist Tracks
 1.1.5 Added Actions Object, Disallows Object, Simplified Playlist Object and updated related methods
-1.2.0 Added Add an Item to the User's Playback Queue, Updated Get a Playlist and Get Playlist's Tracks to support Fields Parameter and Fixed Check/Lookup Methods Return Error Status Correctly</PackageReleaseNotes>
+1.2.0 Added Add an Item to the User's Playback Queue, Updated Get a Playlist and Get Playlist's Tracks to support Fields Parameter and Fixed Check/Lookup Methods Return Error Status Correctly
+1.5.0 Added Save Shows for Current User, Get User's Saved Shows, Remove User's Saved Shows, Get an Episode, Get Multiple Episodes, Get a Show, Get Multiple Shows and Get a Show's Episodes plus PlaybackPositionRead Scope. Updated Get the User's Currently Playing Track, Get Information About The User's Current Playback and Search for an Item</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <AssemblyVersion>1.5.0.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

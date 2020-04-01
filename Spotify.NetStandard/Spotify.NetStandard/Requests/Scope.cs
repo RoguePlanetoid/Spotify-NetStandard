@@ -110,6 +110,18 @@ namespace Spotify.NetStandard.Requests
         public bool? ListeningTopRead { get; set; }
 
         /// <summary>
+        ///	Read access to a user’s playback position in a content
+        ///	<para>Optional For</para>
+        ///	<para>Get an Episodes,
+        ///	Get Multiple Episodes, 
+        ///	Get a Show,
+        ///	Get Multiple Shows,
+        ///	Get a Show's Episodes</para>
+        /// </summary>
+        [Description("user-read-playback-position")]
+        public bool? PlaybackPositionRead { get; set; }
+
+        /// <summary>
         /// Read access to a user’s recently played tracks
         /// <para>Required For</para>
         /// <para>Get Current User's Recently Played Tracks</para>

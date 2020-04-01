@@ -836,6 +836,43 @@
             <returns>List of true or false values</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetUserSavedShowsAsync(Spotify.NetStandard.Requests.Cursor)">
+            <summary>
+            Get User's Saved Shows
+            <para>Scopes: LibraryRead</para>
+            </summary>
+            <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+            <returns>Cursor Paging of Saved Show Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.CheckUserSavedShowsAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            Check User's Saved Shows
+            <para>Scopes: LibraryRead</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <returns>List of true or false values</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.SaveUserShowsAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            Save Shows for Current User
+            <para>Scopes: LibraryModify</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.RemoveUserShowsAsync(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Remove User's Saved Shows
+            <para>Scopes: LibraryModify</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetMultipleArtistsAsync(System.Collections.Generic.List{System.String})">
             <summary>
             Get Multiple Artists
@@ -988,21 +1025,23 @@
             <returns>Status Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetUserPlaybackCurrentAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetUserPlaybackCurrentAsync(System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Get Information About The User's Current Playback
             <para>Scopes: ConnectReadPlaybackState</para>
             </summary>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
             <returns>Currently Playing Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetUserPlaybackCurrentTrackAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetUserPlaybackCurrentTrackAsync(System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Get the User's Currently Playing Track
             <para>Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState</para>
             </summary>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
             <returns>Simplified Currently Playing Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
@@ -1120,6 +1159,57 @@
             <param name="ids">(Required) List of the Spotify IDs for the tracks. Maximum: 50 IDs.</param>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
             <returns>List of Track Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetEpisodeAsync(System.String,System.String)">
+            <summary>
+            Get an Episode
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="id">(Required) The Spotify ID for the episode.</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <returns>Episode Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetMultipleEpisodesAsync(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Get Multiple Episodes
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="ids">(Required) List of the Spotify IDs for the episodes. Maximum: 50 ID</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <returns>List of Episode Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetShowAsync(System.String,System.String)">
+            <summary>
+            Get a Show
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="id">(Required) The Spotify ID for the show.</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <returns>Show Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetMultipleShowsAsync(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Get Multiple Shows
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="ids">(Required) List of the Spotify IDs for the shows. Maximum: 50 IDs.</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <returns>List of Show Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetShowEpisodesAsync(System.String,System.String,Spotify.NetStandard.Requests.Page)">
+            <summary>
+            Get a Show's Episodes
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="id">(Required) The Spotify ID for the show</param>      
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <param name="page">(Optional) Limit: The maximum number of tracks to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first track to return</param>
+            <returns>Paging of Episode Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
         <member name="T:Spotify.NetStandard.Client.Interfaces.ISpotifyClient">
@@ -1628,6 +1718,43 @@
             <returns>List of true or false values</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupUserSavedShowsAsync(Spotify.NetStandard.Requests.Cursor)">
+            <summary>
+            Get User's Saved Shows
+            <para>Scopes: LibraryRead</para>
+            </summary>
+            <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+            <returns>Cursor Paging of Saved Show Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupCheckUserSavedShowsAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            Check User's Saved Shows
+            <para>Scopes: LibraryRead</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <returns>List of true or false values</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthSaveUserShowsAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            Save Shows for Current User
+            <para>Scopes: LibraryModify</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthRemoveUserShowsAsync(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Remove User's Saved Shows
+            <para>Scopes: LibraryModify</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserPlaybackAddToQueueAsync(System.String,System.String)">
             <summary>
             Add an Item to the User's Playback Queue
@@ -1731,21 +1858,23 @@
             <returns>Status Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupUserPlaybackCurrentAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupUserPlaybackCurrentAsync(System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Get Information About The User's Current Playback
             <para>Scopes: ConnectReadPlaybackState</para>
             </summary>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
             <returns>Currently Playing Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupUserPlaybackCurrentTrackAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupUserPlaybackCurrentTrackAsync(System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Get the User's Currently Playing Track
             <para>Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState</para>
             </summary>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
             <returns>Simplified Currently Playing Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
@@ -1876,6 +2005,14 @@
             <param name="parameters">Parameters</param>
             <param name="prefix">Prefix</param>
             <param name="tuneableTrack">Tuneable Track Object</param>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.Extensions.AsType``1(System.Object)">
+            <summary>
+            Object as Type
+            </summary>
+            <typeparam name="TObject">Object Type</typeparam>
+            <param name="obj">Object</param>
+            <returns>Type</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SimpleServiceClient.CreateClient(System.TimeSpan,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <summary>
@@ -2575,6 +2712,43 @@
             <returns>List of true or false values</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetUserSavedShowsAsync(Spotify.NetStandard.Requests.Cursor)">
+            <summary>
+            Get User's Saved Shows
+            <para>Scopes: LibraryRead</para>
+            </summary>
+            <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+            <returns>Cursor Paging of Saved Show Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.CheckUserSavedShowsAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            Check User's Saved Shows
+            <para>Scopes: LibraryRead</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <returns>List of true or false values</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.SaveUserShowsAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            Save Shows for Current User
+            <para>Scopes: LibraryModify</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.RemoveUserShowsAsync(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Remove User's Saved Shows
+            <para>Scopes: LibraryModify</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetMultipleArtistsAsync(System.Collections.Generic.List{System.String})">
             <summary>
             Get Multiple Artists
@@ -2727,21 +2901,23 @@
             <returns>Status Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetUserPlaybackCurrentAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetUserPlaybackCurrentAsync(System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Get Information About The User's Current Playback
             <para>Scopes: ConnectReadPlaybackState</para>
             </summary>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
             <returns>Currently Playing Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetUserPlaybackCurrentTrackAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetUserPlaybackCurrentTrackAsync(System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Get the User's Currently Playing Track
             <para>Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState</para>
             </summary>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
             <returns>Simplified Currently Playing Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
@@ -2861,6 +3037,57 @@
             <returns>List of Track Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetEpisodeAsync(System.String,System.String)">
+            <summary>
+            Get an Episode
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="id">(Required) The Spotify ID for the episode.</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <returns>Episode Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetMultipleEpisodesAsync(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Get Multiple Episodes
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="ids">(Required) List of the Spotify IDs for the episodes. Maximum: 50 ID</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <returns>List of Episode Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetShowAsync(System.String,System.String)">
+            <summary>
+            Get a Show
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="id">(Required) The Spotify ID for the show.</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <returns>Show Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetMultipleShowsAsync(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Get Multiple Shows
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="ids">(Required) List of the Spotify IDs for the shows. Maximum: 50 IDs.</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <returns>List of Show Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetShowEpisodesAsync(System.String,System.String,Spotify.NetStandard.Requests.Page)">
+            <summary>
+            Get a Show's Episodes
+            <para>(Optional) Scopes: PlaybackPositionRead for ResumePoint</para>
+            </summary>
+            <param name="id">(Required) The Spotify ID for the show</param>      
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows and episodes that are available in that market will be returned. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter.</param>
+            <param name="page">(Optional) Limit: The maximum number of tracks to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first track to return</param>
+            <returns>Paging of Episode Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Internal.SpotifyClient">
             <summary>
             Spotify Client
@@ -2898,13 +3125,13 @@
             <param name="cursor">Format Cursor Parameters</param>
             <returns>Dictionary of Request Parameters</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetStatus``1(``0,System.Int32,System.Int32)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetStatus``1(``0,System.Net.HttpStatusCode,System.Net.HttpStatusCode)">
             <summary>
             Get Status
             </summary>
             <typeparam name="TResponse"></typeparam>
             <param name="response"></param>
-            <param name="code"></param>
+            <param name="statusCode"></param>
             <param name="successCode"></param>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetBrowseAsync(System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Requests.Page)">
@@ -2975,7 +3202,7 @@
             <param name="tokenType">Token Type</param>
             <returns>Response Object</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PostApiStatusAsync``2(System.String,``0,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Int32)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PostApiStatusAsync``2(System.String,``0,System.Collections.Generic.Dictionary{System.String,System.String},System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Net.HttpStatusCode)">
             <summary>
             Post API Status
             </summary>
@@ -3002,7 +3229,7 @@
             <param name="tokenType">Token Type</param>
             <returns>Response Object</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PutApiAsync``2(System.Collections.Generic.List{System.String},System.String,``0,System.Byte[],System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Int32)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PutApiAsync``2(System.Collections.Generic.List{System.String},System.String,``0,System.Byte[],System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Net.HttpStatusCode)">
             <summary>
             Put API
             </summary>
@@ -3017,7 +3244,7 @@
             <param name="successCode">Success Code</param>
             <returns>Response Object</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.DeleteApiAsync``2(System.Collections.Generic.List{System.String},System.String,``0,System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Int32)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.DeleteApiAsync``2(System.Collections.Generic.List{System.String},System.String,``0,System.Collections.Generic.Dictionary{System.String,System.String},Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Net.HttpStatusCode)">
             <summary>
             Delete API
             </summary>
@@ -3565,6 +3792,43 @@
             <returns>List of true or false values</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupUserSavedShowsAsync(Spotify.NetStandard.Requests.Cursor)">
+            <summary>
+            Get User's Saved Shows
+            <para>Scopes: LibraryRead</para>
+            </summary>
+            <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+            <returns>Cursor Paging of Saved Show Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupCheckUserSavedShowsAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            Check User's Saved Shows
+            <para>Scopes: LibraryRead</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <returns>List of true or false values</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthSaveUserShowsAsync(System.Collections.Generic.List{System.String})">
+            <summary>
+            Save Shows for Current User
+            <para>Scopes: LibraryModify</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthRemoveUserShowsAsync(System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Remove User's Saved Shows
+            <para>Scopes: LibraryModify</para>
+            </summary>
+            <param name="itemIds">(Required) List of the Spotify IDs for the shows</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only shows that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+            <returns>Status Object</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserPlaybackAddToQueueAsync(System.String,System.String)">
             <summary>
             Add an Item to the User's Playback Queue
@@ -3668,21 +3932,23 @@
             <returns>Status Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupUserPlaybackCurrentAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupUserPlaybackCurrentAsync(System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Get Information About The User's Current Playback
             <para>Scopes: ConnectReadPlaybackState</para>
             </summary>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
             <returns>Currently Playing Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupUserPlaybackCurrentTrackAsync(System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupUserPlaybackCurrentTrackAsync(System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Get the User's Currently Playing Track
             <para>Scopes: ConnectReadCurrentlyPlaying, ConnectReadPlaybackState</para>
             </summary>
             <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token. Provide this parameter if you want to apply Track Relinking.</param>
+            <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
             <returns>Simplified Currently Playing Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
@@ -3826,6 +4092,21 @@
         <member name="F:Spotify.NetStandard.Enums.LookupType.AudioAnalysis">
             <summary>
             Audio Analysis
+            </summary>
+        </member>
+        <member name="F:Spotify.NetStandard.Enums.LookupType.Episodes">
+            <summary>
+            Episodes
+            </summary>
+        </member>
+        <member name="F:Spotify.NetStandard.Enums.LookupType.Shows">
+            <summary>
+            Shows
+            </summary>
+        </member>
+        <member name="F:Spotify.NetStandard.Enums.LookupType.ShowEpisodes">
+            <summary>
+            Show Episodes
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Enums.NavigateType">
@@ -4187,6 +4468,17 @@
             <para>Get a User's Top Artists and Tracks</para>
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Requests.Scope.PlaybackPositionRead">
+            <summary>
+            Read access to a user’s playback position in a content
+            <para>Optional For</para>
+            <para>Get an Episodes,
+            Get Multiple Episodes, 
+            Get a Show,
+            Get Multiple Shows,
+            Get a Show's Episodes</para>
+            </summary>
+        </member>
         <member name="P:Spotify.NetStandard.Requests.Scope.ListeningRecentlyPlayed">
             <summary>
             Read access to a user’s recently played tracks
@@ -4415,6 +4707,16 @@
             Track
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Requests.SearchType.Show">
+            <summary>
+            Show
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.SearchType.Episode">
+            <summary>
+            Episode
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Requests.TuneableTrack">
             <summary>
             Tuneable Track Object
@@ -4557,7 +4859,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.Album.ReleaseDatePrecision">
             <summary>
-            The precision with which release_date value is known: year , month , or day.
+            The precision with which ReleaseDate value is known: year , month , or day.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.Album.Tracks">
@@ -4801,6 +5103,16 @@
             Paging Object of Tracks
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Responses.ContentResponse.Shows">
+            <summary>
+            Paging Object of Simplified Show Objects
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.ContentResponse.Episodes">
+            <summary>
+            Paging Object of Simplified Episode Objects
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.Context">
             <summary>
             Context Object
@@ -5007,6 +5319,16 @@
             Transferring playback not allowed?
             </summary>
         </member>
+        <member name="T:Spotify.NetStandard.Responses.Episode">
+            <summary>
+            Episode Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Episode.Show">
+            <summary>
+            The show on which the episode belongs.
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.ErrorResponse">
             <summary>
             Error Object
@@ -5125,6 +5447,16 @@
         <member name="P:Spotify.NetStandard.Responses.LookupResponse.AudioFeatures">
             <summary>
             List of Audio Feature Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.LookupResponse.Episodes">
+            <summary>
+            List of Episode Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.LookupResponse.Shows">
+            <summary>
+            List of Show Object
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.Paging`1">
@@ -5308,6 +5640,21 @@
             An array of track object (simplified) ordered according to the parameters supplied.
             </summary>
         </member>
+        <member name="T:Spotify.NetStandard.Responses.ResumePoint">
+            <summary>
+            Resume Point Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.ResumePoint.FullyPlayed">
+            <summary>
+            Whether or not the episode has been fully played by the user
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.ResumePoint.ResumePosition">
+            <summary>
+            The user’s most recent position in the episode in milliseconds
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.SavedAlbum">
             <summary>
             Saved Album Object
@@ -5315,12 +5662,27 @@
         </member>
         <member name="P:Spotify.NetStandard.Responses.SavedAlbum.AddedAt">
             <summary>
-            The date and time the album was saved Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, release_date in an album object.
+            The date and time the album was saved Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an album release), an additional field indicates the precision; see for example, ReleaseDate in an album object.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.SavedAlbum.Album">
             <summary>
             Information about the album.
+            </summary>
+        </member>
+        <member name="T:Spotify.NetStandard.Responses.SavedShow">
+            <summary>
+            Saved Show Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SavedShow.AddedAt">
+            <summary>
+            The date and time the show was saved. Timestamps are returned in ISO 8601 format as Coordinated Universal Time (UTC) with a zero offset: YYYY-MM-DDTHH:MM:SSZ. If the time is imprecise (for example, the date/time of an show release), an additional field indicates the precision; see for example, ReleaseDate in a show object.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SavedShow.Show">
+            <summary>
+            Information about the show
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.SavedTrack">
@@ -5423,6 +5785,16 @@
             Timbre is the quality of a musical note or sound that distinguishes different types of musical instruments, or voices.
             </summary>
         </member>
+        <member name="T:Spotify.NetStandard.Responses.Show">
+            <summary>
+            Show Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Show.Episodes">
+            <summary>
+            A list of the show’s episodes.
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Responses.SimplifiedAlbum">
             <summary>
             Simplified Album Object
@@ -5488,9 +5860,19 @@
             If something is currently playing, return true.
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedCurrentlyPlaying.Item">
+            <summary>
+            The currently playing item. Can be null.
+            </summary>
+        </member>
         <member name="P:Spotify.NetStandard.Responses.SimplifiedCurrentlyPlaying.Track">
             <summary>
             The currently playing track. Can be null.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedCurrentlyPlaying.Episode">
+            <summary>
+            The currently playing episode. Can be null.
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.SimplifiedCurrentlyPlaying.Type">
@@ -5501,6 +5883,66 @@
         <member name="P:Spotify.NetStandard.Responses.SimplifiedCurrentlyPlaying.Actions">
             <summary>
             Allows to update the user interface based on which playback actions are available within the current context
+            </summary>
+        </member>
+        <member name="T:Spotify.NetStandard.Responses.SimplifiedEpisode">
+            <summary>
+            Simplified Episode Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.Preview">
+            <summary>
+            A URL to a 30 second preview (MP3 format) of the episode - null if not available
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.Description">
+            <summary>
+            The description of the episode
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.Duration">
+            <summary>
+            The episode length in milliseconds
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.IsExplicit">
+            <summary>
+            Whether or not the episode has explicit content ( true = yes it does; false = no it does not OR unknown)
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.Images">
+            <summary>
+            The cover art for the episode in various sizes, widest first
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.IsExternallyHosted">
+            <summary>
+            True if the episode is hosted outside of Spotify's CDN
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.IsPlayable">
+            <summary>
+            True if the episode is playable in the given market. Otherwise false
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.Languages">
+            <summary>
+            A list of the languages used in the episode, identified by their ISO 639 code
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.ReleaseDate">
+            <summary>
+            The date the episode was first released, for example 1981-12-15. Depending on the precision, it might be shown as 1981 or 1981-12
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.ReleaseDatePrecision">
+            <summary>
+            The precision with which ReleaseDate value is known: year, month, or day
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedEpisode.ResumePoint">
+            <summary>
+            The user's most recent position in the episode. Set if the supplied access token is a user token and has the scope user-read-playback-position
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.SimplifiedPlaylist">
@@ -5536,6 +5978,56 @@
         <member name="P:Spotify.NetStandard.Responses.SimplifiedPlaylist.Tracks">
             <summary>
             Information about the tracks of the playlist.
+            </summary>
+        </member>
+        <member name="T:Spotify.NetStandard.Responses.SimplifiedShow">
+            <summary>
+            Simplified Show Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.AvailableMarkets">
+            <summary>
+            A list of the countries in which the show can be played, identified by their ISO 3166-1 alpha-2 code
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.Copyrights">
+            <summary>
+            The copyright statements of the show
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.Description">
+            <summary>
+            A description of the show
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.IsExplicit">
+            <summary>
+            Whether or not the show has explicit content ( true = yes it does; false = no it does not OR unknown)
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.Images">
+            <summary>
+            The cover art for the show in various sizes, widest first
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.IsExternallyHosted">
+            <summary>
+            True if all of the show's episodes are hosted outside of Spotify’s CDN
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.Languages">
+            <summary>
+            A list of the languages used in the show, identified by their ISO 639 code
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.MediaType">
+            <summary>
+            The media type of the show
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.SimplifiedShow.Publisher">
+            <summary>
+            The publisher of the show
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.SimplifiedTrack">
@@ -5611,6 +6103,11 @@
         <member name="T:Spotify.NetStandard.Responses.Status">
             <summary>
             Status Response
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Status.StatusCode">
+            <summary>
+            Status Code
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Responses.Status.Code">

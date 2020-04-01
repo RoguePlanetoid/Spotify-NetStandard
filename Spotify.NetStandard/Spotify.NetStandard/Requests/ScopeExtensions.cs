@@ -17,6 +17,7 @@
             scope.ConnectReadCurrentlyPlaying = true;
             scope.ConnectReadPlaybackState = true;
             scope.ListeningTopRead = true;
+            scope.PlaybackPositionRead = true;
             scope.ListeningRecentlyPlayed = true;
             scope.UserReadEmail = true;
             scope.UserReadPrivate = true;
@@ -79,6 +80,7 @@
         public static Scope AddListeningHistoryAll(this Scope scope)
         {
             scope.ListeningTopRead = true;
+            scope.PlaybackPositionRead = true;
             scope.ListeningRecentlyPlayed = true;
 
             return scope;

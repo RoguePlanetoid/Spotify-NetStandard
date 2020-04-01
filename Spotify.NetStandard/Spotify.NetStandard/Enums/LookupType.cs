@@ -61,6 +61,21 @@ namespace Spotify.NetStandard.Enums
         /// Audio Analysis
         /// </summary>
         [Description("audio-analysis")]
-        AudioAnalysis
+        AudioAnalysis,
+        /// <summary>
+        /// Episodes
+        /// </summary>
+        [Description("episodes")]
+        Episodes,
+        /// <summary>
+        /// Shows
+        /// </summary>
+        [Description("shows")]
+        Shows,
+        /// <summary>
+        /// Show Episodes
+        /// </summary>
+        [Description("shows_episodes")]
+        ShowEpisodes
     }
 }

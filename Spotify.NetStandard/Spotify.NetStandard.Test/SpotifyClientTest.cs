@@ -1,10 +1,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spotify.NetStandard.Client;
+using Spotify.NetStandard.Client.Authentication;
+using Spotify.NetStandard.Client.Authentication.Enums;
 using Spotify.NetStandard.Client.Interfaces;
 using Spotify.NetStandard.Enums;
 using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -33,6 +36,16 @@ namespace Spotify.NetStandard.Test
             _client = SpotifyClientFactory.CreateSpotifyClient(
                 config["client_id"], config["client_secret"]);
             Assert.IsNotNull(_client);
+            // Spotify Client Token
+            var accessToken = new AccessToken()
+            {
+                Token = config["token"],
+                Expiration = DateTime.Parse(config["expires"]),
+                TokenType = (TokenType)Enum.Parse(typeof(TokenType), config["type"])
+            };
+            var expired = DateTime.UtcNow > accessToken.Expiration;
+            Assert.IsFalse(expired);
+            _client.SetToken(accessToken);
         }
 
         #region Albums
@@ -387,5 +400,106 @@ namespace Spotify.NetStandard.Test
             Assert.IsTrue(_content.Tracks.Count > 0);
         }
         #endregion Tracks
+
+        #region Episodes
+        /// <summary>
+        /// Get an Episode
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_Lookup_Episode()
+        {
+            Episode item = await _client.LookupAsync<Episode>(
+                "79hCFrLsRSD7VlDYXcrCVt", LookupType.Episodes);
+            Assert.IsNotNull(item);
+        }
+
+        /// <summary>
+        /// Get Multiple Episodes
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_Lookup_Episodes()
+        {
+            List<string> ids = new List<string>
+            {
+                "79hCFrLsRSD7VlDYXcrCVt",
+                "6EbtlqXrvhCBic2TpeaalK"
+            };
+            _list = await _client.LookupAsync(ids, LookupType.Episodes);
+            Assert.IsNotNull(_list.Episodes);
+            Assert.IsTrue(_list.Episodes.Count == ids.Count);
+        }
+
+        /// <summary>
+        /// Search for an Episode
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_Search_Episode()
+        {
+            _content = await _client.SearchAsync(
+                "Andrew Jackson", new SearchType() { Episode = true });
+            Assert.IsNotNull(_content.Episodes);
+            Assert.IsTrue(_content.Episodes.Count > 0);
+        }
+        #endregion Episodes
+
+        #region Shows
+        /// <summary>
+        /// Get a Show
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_Lookup_Show()
+        {
+            Show item = await _client.LookupAsync<Show>(
+                "4r157jjrIV0bzS6UxhN07i", LookupType.Shows);
+            Assert.IsNotNull(item);
+        }
+
+        /// <summary>
+        /// Get Multiple Shows
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_Lookup_Shows()
+        {
+            List<string> ids = new List<string>
+            {
+                "4r157jjrIV0bzS6UxhN07i",
+                "2GmNzw8t4uG70rn4XG9zcC"
+            };
+            _list = await _client.LookupAsync(ids, LookupType.Shows);
+            Assert.IsNotNull(_list.Shows);
+            Assert.IsTrue(_list.Shows.Count == ids.Count);
+        }
+
+        /// <summary>
+        /// Get a Show's Episodes
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_Lookup_ShowEpisodes()
+        {
+            Paging<SimplifiedEpisode> list = await _client.LookupAsync<Paging<SimplifiedEpisode>>(
+                "4r157jjrIV0bzS6UxhN07i", LookupType.ShowEpisodes);
+            Assert.IsNotNull(list);
+            Assert.IsTrue(list.Items.Count > 0);
+        }
+
+        /// <summary>
+        /// Search for a Show
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task Test_Search_Show()
+        {
+            _content = await _client.SearchAsync(
+                "Famous Fates", new SearchType() { Show = true });
+            Assert.IsNotNull(_content.Shows);
+            Assert.IsTrue(_content.Shows.Count > 0);
+        }
+        #endregion Shows
     }
 }
