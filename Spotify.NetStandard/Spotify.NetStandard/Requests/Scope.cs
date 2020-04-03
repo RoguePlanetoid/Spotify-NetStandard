@@ -167,7 +167,7 @@ namespace Spotify.NetStandard.Requests
         public bool? UserReadPrivate { get; set; }
 
         /// <summary>
-        /// User Generated Content Image Upload
+        /// Write access to user-provided images
         /// <para>Required For</para>
         /// <para>Upload a Custom Playlist Cover Image</para>
         /// </summary>
