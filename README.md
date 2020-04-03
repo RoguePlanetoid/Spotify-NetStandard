@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 1.5.5
+
+- Fixed issue with Market and Country being used correctly
+
 ### Version 1.5.0
 
 - Added Save Shows for Current User, Get User's Saved Shows, Remove User's Saved Shows, Get an Episode, Get Multiple Episodes, Get a Show, Get Multiple Shows and Get a Show's Episodes plus PlaybackPositionRead Scope. Updated Get the User's Currently Playing Track, Get Information About The User's Current Playback and Search for an Item
@@ -2557,7 +2561,7 @@ Refresh Token
 
 Access Token
 
-### SearchAsync(query, searchType, country, external, page)
+### SearchAsync(query, searchType, market, external, page)
 
 Search
 
@@ -2565,7 +2569,7 @@ Search
 | ---- | ----------- |
 | query | *System.String*<br>(Required) Search Query |
 | searchType | *Spotify.NetStandard.Requests.SearchType*<br>(Required) Search results include hits from all the specified item types. |
-| country | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token |
 | external | *System.Nullable{System.Boolean}*<br>(Optional) Include any relevant audio content that is hosted externally. |
 | page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return |
 
@@ -3092,7 +3096,7 @@ Returns a new Scope object with all scopes within the confines of Spotify Connec
 
 ### UserGeneratedContentImageUpload
 
-User Generated Content Image Upload 
+Write access to user-provided images.
 Required For
 
 Upload a Custom Playlist Cover Image

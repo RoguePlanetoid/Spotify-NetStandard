@@ -1,13 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Spotify.NetStandard.Client;
-using Spotify.NetStandard.Client.Authentication;
-using Spotify.NetStandard.Client.Authentication.Enums;
 using Spotify.NetStandard.Client.Interfaces;
 using Spotify.NetStandard.Enums;
 using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -36,16 +33,6 @@ namespace Spotify.NetStandard.Test
             _client = SpotifyClientFactory.CreateSpotifyClient(
                 config["client_id"], config["client_secret"]);
             Assert.IsNotNull(_client);
-            // Spotify Client Token
-            var accessToken = new AccessToken()
-            {
-                Token = config["token"],
-                Expiration = DateTime.Parse(config["expires"]),
-                TokenType = (TokenType)Enum.Parse(typeof(TokenType), config["type"])
-            };
-            var expired = DateTime.UtcNow > accessToken.Expiration;
-            Assert.IsFalse(expired);
-            _client.SetToken(accessToken);
         }
 
         #region Albums
@@ -439,7 +426,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_Search_Episode()
         {
             _content = await _client.SearchAsync(
-                "Andrew Jackson", new SearchType() { Episode = true });
+                "Andrew Jackson", new SearchType() { Episode = true }, "GB");
             Assert.IsNotNull(_content.Episodes);
             Assert.IsTrue(_content.Episodes.Count > 0);
         }
@@ -454,7 +441,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_Lookup_Show()
         {
             Show item = await _client.LookupAsync<Show>(
-                "4r157jjrIV0bzS6UxhN07i", LookupType.Shows);
+                "4r157jjrIV0bzS6UxhN07i", LookupType.Shows, "GB");
             Assert.IsNotNull(item);
         }
 
@@ -470,7 +457,7 @@ namespace Spotify.NetStandard.Test
                 "4r157jjrIV0bzS6UxhN07i",
                 "2GmNzw8t4uG70rn4XG9zcC"
             };
-            _list = await _client.LookupAsync(ids, LookupType.Shows);
+            _list = await _client.LookupAsync(ids, LookupType.Shows, "GB");
             Assert.IsNotNull(_list.Shows);
             Assert.IsTrue(_list.Shows.Count == ids.Count);
         }
@@ -483,7 +470,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_Lookup_ShowEpisodes()
         {
             Paging<SimplifiedEpisode> list = await _client.LookupAsync<Paging<SimplifiedEpisode>>(
-                "4r157jjrIV0bzS6UxhN07i", LookupType.ShowEpisodes);
+                "4r157jjrIV0bzS6UxhN07i", LookupType.ShowEpisodes, "GB");
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Items.Count > 0);
         }
@@ -496,7 +483,7 @@ namespace Spotify.NetStandard.Test
         public async Task Test_Search_Show()
         {
             _content = await _client.SearchAsync(
-                "Famous Fates", new SearchType() { Show = true });
+                "Famous Fates", new SearchType() { Show = true }, "GB");
             Assert.IsNotNull(_content.Shows);
             Assert.IsTrue(_content.Shows.Count > 0);
         }

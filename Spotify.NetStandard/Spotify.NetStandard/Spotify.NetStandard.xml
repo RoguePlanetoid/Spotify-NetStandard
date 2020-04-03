@@ -1309,13 +1309,13 @@
             </summary>
             <param name="query">(Required) Search Query</param>
             <param name="searchType">(Required) Search results include hits from all the specified item types.</param>
-            <param name="country">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
             <param name="external">(Optional) Include any relevant audio content that is hosted externally. </param>
             <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
             <returns>Content Response</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.LookupAsync``1(System.String,Spotify.NetStandard.Enums.LookupType,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.LookupAsync``1(System.String,Spotify.NetStandard.Enums.LookupType,System.String,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
             <summary>
             Lookup
             </summary>
@@ -1323,7 +1323,8 @@
             <param name="itemId">(Required) The Spotify ID for the album.</param>
             <param name="lookupType">(Required) Item Type</param>
             <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
-            <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType, if omitted, all fields are returned</param>
+            <param name="country">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+            <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType if omitted, all fields are returned</param>
             <param name="key">(Optional) Query Parameter Key</param>
             <param name="value">(Optional) Query Parameter Value</param>
             <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
@@ -3100,7 +3101,7 @@
             <param name="tokenType">Authentication Token Type</param>
             <returns>Dictionary of Headers</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.FormatRequestParameters(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.FormatRequestParameters(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.String,System.String)">
             <summary>
             Format Request Parameters
             </summary>
@@ -3109,6 +3110,7 @@
             <param name="country">Country</param>
             <param name="locale">Locale</param>
             <param name="fields">Fields</param>
+            <param name="market">Market</param>
             <returns>Dictionary of Request Parameters</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.FormatIdsParameter(System.Collections.Generic.List{System.String})">
@@ -3145,13 +3147,14 @@
             <param name="page">Page</param>
             <returns>Content Response</returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.LookupApiAsync``1(System.String,System.String,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.LookupApiAsync``1(System.String,System.String,System.String,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
             <summary>
             Lookup API
             </summary>
             <typeparam name="TResult">Result Type</typeparam>
             <param name="itemId">Spotify ID of the Item</param>
             <param name="lookupType">Lookup Type</param>
+            <param name="market">Market</param>
             <param name="country">Country</param>
             <param name="fields">Fields</param>
             <param name="key">Parameter Key</param>
@@ -3165,7 +3168,7 @@
             </summary>
             <param name="itemIds">Spotify IDs of the Items</param>
             <param name="lookupType">Lookup Type</param>
-            <param name="country">Country</param>
+            <param name="market">Market</param>
             <param name="page">Page Offset and Limit</param>
             <returns>Lookup Response</returns>
         </member>
@@ -3383,13 +3386,13 @@
             </summary>
             <param name="query">(Required) Search Query</param>
             <param name="searchType">(Required) Search results include hits from all the specified item types.</param>
-            <param name="country">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+            <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
             <param name="external">(Optional) Include any relevant audio content that is hosted externally. </param>
             <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
             <returns>Content Response</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.LookupAsync``1(System.String,Spotify.NetStandard.Enums.LookupType,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.LookupAsync``1(System.String,Spotify.NetStandard.Enums.LookupType,System.String,System.String,System.String,System.String,System.String,Spotify.NetStandard.Requests.Page)">
             <summary>
             Lookup
             </summary>
@@ -3397,6 +3400,7 @@
             <param name="itemId">(Required) The Spotify ID for the album.</param>
             <param name="lookupType">(Required) Item Type</param>
             <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+            <param name="country">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
             <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType if omitted, all fields are returned</param>
             <param name="key">(Optional) Query Parameter Key</param>
             <param name="value">(Optional) Query Parameter Value</param>
@@ -4513,7 +4517,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Requests.Scope.UserGeneratedContentImageUpload">
             <summary>
-            User Generated Content Image Upload
+            Write access to user-provided images
             <para>Required For</para>
             <para>Upload a Custom Playlist Cover Image</para>
             </summary>

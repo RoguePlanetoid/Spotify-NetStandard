@@ -120,7 +120,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// </summary>
         /// <param name="query">(Required) Search Query</param>
         /// <param name="searchType">(Required) Search results include hits from all the specified item types.</param>
-        /// <param name="country">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
         /// <param name="external">(Optional) Include any relevant audio content that is hosted externally. </param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
         /// <returns>Content Response</returns>
@@ -128,7 +128,7 @@ namespace Spotify.NetStandard.Client.Interfaces
         Task<ContentResponse> SearchAsync(
             string query,
             SearchType searchType,
-            string country = null,
+            string market = null,
             bool? external = null,
             Page page = null);
 
@@ -139,7 +139,8 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <param name="itemId">(Required) The Spotify ID for the album.</param>
         /// <param name="lookupType">(Required) Item Type</param>
         /// <param name="market">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
-        /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType, if omitted, all fields are returned</param>
+        /// <param name="country">(Optional) ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType if omitted, all fields are returned</param>
         /// <param name="key">(Optional) Query Parameter Key</param>
         /// <param name="value">(Optional) Query Parameter Value</param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return</param>
@@ -149,6 +150,7 @@ namespace Spotify.NetStandard.Client.Interfaces
             string itemId,
             LookupType lookupType,
             string market = null,
+            string country = null,
             string fields = null,
             string key = null,
             string value = null,

@@ -163,8 +163,10 @@ namespace Spotify.NetStandard.Client.Internal
             string country = null,
             Page page = null) => 
                 (await _client.LookupAsync<ContentResponse>(
-                categoryId, LookupType.CategoriesPlaylists, 
-                country, page: page))?.Playlists;
+                itemId: categoryId, 
+                lookupType: LookupType.CategoriesPlaylists, 
+                country: country, 
+                page: page))?.Playlists;
 
         /// <summary>
         /// Get Recommendations
@@ -360,7 +362,9 @@ namespace Spotify.NetStandard.Client.Internal
         public async Task<Playlist> GetPlaylistAsync(
             string playlistId, string fields = null) => 
             await _client.LookupAsync<Playlist>(
-               playlistId, LookupType.Playlist, fields: fields);
+                itemId: playlistId, 
+                lookupType: LookupType.Playlist, 
+                fields: fields);
 
         /// <summary>
         /// Remove Tracks from a Playlist
@@ -1053,7 +1057,7 @@ namespace Spotify.NetStandard.Client.Internal
             List<string> ids,
             string market = null) =>
                 (await _client.LookupAsync(
-                    ids, LookupType.Albums, market))?.Albums;
+                    ids, LookupType.Albums, market: market))?.Albums;
 
         /// <summary>
         /// Get an Album
@@ -1066,7 +1070,7 @@ namespace Spotify.NetStandard.Client.Internal
             string id,
             string market = null) =>
                 await _client.LookupAsync<Album>(
-                    id, LookupType.Albums, market);
+                    id, LookupType.Albums, market: market);
 
         /// <summary>
         /// Get an Album's Tracks
@@ -1081,7 +1085,7 @@ namespace Spotify.NetStandard.Client.Internal
             string market = null,
             Page page = null) =>
                 await _client.LookupAsync<Paging<Track>>(
-                    id, LookupType.AlbumTracks, market, page: page);
+                    id, LookupType.AlbumTracks, market: market, page: page);
         #endregion Albums API
 
         #region Tracks API
@@ -1107,7 +1111,7 @@ namespace Spotify.NetStandard.Client.Internal
             string id,
             string market = null) =>
                 await _client.LookupAsync<Track>(
-                    id, LookupType.Tracks, market);
+                    id, LookupType.Tracks, market: market);
 
         /// <summary>
         /// Get Audio Analysis for a Track
@@ -1142,7 +1146,7 @@ namespace Spotify.NetStandard.Client.Internal
             List<string> ids,
             string market = null) =>
                 (await _client.LookupAsync(
-                    ids, LookupType.Tracks, market))?.Tracks;
+                    ids, LookupType.Tracks, market: market))?.Tracks;
         #endregion Tracks API
 
         #region Episodes API
@@ -1158,7 +1162,7 @@ namespace Spotify.NetStandard.Client.Internal
             string id,
             string market = null) =>
                 await _client.LookupAsync<Episode>(
-                    id, LookupType.Episodes, market);
+                    id, LookupType.Episodes, market: market);
 
         /// <summary>
         /// Get Multiple Episodes
