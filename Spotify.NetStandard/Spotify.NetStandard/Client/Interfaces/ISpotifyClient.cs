@@ -82,6 +82,18 @@ namespace Spotify.NetStandard.Client.Interfaces
             NavigateType navigateType);
 
         /// <summary>
+        /// Paging
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="paging">Paging</param>
+        /// <param name="navigateType">Navigate Type</param>
+        /// <returns>Content Response</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        Task<Paging<TResponse>> PagingAsync<TResponse>(
+            Paging<TResponse> paging,
+            NavigateType navigateType);
+
+        /// <summary>
         /// Get
         /// </summary>
         /// <typeparam name="TResponse">Response Type</typeparam>

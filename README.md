@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 1.6.0
+
+- Updated Remove Tracks from Playlist to support Positions and Added Paging Method
+
 ### Version 1.5.5
 
 - Fixed issue with Market and Country being used correctly
@@ -98,13 +102,84 @@ User Token
 
 Auth Access Token Expired or Required Error
 
+## AuthCodeStateException
+
+Auth Code State Error
+
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Message |
+
+
+## AuthCodeValueException
+
+Auth Code Value Error
+
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Message |
+
+
+## AuthException
+
+Auth Exception
+
+### Constructor
+
+Constructor
+
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Error Message |
+
+
+## AuthTokenRequiredException
+
+Auth Token Expired or Required Error
+
+
 ## AuthTokenStateException
 
 Auth Token State Error
 
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Message |
+
+
+## AuthTokenValueException
+
+Auth Token Value Error
+
+### Constructor(message)
+
+Constructor
+
+| Name | Description |
+| ---- | ----------- |
+| message | *System.String*<br>Message |
+
+
 ## AuthUserTokenRequiredException
 
 Auth User Token Expired or Required Error
+
 
 ## ISpotifyApi
 
@@ -1012,7 +1087,7 @@ Cursor Paging of Track Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### RemoveTracksFromPlaylistAsync(playlistId, uris, snapshotId)
+### RemoveTracksFromPlaylistAsync(playlistId, uris, snapshotId, uriPositions)
 
 Remove Tracks from a Playlist 
 Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
@@ -1023,6 +1098,7 @@ Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
 | playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
 | uris | *System.Collections.Generic.List{System.String}*<br>(Required) List of Spotify URIs of the tracks to remove |
 | snapshotId | *System.String*<br>(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist. |
+| uriPositions | *System.Collections.Generic.List{System.Collections.Generic.List{System.Int32}}*<br>(Optional) List of Positions for each of the Uris in the playlist, positions are zero-indexed, that is the first item in the playlist has the value 0, the second item 1, and so on |
 
 #### Returns
 
@@ -2419,7 +2495,7 @@ Lookup Response
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### LookupAsync(itemId, lookupType, market, fields, key, value, page)
+### LookupAsync(itemId, lookupType, market, country, fields, key, value, page)
 
 Lookup
 
@@ -2432,7 +2508,8 @@ Lookup
 | itemId | *System.String*<br>(Required) The Spotify ID for the album. |
 | lookupType | *Spotify.NetStandard.Enums.LookupType*<br>(Required) Item Type |
 | market | *System.String*<br>(Optional) ISO 3166-1 alpha-2 country code or the string from_token |
-| fields | *System.String*<br>(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType, if omitted, all fields are returned |
+| country | *System.String*<br>(Optional) ISO 3166-1 alpha-2 country code or the string from_token |
+| fields | *System.String*<br>(Optional) Filters for the query: a comma-separated list of the fields to return for Playlist and PlaylistTracks LookupType if omitted, all fields are returned |
 | key | *System.String*<br>(Optional) Query Parameter Key |
 | value | *System.String*<br>(Optional) Query Parameter Value |
 | page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return - Offset: The index of the first item to return |
@@ -2533,6 +2610,25 @@ Navigate
 | Name | Description |
 | ---- | ----------- |
 | paging | *Spotify.NetStandard.Responses.Paging*<br>Paging Object |
+| navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
+
+#### Returns
+
+Content Response
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### PagingAsync(paging, navigateType)
+
+Paging
+
+#### Type Parameters
+
+- TResponse - Response Type
+
+| Name | Description |
+| ---- | ----------- |
+| paging | *Spotify.NetStandard.Responses.Paging*<br>Paging |
 | navigateType | *Spotify.NetStandard.Enums.NavigateType*<br>Navigate Type |
 
 #### Returns
@@ -2901,7 +2997,7 @@ The playlist’s snapshot ID against which you want to make the changes
 
 ### Tracks
 
-Spotify URIs of Tracks
+Spotify URIs and Positions of Tracks
 
 
 ## PositionRequest
@@ -2911,6 +3007,15 @@ Position Request Object
 ### Position
 
 Position
+
+
+## PositionUriRequest
+
+Position URI Request Object
+
+### Positions
+
+Positions for each of the Uris in the playlist, positions are zero-indexed, that is the first item in the playlist has the value 0, the second item 1, and so on
 
 
 ## PublicRequest
@@ -3096,7 +3201,7 @@ Returns a new Scope object with all scopes within the confines of Spotify Connec
 
 ### UserGeneratedContentImageUpload
 
-Write access to user-provided images.
+Write access to user-provided images 
 Required For
 
 Upload a Custom Playlist Cover Image

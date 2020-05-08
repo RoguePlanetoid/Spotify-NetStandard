@@ -373,25 +373,16 @@ namespace Spotify.NetStandard.Client.Internal
         /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
         /// <param name="uris">(Required) List of Spotify URIs of the tracks to remove</param>
         /// <param name="snapshotId">(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
+        /// <param name="uriPositions">(Optional) List of Positions for each of the Uris in the playlist, positions are zero-indexed, that is the first item in the playlist has the value 0, the second item 1, and so on</param>
         /// <returns>Snapshot Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         public async Task<Snapshot> RemoveTracksFromPlaylistAsync(
             string playlistId,
             List<string> uris,
-            string snapshotId = null)
-        {
-            var request = new PlaylistTracksRequest()
-            {
-                Tracks = uris.Select(uri => 
-                    new UriRequest()
-                    {
-                        Uri = uri
-                    }).ToList(),
-                SnapshotId = snapshotId
-            };
-            return await _client.AuthRemoveTracksFromPlaylistAsync(
-                playlistId, request);
-        }
+            string snapshotId = null,
+            List<List<int>> uriPositions = null) => 
+            await _client.AuthRemoveTracksFromPlaylistAsync(
+                playlistId, Helpers.GetPlaylistTracksRequest(uris, uriPositions, snapshotId));
 
         /// <summary>
         /// Get a Playlist's Tracks

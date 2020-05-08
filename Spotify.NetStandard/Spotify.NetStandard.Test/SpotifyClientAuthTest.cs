@@ -259,9 +259,9 @@ namespace Spotify.NetStandard.Test
         {
             var request = new PlaylistTracksRequest()
             {
-                Tracks = new List<UriRequest>()
+                Tracks = new List<PositionUriRequest>()
                 {
-                    new UriRequest()
+                    new PositionUriRequest()
                     {
                         Uri = "spotify:track:2zzdnRWE3z6QP3FoVlnWHO"
                     }
@@ -632,7 +632,7 @@ namespace Spotify.NetStandard.Test
             {
                 DeviceIds = new List<string>
                 {
-                    "d7ed7af587669fea18d47a54fdfd2759e896c1e8"
+                    "7fd36d2a1eba3db7b0ca548ae6dfeba9144f283a"
                 },
                 Play = true
             });

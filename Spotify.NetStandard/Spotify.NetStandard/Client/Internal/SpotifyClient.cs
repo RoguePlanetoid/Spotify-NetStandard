@@ -647,12 +647,44 @@ namespace Spotify.NetStandard.Client.Internal
                         source = new Uri(cursor.Before);
                     break;
                 case NavigateType.Next:
-                    if (cursor.Next != null || cursor?.Cursors?.After != null)
-                        source = new Uri(cursor.Next ?? cursor?.Cursors?.After);
+                    if (cursor.Next != null)
+                        source = new Uri(cursor.Next);
                     break;
             }
             return source != null ? 
                 await AuthGetAsync<CursorPaging<TResponse>>(source) : null;
+        }
+
+        /// <summary>
+        /// Paging
+        /// </summary>
+        /// <typeparam name="TResponse">Response Type</typeparam>
+        /// <param name="paging">Paging</param>
+        /// <param name="navigateType">Navigate Type</param>
+        /// <returns>Content Response</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        public async Task<Paging<TResponse>> PagingAsync<TResponse>(
+            Paging<TResponse> paging,
+            NavigateType navigateType)
+        {
+            Uri source = null;
+            switch (navigateType)
+            {
+                case NavigateType.None:
+                    if (paging.Href != null)
+                        source = new Uri(paging.Href);
+                    break;
+                case NavigateType.Previous:
+                    if (paging.Previous != null)
+                        source = new Uri(paging.Previous);
+                    break;
+                case NavigateType.Next:
+                    if (paging.Next != null)
+                        source = new Uri(paging.Next);
+                    break;
+            }
+            return source != null ?
+                await GetAsync<Paging<TResponse>>(source) : null;
         }
 
         /// <summary>

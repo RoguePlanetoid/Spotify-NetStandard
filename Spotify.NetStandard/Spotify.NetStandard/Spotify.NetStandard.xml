@@ -655,7 +655,7 @@
             <returns>Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.RemoveTracksFromPlaylistAsync(System.String,System.Collections.Generic.List{System.String},System.String)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.RemoveTracksFromPlaylistAsync(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{System.Collections.Generic.List{System.Int32}})">
             <summary>
             Remove Tracks from a Playlist
             <para>Scopes: PlaylistModifyPublic, PlaylistModifyPrivate</para>
@@ -663,6 +663,7 @@
             <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
             <param name="uris">(Required) List of Spotify URIs of the tracks to remove</param>
             <param name="snapshotId">(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
+            <param name="uriPositions">(Optional) List of Positions for each of the Uris in the playlist, positions are zero-indexed, that is the first item in the playlist has the value 0, the second item 1, and so on</param>
             <returns>Snapshot Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
@@ -1274,6 +1275,16 @@
             <param name="navigateType">Navigate Type</param>
             <returns>Content Response</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.PagingAsync``1(Spotify.NetStandard.Responses.Paging{``0},Spotify.NetStandard.Enums.NavigateType)">
+            <summary>
+            Paging
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="paging">Paging</param>
+            <param name="navigateType">Navigate Type</param>
+            <returns>Content Response</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.GetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
@@ -2015,6 +2026,20 @@
             <param name="obj">Object</param>
             <returns>Type</returns>
         </member>
+        <member name="T:Spotify.NetStandard.Client.Internal.Helpers">
+            <summary>
+            Helper Methods
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.Helpers.GetPlaylistTracksRequest(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Collections.Generic.List{System.Int32}},System.String)">
+            <summary>
+            Get Playlist Tracks Request
+            </summary>
+            <param name="uris">Uris</param>
+            <param name="uriPositions">(Optional) Uri Positions</param>
+            <param name="snapshotId">(Optional) Snapshot Id</param>
+            <returns></returns>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SimpleServiceClient.CreateClient(System.TimeSpan,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <summary>
             Create Client
@@ -2532,7 +2557,7 @@
             <returns>Playlist Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.RemoveTracksFromPlaylistAsync(System.String,System.Collections.Generic.List{System.String},System.String)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.RemoveTracksFromPlaylistAsync(System.String,System.Collections.Generic.List{System.String},System.String,System.Collections.Generic.List{System.Collections.Generic.List{System.Int32}})">
             <summary>
             Remove Tracks from a Playlist
             <para>Scopes: PlaylistModifyPublic, PlaylistModifyPrivate</para>
@@ -2540,6 +2565,7 @@
             <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
             <param name="uris">(Required) List of Spotify URIs of the tracks to remove</param>
             <param name="snapshotId">(Optional) The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
+            <param name="uriPositions">(Optional) List of Positions for each of the Uris in the playlist, positions are zero-indexed, that is the first item in the playlist has the value 0, the second item 1, and so on</param>
             <returns>Snapshot Object</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
         </member>
@@ -3351,6 +3377,16 @@
             <param name="navigateType">Navigate Type</param>
             <returns>Content Response</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException"></exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.PagingAsync``1(Spotify.NetStandard.Responses.Paging{``0},Spotify.NetStandard.Enums.NavigateType)">
+            <summary>
+            Paging
+            </summary>
+            <typeparam name="TResponse">Response Type</typeparam>
+            <param name="paging">Paging</param>
+            <param name="navigateType">Navigate Type</param>
+            <returns>Content Response</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetAsync``1(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
@@ -4355,7 +4391,7 @@
         </member>
         <member name="P:Spotify.NetStandard.Requests.PlaylistTracksRequest.Tracks">
             <summary>
-            Spotify URIs of Tracks
+            Spotify URIs and Positions of Tracks
             </summary>
         </member>
         <member name="P:Spotify.NetStandard.Requests.PlaylistTracksRequest.SnapshotId">
@@ -4371,6 +4407,16 @@
         <member name="P:Spotify.NetStandard.Requests.PositionRequest.Position">
             <summary>
             Position
+            </summary>
+        </member>
+        <member name="T:Spotify.NetStandard.Requests.PositionUriRequest">
+            <summary>
+            Position URI Request Object
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Requests.PositionUriRequest.Positions">
+            <summary>
+            Positions for each of the Uris in the playlist, positions are zero-indexed, that is the first item in the playlist has the value 0, the second item 1, and so on
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Requests.PublicRequest">
