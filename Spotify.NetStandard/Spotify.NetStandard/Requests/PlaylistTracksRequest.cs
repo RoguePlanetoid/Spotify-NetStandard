@@ -10,10 +10,10 @@ namespace Spotify.NetStandard.Requests
     public class PlaylistTracksRequest
     {
         /// <summary>
-        /// Spotify URIs of Tracks
+        /// Spotify URIs and Positions of Tracks
         /// </summary>
         [DataMember(Name = "tracks")]
-        public List<UriRequest> Tracks { get; set; }
+        public List<PositionUriRequest> Tracks { get; set; }
 
         /// <summary>
         /// The playlist’s snapshot ID against which you want to make the changes

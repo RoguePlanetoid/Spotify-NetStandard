@@ -36,6 +36,10 @@ You can get a "client-id" and "client-secret" from [developer.spotify.com/dashbo
 
 ## Change Log
 
+### Version 1.6.0
+
+- Updated Remove Tracks from Playlist to support Positions and Added Paging Method
+
 ### Version 1.5.5
 
 - Fixed issue with Market and Country being used correctly
