@@ -36,6 +36,10 @@ You can get a "client-id" and "client-secret" from [developer.spotify.com/dashbo
 
 ## Change Log
 
+### Version 1.6.5
+
+- Updated Get a Playlist and Get a Playlist's Items to support Additional Types
+
 ### Version 1.6.0
 
 - Updated Remove Tracks from Playlist to support Positions and Added Paging Method

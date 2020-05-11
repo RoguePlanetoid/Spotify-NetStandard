@@ -37,6 +37,7 @@ namespace Spotify.NetStandard.Test
             var accessToken = new AccessToken()
             {
                 Token = config["token"],
+                Refresh = config["refresh"],
                 Expiration = DateTime.Parse(config["expires"]),
                 TokenType = (TokenType)Enum.Parse(typeof(TokenType), config["type"])
             };

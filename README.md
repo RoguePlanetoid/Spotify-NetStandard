@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 1.6.5
+
+- Updated Get a Playlist and Get a Playlist's Items to support Additional Types
+
 ### Version 1.6.0
 
 - Updated Remove Tracks from Playlist to support Positions and Added Paging Method
@@ -57,6 +61,8 @@ Spotify API .NET Standard Library
 
 - Initial Release
 
+# Spotify.NetStandard
+
 ## AccessToken
 
 Access Token Object
@@ -101,6 +107,7 @@ User Token
 ## AuthAccessTokenRequiredException
 
 Auth Access Token Expired or Required Error
+
 
 ## AuthCodeStateException
 
@@ -179,7 +186,6 @@ Constructor
 ## AuthUserTokenRequiredException
 
 Auth User Token Expired or Required Error
-
 
 ## ISpotifyApi
 
@@ -682,7 +688,7 @@ List of Show Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
-### GetPlaylistAsync(playlistId, fields)
+### GetPlaylistAsync(playlistId, fields, market, additionalTypes)
 
 Get a Playlist
 
@@ -690,6 +696,8 @@ Get a Playlist
 | ---- | ----------- |
 | playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
 | fields | *System.String*<br>(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned. |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token |
+| additionalTypes | *System.Collections.Generic.List{System.String}*<br>(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. |
 
 #### Returns
 
@@ -711,9 +719,9 @@ List of Image Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:* 
 
-### GetPlaylistTracksAsync(id, market, page, fields)
+### GetPlaylistTracksAsync(id, market, page, fields, additionalTypes)
 
-Get a Playlist's Tracks
+Get a Playlist's Items
 
 | Name | Description |
 | ---- | ----------- |
@@ -721,6 +729,7 @@ Get a Playlist's Tracks
 | market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token |
 | page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0 |
 | fields | *System.String*<br>(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned. |
+| additionalTypes | *System.Collections.Generic.List{System.String}*<br>(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. |
 
 #### Returns
 
@@ -1486,15 +1495,15 @@ Spotify API
 
 ### AuthAddTracksToPlaylistAsync(playlistId, uris, position)
 
-Add Tracks to a Playlist 
+Add Items to a Playlist 
 Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
 
 
 | Name | Description |
 | ---- | ----------- |
 | playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
-| uris | *Spotify.NetStandard.Requests.UriListRequest*<br>(Optional) List of Spotify track URIs to add. |
-| position | *System.Nullable{System.Int32}*<br>(Optional) The position to insert the tracks, a zero-based index. |
+| uris | *Spotify.NetStandard.Requests.UriListRequest*<br>(Optional) List of Spotify URIs to add, can be track or episode URIs |
+| position | *System.Nullable{System.Int32}*<br>(Optional) The position to insert the tracks, a zero-based index. If omitted, the items will be appended to the playlist. Items are added in the order they are listed. |
 
 #### Returns
 
@@ -1950,14 +1959,14 @@ Content Response
 
 ### AuthRemoveTracksFromPlaylistAsync(playlistId, request)
 
-Remove Tracks from a Playlist 
+Remove Items from a Playlist 
 Scopes: PlaylistModifyPublic, PlaylistModifyPrivate
 
 
 | Name | Description |
 | ---- | ----------- |
 | playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
-| request | *Spotify.NetStandard.Requests.PlaylistTracksRequest*<br>(Optional) Tracks: An array of objects containing Spotify URIs of the tracks to remove. Snapshot ID : The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist. |
+| request | *Spotify.NetStandard.Requests.PlaylistTracksRequest*<br>(Optional) Tracks: An array of objects containing Spotify URIs of the tracks or episodes to remove. Snapshot ID : The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist. |
 
 #### Returns
 
@@ -2568,6 +2577,41 @@ Content Response
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
+### LookupPlaylistAsync(playlistId, market, fields, additionalTypes)
+
+Get a Playlist
+
+| Name | Description |
+| ---- | ----------- |
+| playlistId | *System.String*<br>(Required) The Spotify ID for the playlist. |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token |
+| fields | *System.String*<br>(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned. |
+| additionalTypes | *System.Collections.Generic.List{System.String}*<br>(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. |
+
+#### Returns
+
+Playlist Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
+### LookupPlaylistItemsAsync(id, market, page, fields, additionalTypes)
+
+Get a Playlist's Items
+
+| Name | Description |
+| ---- | ----------- |
+| id | *System.String*<br>(Required) The Spotify ID for the playlist. |
+| market | *System.String*<br>(Optional) An ISO 3166-1 alpha-2 country code or the string from_token |
+| page | *Spotify.NetStandard.Requests.Page*<br>(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0 |
+| fields | *System.String*<br>(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned. |
+| additionalTypes | *System.Collections.Generic.List{System.String}*<br>(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future. |
+
+#### Returns
+
+Paging List of Playlist Track Object
+
+*Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
+
 ### LookupRecommendationGenres
 
 Lookup Recommendation Genres
@@ -2726,6 +2770,19 @@ Artist
 ### User
 
 User
+
+
+## ItemType
+
+Item Type
+
+### Episode
+
+Episode
+
+### Track
+
+Track
 
 
 ## LookupType
@@ -4083,13 +4140,21 @@ The date and time the track was added.
 
 The Spotify user who added the track.
 
+### Episode
+
+Information about the episode
+
 ### IsLocal
 
 Whether this track is a local file or not.
 
+### Item
+
+Information about the track or episode.
+
 ### Track
 
-Information about the track.
+Information about the track
 
 
 ## PrivateUser

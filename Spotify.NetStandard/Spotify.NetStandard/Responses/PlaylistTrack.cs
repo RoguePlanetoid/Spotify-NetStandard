@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spotify.NetStandard.Client.Internal;
+using System;
 using System.Runtime.Serialization;
 
 namespace Spotify.NetStandard.Responses
@@ -28,9 +29,21 @@ namespace Spotify.NetStandard.Responses
         public bool IsLocal { get; set; }
 
         /// <summary>
-        /// Information about the track.
+        /// Information about the track or episode.
         /// </summary>
         [DataMember(Name = "track")]
-        public Track Track { get; set; }
+        public object Item { get; set; }
+
+        /// <summary>
+        /// Information about the track
+        /// </summary>
+        [IgnoreDataMember]
+        public Track Track => Item.AsType<Track>();
+
+        /// <summary>
+        /// Information about the episode
+        /// </summary>
+        [IgnoreDataMember]
+        public Episode Episode => Item.AsType<Episode>();
     }
 }

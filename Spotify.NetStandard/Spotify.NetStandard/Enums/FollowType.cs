@@ -16,6 +16,6 @@ namespace Spotify.NetStandard.Enums
         /// Artist
         /// </summary>
         [Description("artist")]
-        Artist,
+        Artist
     }
 }

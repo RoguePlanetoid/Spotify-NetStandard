@@ -21,6 +21,6 @@ namespace Spotify.NetStandard.Enums
         /// Will turn repeat off.
         /// </summary>
         [Description("off")]
-        Off,
+        Off
     }
 }

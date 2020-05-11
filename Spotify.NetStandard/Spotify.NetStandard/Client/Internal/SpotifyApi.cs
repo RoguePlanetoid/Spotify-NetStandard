@@ -6,7 +6,6 @@ using Spotify.NetStandard.Requests;
 using Spotify.NetStandard.Responses;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Spotify.NetStandard.Client.Internal
@@ -357,14 +356,20 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
         /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Playlist Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
         public async Task<Playlist> GetPlaylistAsync(
-            string playlistId, string fields = null) => 
-            await _client.LookupAsync<Playlist>(
-                itemId: playlistId, 
-                lookupType: LookupType.Playlist, 
-                fields: fields);
+            string playlistId,
+            string fields = null,
+            string market = null,
+            List<string> additionalTypes = null) =>
+            await _client.LookupPlaylistAsync(
+                playlistId: playlistId, 
+                market: market,
+                fields: fields, 
+                additionalTypes: additionalTypes);
 
         /// <summary>
         /// Remove Tracks from a Playlist
@@ -385,21 +390,26 @@ namespace Spotify.NetStandard.Client.Internal
                 playlistId, Helpers.GetPlaylistTracksRequest(uris, uriPositions, snapshotId));
 
         /// <summary>
-        /// Get a Playlist's Tracks
+        /// Get a Playlist's Items
         /// </summary>
         /// <param name="id">(Required) The Spotify ID for the playlist.</param>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0</param>
         /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Paging List of Playlist Track Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
         public async Task<Paging<PlaylistTrack>> GetPlaylistTracksAsync(
             string id,
             string market = null,
             Page page = null,
-            string fields = null) =>
-                await _client.LookupAsync<Paging<PlaylistTrack>>(
-                    id, LookupType.PlaylistTracks, market: market, fields: fields, page: page);
+            string fields = null,
+            List<string> additionalTypes = null) =>
+            await _client.LookupPlaylistItemsAsync(id,
+                market: market,
+                page: page,
+                fields: fields,
+                additionalTypes: additionalTypes);
 
         /// <summary>
         /// Get a Playlist Cover Image
