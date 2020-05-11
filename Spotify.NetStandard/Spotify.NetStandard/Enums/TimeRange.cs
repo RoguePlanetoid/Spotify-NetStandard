@@ -21,6 +21,6 @@ namespace Spotify.NetStandard.Enums
         /// Approximately last 4 weeks
         /// </summary>
         [Description("short_term")]
-        ShortTerm,
+        ShortTerm
     }
 }

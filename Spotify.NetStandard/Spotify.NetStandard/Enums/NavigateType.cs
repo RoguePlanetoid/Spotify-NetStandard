@@ -16,6 +16,6 @@
         /// <summary>
         /// Navigate Next
         /// </summary>
-        Next = 2,
+        Next = 2
     }
 }

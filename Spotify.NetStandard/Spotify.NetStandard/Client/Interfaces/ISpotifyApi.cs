@@ -295,10 +295,15 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
         /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Playlist Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
         Task<Playlist> GetPlaylistAsync(
-            string playlistId, string fields = null);
+            string playlistId,
+            string fields = null,
+            string market = null,
+            List<string> additionalTypes = null);
 
         /// <summary>
         /// Remove Tracks from a Playlist
@@ -317,19 +322,21 @@ namespace Spotify.NetStandard.Client.Interfaces
             List<List<int>> uriPositions = null);
 
         /// <summary>
-        /// Get a Playlist's Tracks
+        /// Get a Playlist's Items
         /// </summary>
         /// <param name="id">(Required) The Spotify ID for the playlist.</param>
         /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
         /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0</param>
         /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
         /// <returns>Paging List of Playlist Track Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
         Task<Paging<PlaylistTrack>> GetPlaylistTracksAsync(
             string id,
             string market = null,
             Page page = null,
-            string fields = null);
+            string fields = null,
+            List<string> additionalTypes = null);
 
         /// <summary>
         /// Get a Playlist Cover Image

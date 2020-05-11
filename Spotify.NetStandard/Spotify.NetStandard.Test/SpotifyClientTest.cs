@@ -271,8 +271,7 @@ namespace Spotify.NetStandard.Test
         [TestMethod]
         public async Task Test_Lookup_Playlist()
         {
-            Playlist playlist = await _client.LookupAsync<Playlist>(
-                "37i9dQZF1DXatMjChPKgBk", LookupType.Playlist);
+            Playlist playlist = await _client.LookupPlaylistAsync("37i9dQZF1DXatMjChPKgBk");
             Assert.IsNotNull(playlist);
         }
 
@@ -283,8 +282,7 @@ namespace Spotify.NetStandard.Test
         [TestMethod]
         public async Task Test_Lookup_PlaylistsTracks()
         {
-            Paging<PlaylistTrack> list = await _client.LookupAsync<Paging<PlaylistTrack>>(
-                "37i9dQZF1DXatMjChPKgBk", LookupType.PlaylistTracks);
+            Paging<PlaylistTrack> list = await _client.LookupPlaylistItemsAsync("37i9dQZF1DXatMjChPKgBk");
             Assert.IsNotNull(list);
             Assert.IsTrue(list.Count > 0);
         }

@@ -300,6 +300,38 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <returns>Available Genre Seeds Object</returns>
         /// <exception cref="AuthAccessTokenRequiredException"></exception>
         Task<AvailableGenreSeeds> LookupRecommendationGenres();
+
+        /// <summary>
+        /// Get a Playlist
+        /// </summary>
+        /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
+        /// <returns>Playlist Object</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        Task<Playlist> LookupPlaylistAsync(
+                    string playlistId,
+                    string market = null,
+                    string fields = null,
+                    List<string> additionalTypes = null);
+
+        /// <summary>
+        /// Get a Playlist's Items
+        /// </summary>
+        /// <param name="id">(Required) The Spotify ID for the playlist.</param>
+        /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code or the string from_token</param>
+        /// <param name="page">(Optional) Limit: The maximum number of items to return. Default: 100. Minimum: 1. Maximum: 100. - Offset: The index of the first item to return. Default: 0</param>
+        /// <param name="fields">(Optional) Filters for the query: a comma-separated list of the fields to return. If omitted, all fields are returned.</param>
+        /// <param name="additionalTypes">(Optional) List of item types that your client supports besides the default track type. Valid types are track and episode. An unsupported type in the response is expected to be represented as null value in the item field. This parameter was introduced to allow existing clients to maintain their current behaviour and might be deprecated in the future.</param>
+        /// <returns>Paging List of Playlist Track Object</returns>
+        /// <exception cref="AuthAccessTokenRequiredException"></exception>
+        Task<Paging<PlaylistTrack>> LookupPlaylistItemsAsync(
+            string id,
+            string market = null,
+            Page page = null,
+            string fields = null,
+            List<string> additionalTypes = null);
         #endregion Public Methods
 
         #region Authenticate
@@ -450,12 +482,12 @@ namespace Spotify.NetStandard.Client.Interfaces
 
         #region Authenticated Playlists API
         /// <summary>
-        /// Add Tracks to a Playlist
+        /// Add Items to a Playlist
         /// <para>Scopes: PlaylistModifyPublic, PlaylistModifyPrivate</para>
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
-        /// <param name="uris">(Optional) List of Spotify track URIs to add.</param>
-        /// <param name="position">(Optional) The position to insert the tracks, a zero-based index.</param>
+        /// <param name="uris">(Optional) List of Spotify URIs to add, can be track or episode URIs</param>
+        /// <param name="position">(Optional) The position to insert the tracks, a zero-based index. If omitted, the items will be appended to the playlist. Items are added in the order they are listed.</param>
         /// <returns>Snapshot Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         Task<Snapshot> AuthAddTracksToPlaylistAsync(
@@ -464,11 +496,11 @@ namespace Spotify.NetStandard.Client.Interfaces
             int? position = null);
 
         /// <summary>
-        /// Remove Tracks from a Playlist
+        /// Remove Items from a Playlist
         /// <para>Scopes: PlaylistModifyPublic, PlaylistModifyPrivate</para>
         /// </summary>
         /// <param name="playlistId">(Required) The Spotify ID for the playlist.</param>
-        /// <param name="request">(Optional) Tracks: An array of objects containing Spotify URIs of the tracks to remove. Snapshot ID : The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
+        /// <param name="request">(Optional) Tracks: An array of objects containing Spotify URIs of the tracks or episodes to remove. Snapshot ID : The playlist’s snapshot ID against which you want to make the changes. The API will validate that the specified tracks exist and in the specified positions and make the changes, even if more recent changes have been made to the playlist.</param>
         /// <returns>Snapshot Object</returns>
         /// <exception cref="AuthUserTokenRequiredException"></exception>
         Task<Snapshot> AuthRemoveTracksFromPlaylistAsync(
