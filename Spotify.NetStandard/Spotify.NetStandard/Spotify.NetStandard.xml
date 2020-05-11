@@ -4126,21 +4126,6 @@
             Artist
             </summary>
         </member>
-        <member name="T:Spotify.NetStandard.Enums.ItemType">
-            <summary>
-            Item Type
-            </summary>
-        </member>
-        <member name="F:Spotify.NetStandard.Enums.ItemType.Track">
-            <summary>
-            Track
-            </summary>
-        </member>
-        <member name="F:Spotify.NetStandard.Enums.ItemType.Episode">
-            <summary>
-            Episode
-            </summary>
-        </member>
         <member name="T:Spotify.NetStandard.Enums.LookupType">
             <summary>
             Lookup Type
