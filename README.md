@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 1.6.6
+
+- Fixed Track or Episode identification issue with Playlist Track and Currently Playing Objects
+
 ### Version 1.6.5
 
 - Updated Get a Playlist and Get a Playlist's Items to support Additional Types
