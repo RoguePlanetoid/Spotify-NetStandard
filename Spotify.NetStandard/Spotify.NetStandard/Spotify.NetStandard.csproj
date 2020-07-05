@@ -21,6 +21,7 @@
 1.5.5 Fixed issue with Market and Country being used correctly
 1.6.0 Updated Remove Tracks from Playlist to support Positions and Added Paging Method
 1.6.5 Updated Get a Playlist and Get a Playlist's Items to support Additional Types
+1.6.6 Fixed Track or Episode identification issue with Playlist Track and Currently Playing Objects
 1.7.0 Added Authorization Code Flow with Proof Key for Code Exchange (PKCE), Updated Track Restrictions and Newtonsoft.Json</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyVersion>1.7.0.0</AssemblyVersion>
