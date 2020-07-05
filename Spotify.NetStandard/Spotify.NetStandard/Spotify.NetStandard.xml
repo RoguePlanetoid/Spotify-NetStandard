@@ -2181,6 +2181,20 @@
             <param name="obj">Object</param>
             <returns>Type</returns>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.Extensions.AsTrack(System.Object)">
+            <summary>
+            As Track
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.Extensions.AsEpisode(System.Object)">
+            <summary>
+            As Episode
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Internal.Helpers">
             <summary>
             Helper Methods
