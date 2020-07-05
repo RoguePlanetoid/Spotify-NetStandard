@@ -43,13 +43,13 @@ namespace Spotify.NetStandard.Responses
         /// The currently playing track. Can be null.
         /// </summary>
         [IgnoreDataMember]
-        public Track Track => Item.AsType<Track>();
+        public Track Track => Item.AsTrack();
 
         /// <summary>
         /// The currently playing episode. Can be null.
         /// </summary>
         [IgnoreDataMember]
-        public Episode Episode => Item.AsType<Episode>();
+        public Episode Episode => Item.AsEpisode();
 
         /// <summary>
         /// The object type of the currently playing item. Can be one of track, episode, ad or unknown.

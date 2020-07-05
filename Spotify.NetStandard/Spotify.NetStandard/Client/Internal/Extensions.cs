@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Spotify.NetStandard.Requests;
+using Spotify.NetStandard.Responses;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -173,6 +174,28 @@ namespace Spotify.NetStandard.Client.Internal
             obj != null 
             ? JsonConvert.DeserializeObject<TObject>(obj.ToString()) :
             default;
+
+        /// <summary>
+        /// As Track
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static Track AsTrack(this object obj)
+        {
+            var track = obj.AsType<Track>();
+            return track?.Type == "track" ? track : null;
+        }
+
+        /// <summary>
+        /// As Episode
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static Episode AsEpisode(this object obj)
+        {
+            var track = obj.AsType<Episode>();
+            return track?.Type == "episode" ? track : null;
+        }
         #endregion Public Methods
     }
 }

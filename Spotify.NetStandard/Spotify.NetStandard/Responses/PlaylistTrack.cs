@@ -38,12 +38,12 @@ namespace Spotify.NetStandard.Responses
         /// Information about the track
         /// </summary>
         [IgnoreDataMember]
-        public Track Track => Item.AsType<Track>();
+        public Track Track => Item.AsTrack();
 
         /// <summary>
         /// Information about the episode
         /// </summary>
         [IgnoreDataMember]
-        public Episode Episode => Item.AsType<Episode>();
+        public Episode Episode => Item.AsEpisode();
     }
 }
