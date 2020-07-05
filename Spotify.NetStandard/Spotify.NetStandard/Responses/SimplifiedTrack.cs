@@ -52,12 +52,6 @@ namespace Spotify.NetStandard.Responses
         public LinkedTrack LinkedFrom { get; set; }
 
         /// <summary>
-        /// Part of the response when Track Relinking is applied, the original track is not available in the given market
-        /// </summary>
-        [DataMember(Name = "restrictions")]
-        public List<TrackRestriction> Restrictions { get; set; }
-
-        /// <summary>
         /// A link to a 30 second preview (MP3 format) of the track.
         /// </summary>
         [DataMember(Name = "preview_url")]

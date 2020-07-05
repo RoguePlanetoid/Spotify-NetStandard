@@ -330,6 +330,93 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             }
             return null;
         }
+
+        /// <summary>
+        /// Get Authorisation Code Proof Key for Code Exchange - Authorization Code Flow with Proof Key for Code Exchange Flow
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State</param>
+        /// <param name="scopes">Scope</param>
+        /// <returns>Authentication Uri</returns>
+        public Uri GetAuthorisationCodePkce(
+            Uri redirectUri,
+            string state,
+            string scopes)
+        {
+            VerifierChallenge = VerifierChallenge ?? new VerifierChallenge();
+            return _client.GetAuthorisationCodeUri(
+                _clientId,
+                VerifierChallenge?.Challenge, 
+                scopes, 
+                state, 
+                redirectUri.ToString());
+        }
+
+        /// <summary>
+        /// Get Authorisation Code Token - Authorization Code Flow with Proof Key for Code Exchange
+        /// </summary>
+        /// <param name="accessCode">Access Code</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>Access Token</returns>
+        public async Task<AccessToken> GetAuthorisationCodePkceTokenAsync(
+            AccessCode accessCode,
+            CancellationToken cancellationToken)
+        {
+            var authenticationResponse =
+                await _client.GetAuthorisationCodeAsync(
+                    _clientId,
+                    VerifierChallenge?.Verifier,
+                    accessCode,
+                    cancellationToken);
+            if (authenticationResponse != null)
+                AccessToken = Map(TokenType.User, authenticationResponse);
+            return AccessToken;
+        }
+
+        /// <summary>
+        /// Get Authorisation Code Proof Key for Code Exchange
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Request Uri</param>
+        /// <param name="state">State</param>
+        /// <returns>Access Token</returns>
+        public async Task<AccessToken> GetAuthorisationCodePkceAuthAsync(
+            Uri responseUri,
+            Uri redirectUri,
+            string state)
+        {
+            if (VerifierChallenge != null && responseUri != null)
+            {
+                if (responseUri.ToString().Contains(redirectUri.ToString()))
+                {
+                    if (_accessCode == null || _accessCode.ResponseUri != responseUri)
+                    {
+                        _accessCode = new AccessCode(
+                            responseUri, redirectUri,
+                            responseUri.Query.QueryStringAsDictionary());
+                        if (state == null || _accessCode.State == state)
+                        {
+                            if (string.IsNullOrEmpty(_accessCode.Code))
+                            {
+                                throw new AuthCodeValueException(_accessCode.Error);
+                            }
+                            else
+                            {
+                                AccessToken = await GetAuthorisationCodePkceTokenAsync(
+                                    _accessCode, 
+                                    new CancellationToken(false));
+                                return AccessToken;
+                            }
+                        }
+                        else
+                        {
+                            throw new AuthCodeStateException(_accessCode.State);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
         #endregion Public Methods
 
         #region Public Properties
@@ -337,6 +424,11 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// Access Token
         /// </summary>
         public AccessToken AccessToken { get; set; } = null;
+
+        /// <summary>
+        /// Verifier Challenge
+        /// </summary>
+        public VerifierChallenge VerifierChallenge { get; set; } = null;
         #endregion Publoc Properties
     }
 }

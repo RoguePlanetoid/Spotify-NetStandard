@@ -2,6 +2,10 @@
 
 ## Change Log
 
+### Version 1.7.0
+
+- Added Authorization Code Flow with Proof Key for Code Exchange (PKCE), Updated Track Restrictions and Newtonsoft.Json
+
 ### Version 1.6.5
 
 - Updated Get a Playlist and Get a Playlist's Items to support Additional Types

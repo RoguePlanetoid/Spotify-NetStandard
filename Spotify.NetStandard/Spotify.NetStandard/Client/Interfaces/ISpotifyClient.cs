@@ -35,6 +35,18 @@ namespace Spotify.NetStandard.Client.Interfaces
         void SetToken(AccessToken value);
 
         /// <summary>
+        /// Get Code Verifier
+        /// </summary>
+        /// <returns>Verifier</returns>
+        string GetCodeVerifier();
+
+        /// <summary>
+        /// Set Code Verifier
+        /// </summary>
+        /// <param name="value">Verifier</param>
+        void SetCodeVerifier(string value);
+
+        /// <summary>
         /// Refresh Token
         /// </summary>
         /// <returns>Access Token</returns>
@@ -338,9 +350,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <summary>
         /// Auth User - Authorisation Code Flow
         /// </summary>
-        /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
-        /// <param name="scope">Scope</param>
+        /// <param name="redirectUri">(Required) Redirect Uri</param>
+        /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+        /// <param name="scope">(Optional) Authorisation Scopes</param>
         /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         Uri AuthUser(
@@ -352,9 +364,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <summary>
         /// Auth User - Authorisation Code Flow
         /// </summary>
-        /// <param name="responseUri">Response Uri</param>
-        /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
+        /// <param name="responseUri">(Required) Response Uri</param>
+        /// <param name="redirectUri">(Required) Redirect Uri</param>
+        /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
         /// <returns>AccessToken on Success, Null if Not</returns>
         /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
         /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
@@ -372,9 +384,9 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <summary>
         /// Auth User Implicit - Implicit Grant Flow
         /// </summary>
-        /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
-        /// <param name="scope">Scope</param>
+        /// <param name="redirectUri">(Required) Redirect Uri</param>
+        /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+        /// <param name="scope">(Optional) Authorisation Scopes</param>
         /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         Uri AuthUserImplicit(
@@ -386,13 +398,39 @@ namespace Spotify.NetStandard.Client.Interfaces
         /// <summary>
         /// Auth User Implicit - Implicit Grant Flow
         /// </summary>
-        /// <param name="responseUri">Response Uri</param>
-        /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
+        /// <param name="responseUri">(Required) Response Uri</param>
+        /// <param name="redirectUri">(Required) Redirect Uri</param>
+        /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
         /// <returns>AccessToken on Success, Null if Not</returns>
         /// <exception cref="AuthTokenValueException">AuthCodeValueException</exception>
         /// <exception cref="AuthTokenStateException">AuthCodeStateException</exception>
         AccessToken AuthUserImplicit(
+            Uri responseUri,
+            Uri redirectUri,
+            string state);
+
+        /// <summary>
+        /// Auth User Code - Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+        /// </summary>
+        /// <param name="redirectUri">(Required) Redirect Uri</param>
+        /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+        /// <param name="scope">(Optional) Authorisation Scopes</param>
+        /// <returns>Uri</returns>
+        Uri AuthUserCode(
+            Uri redirectUri,
+            string state,
+            Scope scope);
+
+        /// <summary>
+        /// Auth User Code - Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+        /// </summary>
+        /// <param name="responseUri">(Required) Response Uri</param>
+        /// <param name="redirectUri">(Required) Redirect Uri</param>
+        /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+        Task<AccessToken> AuthUserCodeAsync(
             Uri responseUri,
             Uri redirectUri,
             string state);
