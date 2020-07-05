@@ -124,6 +124,28 @@ namespace Spotify.NetStandard.Test
             var newToken = await _client.RefreshToken(oldToken);
             Assert.AreNotEqual(oldToken.Token, newToken.Token);
         }
+
+        /// <summary>
+        /// Test Auth User Code
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public void Test_AuthUserCode_Uri()
+        {
+            var uri = _client.AuthUserCode(
+                redirect_url, 
+                state, new Scope
+                {
+                    UserReadPrivate = true,
+                    FollowRead = true,
+                    FollowModify = true,
+                    PlaylistModifyPublic = true,
+                    PlaylistModifyPrivate = true,
+                    UserGeneratedContentImageUpload = true,
+                    PlaybackPositionRead = true,
+                });
+            Assert.IsNotNull(uri);
+        }
         #endregion Authenticate
 
         #region Follow

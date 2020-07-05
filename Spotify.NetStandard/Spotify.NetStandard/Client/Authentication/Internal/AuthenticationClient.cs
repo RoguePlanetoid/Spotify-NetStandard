@@ -1,6 +1,7 @@
 ﻿using Spotify.NetStandard.Client.Internal;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +36,11 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         private const string authorization_code = "authorization_code";
         private const string refresh_token = "refresh_token";
         private const string show_dialog = "show_dialog";
+        // PKCE Auth
+        private const string code_challenge_method_type = "S256";
+        private const string code_challenge_method = "code_challenge_method";
+        private const string code_challenge = "code_challenge";
+        private const string code_verifier = "code_verifier";
         #endregion Private Members
 
         #region Private Methods
@@ -204,6 +210,68 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 { show_dialog, $"{showDialog}".ToLower() }
             };
             return GetUri(host_name, auth_uri, request);
+        }
+
+        /// <summary>
+        /// Get Authoristion Code - Authorisation Code Flow with PKCE 
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="challenge">Challenge</param>
+        /// <param name="scopes">Scopes</param>
+        /// <param name="state">State</param>
+        /// <param name="redirectUrl">Redirect Uri</param>
+        /// <returns>Uri</returns>
+        public Uri GetAuthorisationCodeUri(
+            string clientId,
+            string challenge,
+            string scopes,
+            string state,
+            string redirectUrl)
+        {
+            var request = new Dictionary<string, string>()
+            {
+                { client_id, clientId },
+                { response_type, code_value },
+                { redirect_uri, HttpUtility.UrlEncode(redirectUrl) },
+                { code_challenge_method, code_challenge_method_type },
+                { code_challenge, challenge },
+                { scope_value, scopes },
+                { state_value, HttpUtility.UrlEncode(state) }
+            };
+            return GetUri(host_name, auth_uri, request);
+        }
+
+        /// <summary>
+        /// Get Authorisation Code - Authorisation Code Flow with PKCE 
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="verifier">Value of this parameter must match the value of the one that your app generated</param>
+        /// <param name="accessCode">Access Code</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>Authentication Response</returns>
+        public Task<AuthenticationResponse> GetAuthorisationCodeAsync(
+            string clientId,
+            string verifier,
+            AccessCode accessCode,
+            CancellationToken cancellationToken)
+        {
+            var request = new Dictionary<string, string>()
+            {
+                { client_id, clientId },
+                { grant_type, authorization_code },
+                { code_value, accessCode.Code },
+                { redirect_uri, $"{accessCode.RedirectUri}" },
+                { code_verifier, verifier }
+            };
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
+                hostname: host_name,
+                relativeUri: token_uri,
+                null,
+                cancellationToken: cancellationToken,
+                request,
+                null,
+                null,
+                true);
         }
         #endregion Public Methods
     }

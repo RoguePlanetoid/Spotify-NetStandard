@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.6.5</Version>
+    <Version>1.7.0</Version>
     <Authors>RoguePlanetoid</Authors>
     <Company>Comentsys</Company>
     <Description>Spotify API .NET Standard Library</Description>
@@ -20,11 +20,12 @@
 1.5.0 Added Save Shows for Current User, Get User's Saved Shows, Remove User's Saved Shows, Get an Episode, Get Multiple Episodes, Get a Show, Get Multiple Shows and Get a Show's Episodes plus PlaybackPositionRead Scope. Updated Get the User's Currently Playing Track, Get Information About The User's Current Playback and Search for an Item
 1.5.5 Fixed issue with Market and Country being used correctly
 1.6.0 Updated Remove Tracks from Playlist to support Positions and Added Paging Method
-1.6.5 Updated Get a Playlist and Get a Playlist's Items to support Additional Types</PackageReleaseNotes>
+1.6.5 Updated Get a Playlist and Get a Playlist's Items to support Additional Types
+1.7.0 Added Authorization Code Flow with Proof Key for Code Exchange (PKCE), Updated Track Restrictions and Newtonsoft.Json</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.6.5.0</AssemblyVersion>
+    <AssemblyVersion>1.7.0.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <FileVersion>1.6.5.0</FileVersion>
+    <FileVersion>1.7.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -36,7 +37,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
 </Project>

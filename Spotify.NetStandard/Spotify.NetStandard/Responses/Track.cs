@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Spotify.NetStandard.Responses
 {
@@ -26,5 +25,11 @@ namespace Spotify.NetStandard.Responses
         /// </summary>
         [DataMember(Name = "popularity")]
         public int Popularity { get; set; }
+
+        /// <summary>
+        /// Part of the response when Track Relinking is applied, the original track is not available in the given market
+        /// </summary>
+        [DataMember(Name = "restrictions")]
+        public TrackRestriction Restrictions { get; set; }
     }
 }

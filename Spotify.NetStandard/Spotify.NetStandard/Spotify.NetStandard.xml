@@ -204,9 +204,40 @@
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">AuthTokenValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">AuthTokenStateException</exception>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAuthorisationCodePkce(System.Uri,System.String,System.String)">
+            <summary>
+            Get Authorisation Code Proof Key for Code Exchange - Authorization Code Flow with Proof Key for Code Exchange Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scopes">Scope</param>
+            <returns>Authentication Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAuthorisationCodePkceTokenAsync(Spotify.NetStandard.Client.Authentication.Internal.AccessCode,System.Threading.CancellationToken)">
+            <summary>
+            Get Authorisation Code Token - Authorization Code Flow with Proof Key for Code Exchange
+            </summary>
+            <param name="accessCode">Access Code</param>
+            <param name="cancellationToken">Cancellation Token</param>
+            <returns>Access Token</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAuthorisationCodePkceAuthAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Authorisation Code Proof Key for Code Exchange
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Request Uri</param>
+            <param name="state">State</param>
+            <returns>Access Token</returns>
+        </member>
         <member name="P:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.AccessToken">
             <summary>
             Access Token
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.VerifierChallenge">
+            <summary>
+            Verifier Challenge
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient">
@@ -272,6 +303,27 @@
             <param name="redirectUrl">Redirect Url</param>
             <param name="showDialog">Show Dialog</param>
             <returns>Url</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.GetAuthorisationCodeUri(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Get Authoristion Code - Authorisation Code Flow with PKCE 
+            </summary>
+            <param name="clientId">Client Id</param>
+            <param name="challenge">Challenge</param>
+            <param name="scopes">Scopes</param>
+            <param name="state">State</param>
+            <param name="redirectUrl">Redirect Uri</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.GetAuthorisationCodeAsync(System.String,System.String,Spotify.NetStandard.Client.Authentication.Internal.AccessCode,System.Threading.CancellationToken)">
+            <summary>
+            Get Authorisation Code - Authorisation Code Flow with PKCE 
+            </summary>
+            <param name="clientId">Client Id</param>
+            <param name="verifier">Value of this parameter must match the value of the one that your app generated</param>
+            <param name="accessCode">Access Code</param>
+            <param name="cancellationToken">Cancellation Token</param>
+            <returns>Authentication Response</returns>
         </member>
         <member name="T:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationResponse">
             <summary>
@@ -355,6 +407,51 @@
             <param name="responseUri">An authorization Uri</param>
             <param name="redirectUri">Redirect Uri</param>
             <param name="dictionary">QueryString Dictionary</param>
+        </member>
+        <member name="T:Spotify.NetStandard.Client.Authentication.Internal.VerifierChallenge">
+            <summary>
+            Verifier Challenge Request for Proof Key for Code Exchange
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.VerifierChallenge.GetVerifier">
+            <summary>
+            Get Verifier
+            </summary>
+            <returns>Cryptographically random string between 43 and 128 characters in length</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.VerifierChallenge.Base64UrlEncode(System.Byte[])">
+            <summary>
+            Base 64 Url Encode
+            </summary>
+            <param name="value">Values to Encode</param>
+            <returns>Encoded Values</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.VerifierChallenge.GetChallenge">
+            <summary>
+            Get Challenge
+            </summary>
+            <returns>Base 64 Encoded Verifier Hashed with SHA256</returns>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.VerifierChallenge.Verifier">
+            <summary>
+            Cryptographically random string between 43 and 128 characters in length. It can contain letters, digits, underscores, periods, hyphens, or tildes
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.VerifierChallenge.Challenge">
+            <summary>
+            Base 64 Encoded Hash of Code Verifier using the SHA256 algorithm
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.VerifierChallenge.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.VerifierChallenge.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="verifier">Cryptographically random string between 43 and 128 characters in length. It can contain letters, digits, underscores, periods, hyphens, or tildes</param>
         </member>
         <member name="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">
             <summary>
@@ -1238,6 +1335,18 @@
             </summary>
             <param name="value">Access Token</param>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.GetCodeVerifier">
+            <summary>
+            Get Code Verifier
+            </summary>
+            <returns>Verifier</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.SetCodeVerifier(System.String)">
+            <summary>
+            Set Code Verifier
+            </summary>
+            <param name="value">Verifier</param>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.RefreshToken">
             <summary>
             Refresh Token
@@ -1473,9 +1582,9 @@
             <summary>
             Auth User - Authorisation Code Flow
             </summary>
-            <param name="redirectUri">Redirect Uri</param>
-            <param name="state">State</param>
-            <param name="scope">Scope</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">(Optional) Authorisation Scopes</param>
             <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
@@ -1483,9 +1592,9 @@
             <summary>
             Auth User - Authorisation Code Flow
             </summary>
-            <param name="responseUri">Response Uri</param>
-            <param name="redirectUri">Redirect Uri</param>
-            <param name="state">State</param>
+            <param name="responseUri">(Required) Response Uri</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
@@ -1500,9 +1609,9 @@
             <summary>
             Auth User Implicit - Implicit Grant Flow
             </summary>
-            <param name="redirectUri">Redirect Uri</param>
-            <param name="state">State</param>
-            <param name="scope">Scope</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">(Optional) Authorisation Scopes</param>
             <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
@@ -1510,12 +1619,32 @@
             <summary>
             Auth User Implicit - Implicit Grant Flow
             </summary>
-            <param name="responseUri">Response Uri</param>
-            <param name="redirectUri">Redirect Uri</param>
-            <param name="state">State</param>
+            <param name="responseUri">(Required) Response Uri</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserCode(System.Uri,System.String,Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            Auth User Code - Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+            </summary>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">(Optional) Authorisation Scopes</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserCodeAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Auth User Code - Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+            </summary>
+            <param name="responseUri">(Required) Response Uri</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupFollowingStateAsync(System.Collections.Generic.List{System.String},Spotify.NetStandard.Enums.FollowType)">
             <summary>
@@ -3366,6 +3495,18 @@
             </summary>
             <param name="value">Access Token</param>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.GetCodeVerifier">
+            <summary>
+            Get Code Verifier
+            </summary>
+            <returns>Core Verifier</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.SetCodeVerifier(System.String)">
+            <summary>
+            Set Code Verifier
+            </summary>
+            <param name="value">Code Verifier</param>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.RefreshToken">
             <summary>
             Refresh Token
@@ -3601,9 +3742,9 @@
             <summary>
             Auth User - Authorisation Code Flow
             </summary>
-            <param name="redirectUri">Redirect Uri</param>
-            <param name="state">State</param>
-            <param name="scope">Scope</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">(Optional) Authorisation Scopes</param>
             <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
@@ -3611,9 +3752,9 @@
             <summary>
             Auth User - Authorisation Code Flow
             </summary>
-            <param name="responseUri">Response Uri</param>
-            <param name="redirectUri">Redirect Uri</param>
-            <param name="state">State</param>
+            <param name="responseUri">(Required) Response Uri</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
@@ -3628,9 +3769,9 @@
             <summary>
             Auth User Implicit - Implicit Grant Flow
             </summary>
-            <param name="redirectUri">Redirect Uri</param>
-            <param name="state">State</param>
-            <param name="scope">Scope</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">(Optional) Authorisation Scopes</param>
             <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
             <returns>Uri</returns>
         </member>
@@ -3638,12 +3779,32 @@
             <summary>
             Auth User Implicit - Implicit Grant Flow
             </summary>
-            <param name="responseUri">Response Uri</param>
-            <param name="redirectUri">Redirect Uri</param>
-            <param name="state">State</param>
+            <param name="responseUri">(Required) Response Uri</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthTokenStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserCode(System.Uri,System.String,Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            Auth User Code - Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+            </summary>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">(Optional) Authorisation Scopes</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserCodeAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Auth User Code - Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+            </summary>
+            <param name="responseUri">(Required) Response Uri</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupFollowingStateAsync(System.Collections.Generic.List{System.String},Spotify.NetStandard.Enums.FollowType)">
             <summary>
@@ -6182,11 +6343,6 @@
             Part of the response when Track Relinking is applied and is only part of the response if the track linking, in fact, exists
             </summary>
         </member>
-        <member name="P:Spotify.NetStandard.Responses.SimplifiedTrack.Restrictions">
-            <summary>
-            Part of the response when Track Relinking is applied, the original track is not available in the given market
-            </summary>
-        </member>
         <member name="P:Spotify.NetStandard.Responses.SimplifiedTrack.Preview">
             <summary>
             A link to a 30 second preview (MP3 format) of the track.
@@ -6270,6 +6426,11 @@
         <member name="P:Spotify.NetStandard.Responses.Track.Popularity">
             <summary>
             The popularity of the track. The value will be between 0 and 100, with 100 being the most popular.
+            </summary>
+        </member>
+        <member name="P:Spotify.NetStandard.Responses.Track.Restrictions">
+            <summary>
+            Part of the response when Track Relinking is applied, the original track is not available in the given market
             </summary>
         </member>
         <member name="T:Spotify.NetStandard.Responses.TrackRestriction">
