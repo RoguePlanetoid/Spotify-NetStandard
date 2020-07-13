@@ -8,7 +8,6 @@ using Spotify.NetStandard.Requests;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Spotify.NetStandard.Test
@@ -16,6 +15,9 @@ namespace Spotify.NetStandard.Test
     [TestClass]
     public class SpotifyClientApiTest
     {
+        private readonly Uri redirect_url = new Uri("https://www.example.org/spotify");
+        private const string state = "spotify.state";
+
         private ISpotifyClient _client = null;
 
         /// <summary>
@@ -45,6 +47,65 @@ namespace Spotify.NetStandard.Test
             //Assert.IsFalse(expired);
             _client.SetToken(accessToken);
         }
+
+        #region Authentication
+        /// <summary>
+        /// Get Authorisation Code Auth Uri - Authorisation Code Flow
+        /// </summary>
+        [TestMethod]
+        public void Test_GetAuthorisationCodeAuthUri()
+        {
+            var uri = _client.Api.GetAuthorisationCodeAuthUri(redirect_url, state, new Scope
+            {
+                UserReadPrivate = true,
+                FollowRead = true,
+                FollowModify = true,
+                PlaylistModifyPublic = true,
+                PlaylistModifyPrivate = true,
+                UserGeneratedContentImageUpload = true,
+                PlaybackPositionRead = true,
+            });
+            Assert.IsNotNull(uri);
+        }
+
+        /// <summary>
+        /// Get Authorisation Code Auth Uri - Authorisation Code Flow
+        /// </summary>
+        [TestMethod]
+        public void Test_GetAuthorisationCodePkceAuthUri()
+        {
+            var uri = _client.Api.GetAuthorisationCodeWithPkceAuthUri(redirect_url, state, new Scope
+            {
+                UserReadPrivate = true,
+                FollowRead = true,
+                FollowModify = true,
+                PlaylistModifyPublic = true,
+                PlaylistModifyPrivate = true,
+                UserGeneratedContentImageUpload = true,
+                PlaybackPositionRead = true,
+            });
+            Assert.IsNotNull(uri);
+        }
+
+        /// <summary>
+        /// Get Implicit Grant Auth Uri
+        /// </summary>
+        [TestMethod]
+        public void Test_GetImplicitGrantAuthUri()
+        {
+            var uri = _client.Api.GetImplicitGrantAuthUri(redirect_url, state, new Scope
+            {
+                UserReadPrivate = true,
+                FollowRead = true,
+                FollowModify = true,
+                PlaylistModifyPublic = true,
+                PlaylistModifyPrivate = true,
+                UserGeneratedContentImageUpload = true,
+                PlaybackPositionRead = true,
+            });
+            Assert.IsNotNull(uri);
+        }
+        #endregion Authentication
 
         #region Search API
         /// <summary>

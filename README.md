@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 1.7.5
+
+- Added Authorization Code Flow with Proof Key for Code Exchange (PKCE) for API
+
 ### Version 1.7.0
 
 - Added Authorization Code Flow with Proof Key for Code Exchange (PKCE), Updated Track Restrictions and Newtonsoft.Json
@@ -486,7 +490,7 @@ Get Authorisation Code Auth Token - Authorisation Code Flow
 | ---- | ----------- |
 | responseUri | *System.Uri*<br>Response Uri |
 | redirectUri | *System.Uri*<br>Redirect Uri |
-| state | *System.String*<br>State |
+| state | *System.String*<br>State used to mitigate cross-site request forgery attacks |
 
 #### Returns
 
@@ -503,9 +507,41 @@ Get Authorisation Code Auth Uri - Authorisation Code Flow
 | Name | Description |
 | ---- | ----------- |
 | redirectUri | *System.Uri*<br>Redirect Uri |
-| state | *System.String*<br>State |
-| scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+| state | *System.String*<br>State used to mitigate cross-site request forgery attacks |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Authorisation Scopes |
 | showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
+
+#### Returns
+
+Uri
+
+### GetAuthorisationCodeWithPkceAuthTokenAsync(responseUri, redirectUri, state)
+
+Get Authorisation Code With Proof Key For Code Exchange Auth Token - Authorization Code Flow With Proof Key For Code Exchange (PKCE)
+
+| Name | Description |
+| ---- | ----------- |
+| responseUri | *System.Uri*<br>Response Uri |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State used to mitigate cross-site request forgery attacks |
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+*Spotify.NetStandard.Client.Exceptions.AuthCodeValueException:* AuthCodeValueException
+
+*Spotify.NetStandard.Client.Exceptions.AuthCodeStateException:* AuthCodeStateException
+
+### GetAuthorisationCodeWithPkceAuthUri(redirectUri, state, scope)
+
+Get Authorisation Code With Proof Key For Code Exchange Auth Uri - Authorization Code Flow With Proof Key For Code Exchange (PKCE)
+
+| Name | Description |
+| ---- | ----------- |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State used to mitigate cross-site request forgery attacks |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Authorisation Scopes |
 
 #### Returns
 
@@ -589,15 +625,15 @@ Get Implicit Grant Auth Token - Implicit Grant Flow
 | ---- | ----------- |
 | responseUri | *System.Uri*<br>Response Uri |
 | redirectUri | *System.Uri*<br>Redirect Uri |
-| state | *System.String*<br>State |
+| state | *System.String*<br>State used to mitigate cross-site request forgery attacks |
 
 #### Returns
 
 AccessToken on Success, Null if Not
 
-*Spotify.NetStandard.Client.Exceptions.AuthTokenValueException:* AuthCodeValueException
+*Spotify.NetStandard.Client.Exceptions.AuthTokenValueException:* AuthTokenValueException
 
-*Spotify.NetStandard.Client.Exceptions.AuthTokenStateException:* AuthCodeStateException
+*Spotify.NetStandard.Client.Exceptions.AuthTokenStateException:* AuthTokenStateException
 
 ### GetImplicitGrantAuthUri(redirectUri, state, scope, showDialog)
 
@@ -606,8 +642,8 @@ Get Implicit Grant Auth Uri - Implicit Grant Flow
 | Name | Description |
 | ---- | ----------- |
 | redirectUri | *System.Uri*<br>Redirect Uri |
-| state | *System.String*<br>State |
-| scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+| state | *System.String*<br>State used to mitigate cross-site request forgery attacks |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Authorisation Scopes |
 | showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
 
 #### Returns

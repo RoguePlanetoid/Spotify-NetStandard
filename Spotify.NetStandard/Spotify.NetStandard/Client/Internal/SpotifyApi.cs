@@ -33,8 +33,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// Get Authorisation Code Auth Uri - Authorisation Code Flow
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
-        /// <param name="scope">Scope</param>
+        /// <param name="state">State used to mitigate cross-site request forgery attacks</param>
+        /// <param name="scope">Authorisation Scopes</param>
         /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         public Uri GetAuthorisationCodeAuthUri(
@@ -49,7 +49,7 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
+        /// <param name="state">State used to mitigate cross-site request forgery attacks</param>
         /// <returns>AccessToken on Success, Null if Not</returns>
         /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
         /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
@@ -59,6 +59,35 @@ namespace Spotify.NetStandard.Client.Internal
             string state) =>
                 await _client.AuthUserAsync(
                 responseUri, redirectUri, state);
+
+        /// <summary>
+        /// Get Authorisation Code With Proof Key For Code Exchange Auth Uri - Authorization Code Flow With Proof Key For Code Exchange (PKCE)
+        /// </summary>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State used to mitigate cross-site request forgery attacks</param>
+        /// <param name="scope">Authorisation Scopes</param>
+        /// <returns>Uri</returns>
+        public Uri GetAuthorisationCodeWithPkceAuthUri(
+            Uri redirectUri,
+            string state,
+            Scope scope) =>
+            _client.AuthUserCode(redirectUri, state, scope);
+
+        /// <summary>
+        /// Get Authorisation Code With Proof Key For Code Exchange Auth Token - Authorization Code Flow With Proof Key For Code Exchange (PKCE)
+        /// </summary>
+        /// <param name="responseUri">Response Uri</param>
+        /// <param name="redirectUri">Redirect Uri</param>
+        /// <param name="state">State used to mitigate cross-site request forgery attacks</param>
+        /// <returns>AccessToken on Success, Null if Not</returns>
+        /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+        /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+        public async Task<AccessToken> GetAuthorisationCodeWithPkceAuthTokenAsync(
+            Uri responseUri,
+            Uri redirectUri,
+            string state)
+            => await
+            _client.AuthUserCodeAsync(responseUri, redirectUri, state);
 
         /// <summary>
         /// Get Client Credentials Auth Token - Client Credentials Flow
@@ -71,8 +100,8 @@ namespace Spotify.NetStandard.Client.Internal
         /// Get Implicit Grant Auth Uri - Implicit Grant Flow
         /// </summary>
         /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
-        /// <param name="scope">Scope</param>
+        /// <param name="state">State used to mitigate cross-site request forgery attacks</param>
+        /// <param name="scope">Authorisation Scopes</param>
         /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
         /// <returns>Uri</returns>
         public Uri GetImplicitGrantAuthUri(
@@ -87,10 +116,10 @@ namespace Spotify.NetStandard.Client.Internal
         /// </summary>
         /// <param name="responseUri">Response Uri</param>
         /// <param name="redirectUri">Redirect Uri</param>
-        /// <param name="state">State</param>
+        /// <param name="state">State used to mitigate cross-site request forgery attacks</param>
         /// <returns>AccessToken on Success, Null if Not</returns>
-        /// <exception cref="AuthTokenValueException">AuthCodeValueException</exception>
-        /// <exception cref="AuthTokenStateException">AuthCodeStateException</exception>
+        /// <exception cref="AuthTokenValueException">AuthTokenValueException</exception>
+        /// <exception cref="AuthTokenStateException">AuthTokenStateException</exception>
         public AccessToken GetImplicitGrantAuthToken(
             Uri responseUri,
             Uri redirectUri,

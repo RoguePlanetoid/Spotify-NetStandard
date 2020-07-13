@@ -2,6 +2,10 @@
 
 ## Change Log
 
+### Version 1.7.5
+
+- Added Authorization Code Flow with Proof Key for Code Exchange (PKCE) for API
+
 ### Version 1.7.0
 
 - Added Authorization Code Flow with Proof Key for Code Exchange (PKCE), Updated Track Restrictions and Newtonsoft.Json
