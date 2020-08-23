@@ -36,6 +36,10 @@ You can get a "client-id" and "client-secret" from [developer.spotify.com/dashbo
 
 ## Change Log
 
+### Version 1.7.6
+
+- Fixed issue with Resume Point not returning Resume Position Correctly
+
 ### Version 1.7.5
 
 - Added Authorization Code Flow with Proof Key for Code Exchange (PKCE) for API

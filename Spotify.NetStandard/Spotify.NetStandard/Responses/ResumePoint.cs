@@ -5,6 +5,7 @@ namespace Spotify.NetStandard.Responses
     /// <summary>
     /// Resume Point Object
     /// </summary>
+    [DataContract]
     public class ResumePoint
     {
         /// <summary>
@@ -17,6 +18,6 @@ namespace Spotify.NetStandard.Responses
         /// The user’s most recent position in the episode in milliseconds
         /// </summary>
         [DataMember(Name = "resume_position_ms")]
-        public int ResumePosition { get; set; }
+        public long ResumePosition { get; set; }
     }
 }
