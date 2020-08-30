@@ -242,7 +242,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             {
                 if (responseUri.ToString().Contains(redirectUri.ToString()))
                 {
-                    if (_accessCode == null || _accessCode.ResponseUri != responseUri)
+                    if (_accessCode?.ResponseUri == null || (_accessCode.ResponseUri.ToString() != responseUri.ToString()))
                     {
                         _accessCode = new AccessCode(
                             responseUri, redirectUri,
@@ -304,7 +304,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             {
                 if (responseUri.ToString().Contains(redirectUri.ToString()))
                 {
-                    if (_implicitGrant == null || _implicitGrant.ResponseUri != responseUri)
+                    if (_implicitGrant?.ResponseUri == null || (_implicitGrant.ResponseUri.ToString() != responseUri.ToString()))
                     {
                         _implicitGrant = new ImplicitGrant(
                             responseUri, redirectUri,
@@ -389,7 +389,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             {
                 if (responseUri.ToString().Contains(redirectUri.ToString()))
                 {
-                    if (_accessCode == null || _accessCode.ResponseUri != responseUri)
+                    if (_accessCode?.ResponseUri == null || (_accessCode.ResponseUri.ToString() != responseUri.ToString()))
                     {
                         _accessCode = new AccessCode(
                             responseUri, redirectUri,
