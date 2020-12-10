@@ -1228,6 +1228,12 @@ namespace Spotify.NetStandard.Client.Internal
                     responseUri, 
                     redirectUri, 
                     state);
+
+        /// <summary>
+        /// Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+        /// </summary>
+        public bool IsAuthorisationCodePkceAuth =>
+            _authenticationCache.HasCodeVerifier;
         #endregion Authenticate
 
         #region Authenticated Follow API

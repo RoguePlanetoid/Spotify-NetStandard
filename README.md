@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 1.8.0
+
+- Updated Authentication Flow with PKCE for Refresh Token
+
 ### Version 1.7.7
 
 - Fixed issue with Authentication Cache Response Uri
@@ -299,6 +303,10 @@ Scopes: PlaylistReadPrivate
 List of true or false values
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:*
+
+### Client
+
+Spotify Client
 
 ### CreatePlaylistAsync(userId, name, isPublic, isCollaborative, description)
 
@@ -1111,6 +1119,10 @@ Scopes: ListeningTopRead
 Cursor Paging of Track Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthUserTokenRequiredException:*
+
+### IsAuthorisationCodePkceAuth
+
+Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
 
 ### RemoveTracksFromPlaylistAsync(playlistId, uris, snapshotId, uriPositions)
 
@@ -2412,6 +2424,10 @@ Get Access Token
 #### Returns
 
 Access Token
+
+### IsAuthorisationCodePkceAuth
+
+Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
 
 ### LookupAllCategoriesAsync(country, locale, page)
 

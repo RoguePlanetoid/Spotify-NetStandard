@@ -14,6 +14,13 @@ namespace Spotify.NetStandard.Client.Interfaces
     /// </summary>
     public interface ISpotifyApi
     {
+        #region Public Properties
+        /// <summary>
+        /// Spotify Client
+        /// </summary>
+        ISpotifyClient Client { get; }
+        #endregion Public Properties
+
         #region Authentication
         /// <summary>
         /// Get Authorisation Code Auth Uri - Authorisation Code Flow
@@ -68,6 +75,11 @@ namespace Spotify.NetStandard.Client.Interfaces
             Uri responseUri,
             Uri redirectUri,
             string state);
+
+        /// <summary>
+        /// Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+        /// </summary>
+        bool IsAuthorisationCodePkceAuth { get; }
 
         /// <summary>
         /// Get Client Credentials Auth Token - Client Credentials Flow
