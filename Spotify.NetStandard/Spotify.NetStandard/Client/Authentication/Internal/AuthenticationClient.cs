@@ -1,7 +1,6 @@
 ﻿using Spotify.NetStandard.Client.Internal;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -143,7 +142,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             var request = new Dictionary<string, string>()
             {
                 { grant_type, refresh_token },
-                { refresh_token, refreshToken },
+                { refresh_token, refreshToken }
             };
             return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
                 host_name,
@@ -153,6 +152,35 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 request, 
                 null, 
                 headers, 
+                true);
+        }
+
+        /// <summary>
+        /// Refresh Token - Authorisation Code Flow with PKCE
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="refreshToken">Refresh Token</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>Authentication Response</returns>
+        public Task<AuthenticationResponse> RefreshTokenAsync(
+            string clientId,
+            string refreshToken,
+            CancellationToken cancellationToken)
+        {
+            var request = new Dictionary<string, string>()
+            {
+                { grant_type, refresh_token },
+                { refresh_token, refreshToken },
+                { client_id, clientId }
+            };
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
+                host_name,
+                token_uri,
+                null,
+                cancellationToken,
+                request,
+                null,
+                null,
                 true);
         }
 

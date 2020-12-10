@@ -130,7 +130,7 @@
         </member>
         <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.CheckAndRenewTokenAsync(Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Threading.CancellationToken)">
             <summary>
-            Check And Renew Token - Client Credentials Flow
+            Check And Renew Token
             </summary>
             <param name="tokenType">Token Type</param>
             <param name="cancellationToken">Cancellation Token</param>
@@ -140,7 +140,7 @@
         </member>
         <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetRefreshTokenAsync(System.String,Spotify.NetStandard.Client.Authentication.Enums.TokenType,System.Threading.CancellationToken)">
             <summary>
-            Get Refresh Token - Client Credentials Flow
+            Get Refresh Token
             </summary>
             <param name="refreshToken">Refresh Token</param>
             <param name="tokenType">Token Type</param>
@@ -240,6 +240,11 @@
             Verifier Challenge
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.HasCodeVerifier">
+            <summary>
+            Has Code Verifier
+            </summary>
+        </member>
         <member name="T:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient">
             <summary>
             Authentication Client
@@ -278,6 +283,15 @@
             </summary>
             <param name="clientId">Client Id</param>
             <param name="clientSecret">Client Secret</param>
+            <param name="refreshToken">Refresh Token</param>
+            <param name="cancellationToken">Cancellation Token</param>
+            <returns>Authentication Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.RefreshTokenAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Refresh Token - Authorisation Code Flow with PKCE
+            </summary>
+            <param name="clientId">Client Id</param>
             <param name="refreshToken">Refresh Token</param>
             <param name="cancellationToken">Cancellation Token</param>
             <returns>Authentication Response</returns>
@@ -533,6 +547,11 @@
             Spotify API
             </summary>
         </member>
+        <member name="P:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.Client">
+            <summary>
+            Spotify Client
+            </summary>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetAuthorisationCodeAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
             <summary>
             Get Authorisation Code Auth Uri - Authorisation Code Flow
@@ -573,6 +592,11 @@
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.IsAuthorisationCodePkceAuth">
+            <summary>
+            Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+            </summary>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetClientCredentialsAuthTokenAsync">
             <summary>
@@ -1666,6 +1690,11 @@
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
         </member>
+        <member name="P:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.IsAuthorisationCodePkceAuth">
+            <summary>
+            Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+            </summary>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthLookupFollowingStateAsync(System.Collections.Generic.List{System.String},Spotify.NetStandard.Enums.FollowType)">
             <summary>
             Get Following State for Artists/Users
@@ -2527,6 +2556,11 @@
             </summary>
             <param name="client">Spotify Client</param>
         </member>
+        <member name="P:Spotify.NetStandard.Client.Internal.SpotifyApi.Client">
+            <summary>
+            Spotify Client
+            </summary>
+        </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetAuthorisationCodeAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
             <summary>
             Get Authorisation Code Auth Uri - Authorisation Code Flow
@@ -2567,6 +2601,11 @@
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Internal.SpotifyApi.IsAuthorisationCodePkceAuth">
+            <summary>
+            Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+            </summary>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetClientCredentialsAuthTokenAsync">
             <summary>
@@ -3859,6 +3898,11 @@
             <returns>AccessToken on Success, Null if Not</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="P:Spotify.NetStandard.Client.Internal.SpotifyClient.IsAuthorisationCodePkceAuth">
+            <summary>
+            Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+            </summary>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthLookupFollowingStateAsync(System.Collections.Generic.List{System.String},Spotify.NetStandard.Enums.FollowType)">
             <summary>

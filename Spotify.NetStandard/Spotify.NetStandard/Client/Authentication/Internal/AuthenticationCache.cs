@@ -89,7 +89,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Check And Renew Token - Client Credentials Flow
+        /// Check And Renew Token
         /// </summary>
         /// <param name="tokenType">Token Type</param>
         /// <param name="cancellationToken">Cancellation Token</param>
@@ -138,7 +138,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Get Refresh Token - Client Credentials Flow
+        /// Get Refresh Token
         /// </summary>
         /// <param name="refreshToken">Refresh Token</param>
         /// <param name="tokenType">Token Type</param>
@@ -149,12 +149,17 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             TokenType tokenType,
             CancellationToken cancellationToken)
         {
-            var authenticationResponse =
-            await _client.RefreshTokenAsync(
-                _clientId, 
-                _clientSecret, 
-                refreshToken, 
-                cancellationToken);
+            var authenticationResponse = 
+                HasCodeVerifier ?
+                await _client.RefreshTokenAsync(
+                    _clientId, 
+                    refreshToken, 
+                    cancellationToken) :
+                await _client.RefreshTokenAsync(
+                    _clientId, 
+                    _clientSecret, 
+                    refreshToken, 
+                    cancellationToken);
             if (authenticationResponse != null)
             {
                 AccessToken = Map(tokenType, 
@@ -202,7 +207,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 cancellationToken);
             if (authenticationResponse != null)
             {
-                AccessToken = Map(TokenType.User,
+                AccessToken = Map(TokenType.User, 
                     authenticationResponse);
             }
             return AccessToken;
@@ -368,6 +373,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                     VerifierChallenge?.Verifier,
                     accessCode,
                     cancellationToken);
+            VerifierChallenge = null;
             if (authenticationResponse != null)
                 AccessToken = Map(TokenType.User, authenticationResponse);
             return AccessToken;
@@ -385,7 +391,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             Uri redirectUri,
             string state)
         {
-            if (VerifierChallenge != null && responseUri != null)
+            if (HasCodeVerifier && responseUri != null)
             {
                 if (responseUri.ToString().Contains(redirectUri.ToString()))
                 {
@@ -429,6 +435,12 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// Verifier Challenge
         /// </summary>
         public VerifierChallenge VerifierChallenge { get; set; } = null;
-        #endregion Publoc Properties
+
+        /// <summary>
+        /// Has Code Verifier
+        /// </summary>
+        public bool HasCodeVerifier =>
+            !string.IsNullOrEmpty(VerifierChallenge?.Verifier);
+        #endregion Public Properties
     }
 }

@@ -28,6 +28,13 @@ namespace Spotify.NetStandard.Client.Internal
             _client = client;
         #endregion Constructor
 
+        #region Public Properties
+        /// <summary>
+        /// Spotify Client
+        /// </summary>
+        public ISpotifyClient Client => _client;
+        #endregion Public Properties
+
         #region Authentication
         /// <summary>
         /// Get Authorisation Code Auth Uri - Authorisation Code Flow
@@ -88,6 +95,12 @@ namespace Spotify.NetStandard.Client.Internal
             string state)
             => await
             _client.AuthUserCodeAsync(responseUri, redirectUri, state);
+
+        /// <summary>
+        /// Is Authorization Code Flow with Proof Key for Code Exchange (PKCE)
+        /// </summary>
+        public bool IsAuthorisationCodePkceAuth =>
+            _client.IsAuthorisationCodePkceAuth;
 
         /// <summary>
         /// Get Client Credentials Auth Token - Client Credentials Flow

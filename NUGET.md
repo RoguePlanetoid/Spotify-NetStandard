@@ -36,6 +36,10 @@ You can get a "client-id" and "client-secret" from [developer.spotify.com/dashbo
 
 ## Change Log
 
+### Version 1.8.0
+
+- Updated Authentication Flow with PKCE for Refresh Token
+
 ### Version 1.7.7
 
 - Fixed issue with Authentication Cache Response Uri
