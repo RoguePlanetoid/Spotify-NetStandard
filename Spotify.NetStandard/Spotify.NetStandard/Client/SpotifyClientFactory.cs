@@ -2,6 +2,7 @@
 using Spotify.NetStandard.Client.Interfaces;
 using Spotify.NetStandard.Client.Internal;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace Spotify.NetStandard.Client
 {
@@ -26,7 +27,8 @@ namespace Spotify.NetStandard.Client
         /// <param name="clientSecret">Spotify Client Secret</param>
         /// <returns>Authentication Cache</returns>
         private static AuthenticationCache GetOrAddAuthenticationCache(
-            string clientId, string clientSecret)
+            string clientId, 
+            string clientSecret)
         {
             if (!_authenticationCaches.ContainsKey(clientId))
             {
@@ -43,15 +45,25 @@ namespace Spotify.NetStandard.Client
         /// Create Spotify Client
         /// </summary>
         /// <param name="clientId">(Required) Spotify Client Id</param>
-        /// <param name="clientSecret">Spotify Client Secret</param>
+        /// <param name="clientSecret">(Optional) Spotify Client Secret</param>
         /// <returns>Spotify Client</returns>
         public static ISpotifyClient CreateSpotifyClient(
-            string clientId, 
-            string clientSecret = null)
-        {
-            return new SpotifyClient(GetOrAddAuthenticationCache(
-            clientId, clientSecret));
-        }
+            string clientId,
+            string clientSecret = null) => 
+            new SpotifyClient(GetOrAddAuthenticationCache(clientId, clientSecret));
+
+        /// <summary>
+        /// Create Spotify Client
+        /// </summary>
+        /// <param name="httpClient">(Required) Http Client</param>
+        /// <param name="clientId">(Required) Spotify Client Id</param>
+        /// <param name="clientSecret">(Optional) Spotify Client Secret</param>
+        /// <returns>Spotify Client</returns>
+        public static ISpotifyClient CreateSpotifyClient(
+            HttpClient httpClient,
+            string clientId,
+            string clientSecret = null) =>
+            new SpotifyClient(GetOrAddAuthenticationCache(clientId, clientSecret), httpClient);
         #endregion Public Methods
     }
 }

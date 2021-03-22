@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.8.0</Version>
+    <Version>1.9.0</Version>
     <Authors>RoguePlanetoid</Authors>
     <Company>Comentsys</Company>
     <Description>Spotify API .NET Standard Library</Description>
@@ -26,11 +26,12 @@
 1.7.5 Added Authorization Code Flow with Proof Key for Code Exchange (PKCE) for API
 1.7.6 Fixed issue with Resume Point not returning Resume Position Correctly
 1.7.7 Fixed issue with Authentication Cache Response Uri
-1.8.0 Updated Authentication Flow with PKCE for Refresh Token</PackageReleaseNotes>
+1.8.0 Updated Authentication Flow with PKCE for Refresh Token
+1.9.0 Added External HttpClient Support and Uno Platform Compatibility</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>1.8.0.0</AssemblyVersion>
+    <AssemblyVersion>1.9.0.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <FileVersion>1.8.0.0</FileVersion>
+    <FileVersion>1.9.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

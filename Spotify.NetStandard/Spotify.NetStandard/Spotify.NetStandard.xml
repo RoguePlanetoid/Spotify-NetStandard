@@ -2258,13 +2258,17 @@
             <param name="snapshotId">(Optional) Snapshot Id</param>
             <returns></returns>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SimpleServiceClient.CreateClient(System.TimeSpan,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+        <member name="P:Spotify.NetStandard.Client.Internal.SimpleServiceClient.HttpClient">
+            <summary>
+            HTTP Client
+            </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SimpleServiceClient.CreateClient(System.TimeSpan)">
             <summary>
             Create Client
             </summary>
-            <param name="timeout">TimeSpan</param>
-            <param name="extraHeaders">Extra HTTP Headers</param>
-            <returns></returns>
+            <param name="timeout">Timeout TimeSpan</param>
+            <returns>Http Client</returns>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SimpleServiceClient.GetJsonContent``1(``0)">
             <summary>
@@ -3571,6 +3575,13 @@
             </summary>
             <param name="authenticationCache">Authentication Cache</param>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.#ctor(Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache,System.Net.Http.HttpClient)">
+            <summary>
+            Spotify Client
+            </summary>
+            <param name="authenticationCache">Authentication Cache</param>
+            <param name="httpClient">Http Client</param>
+        </member>
         <member name="P:Spotify.NetStandard.Client.Internal.SpotifyClient.Api">
             <summary>
             Spotify API
@@ -4367,7 +4378,16 @@
             Create Spotify Client
             </summary>
             <param name="clientId">(Required) Spotify Client Id</param>
-            <param name="clientSecret">Spotify Client Secret</param>
+            <param name="clientSecret">(Optional) Spotify Client Secret</param>
+            <returns>Spotify Client</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.SpotifyClientFactory.CreateSpotifyClient(System.Net.Http.HttpClient,System.String,System.String)">
+            <summary>
+            Create Spotify Client
+            </summary>
+            <param name="httpClient">(Required) Http Client</param>
+            <param name="clientId">(Required) Spotify Client Id</param>
+            <param name="clientSecret">(Optional) Spotify Client Secret</param>
             <returns>Spotify Client</returns>
         </member>
         <member name="T:Spotify.NetStandard.Enums.FollowType">
