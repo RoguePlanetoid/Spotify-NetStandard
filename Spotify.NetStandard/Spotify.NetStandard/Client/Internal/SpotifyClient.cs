@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -547,6 +548,18 @@ namespace Spotify.NetStandard.Client.Internal
         {
             _api = new SpotifyApi(this);
             _authenticationCache = authenticationCache;
+        }
+
+        /// <summary>
+        /// Spotify Client
+        /// </summary>
+        /// <param name="authenticationCache">Authentication Cache</param>
+        /// <param name="httpClient">Http Client</param>
+        internal SpotifyClient(AuthenticationCache authenticationCache, HttpClient httpClient)
+        {
+            _api = new SpotifyApi(this);
+            _authenticationCache = authenticationCache;
+            HttpClient = httpClient;
         }
         #endregion Constructors
 

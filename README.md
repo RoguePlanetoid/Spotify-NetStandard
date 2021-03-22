@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 1.9.0
+
+- Added External HttpClient Support and Uno Platform Compatibility
+
 ### Version 1.8.0
 
 - Updated Authentication Flow with PKCE for Refresh Token
@@ -2743,6 +2747,20 @@ Set Access Token
 
 Spotify Client Factory
 
+### CreateSpotifyClient(httpClient, clientId, clientSecret)
+
+Create Spotify Client
+
+| Name | Description |
+| ---- | ----------- |
+| httpClient | *System.Net.Http.HttpClient*<br>(Required) Http Client |
+| clientId | *System.String*<br>(Required) Spotify Client Id |
+| clientSecret | *System.String*<br>(Optional) Spotify Client Secret |
+
+#### Returns
+
+Spotify Client
+
 ### CreateSpotifyClient(clientId, clientSecret)
 
 Create Spotify Client
@@ -2755,19 +2773,6 @@ Create Spotify Client
 #### Returns
 
 Spotify Client
-
-### GetOrAddAuthenticationCache(clientId, clientSecret)
-
-Get or Add Authenciation Cache
-
-| Name | Description |
-| ---- | ----------- |
-| clientId | *System.String*<br>Spotify Client Id |
-| clientSecret | *System.String*<br>Spotify Client Secret |
-
-#### Returns
-
-Authentication Cache
 
 ## FollowType
 

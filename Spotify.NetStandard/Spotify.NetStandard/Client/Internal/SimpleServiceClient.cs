@@ -31,41 +31,21 @@ namespace Spotify.NetStandard.Client.Internal
         private readonly Lazy<HttpClient> _httpClient = new Lazy<HttpClient>(
             () => CreateClient(_defaultTimeout), LazyThreadSafetyMode.PublicationOnly);
 
-        #region Public Properties
-        public TimeSpan Timeout
-        {
-            get { return _httpClient.Value.Timeout; }
-            set { _httpClient.Value.Timeout = value; }
-        }
+        #region Internal Properties
+        /// <summary>
+        /// HTTP Client
+        /// </summary>
+        internal static HttpClient HttpClient { get; set; }
         #endregion Public Properties
 
         #region Private Methods
         /// <summary>
         /// Create Client
         /// </summary>
-        /// <param name="timeout">TimeSpan</param>
-        /// <param name="extraHeaders">Extra HTTP Headers</param>
-        /// <returns></returns>
-        private static HttpClient CreateClient(
-            TimeSpan timeout,
-            IEnumerable<KeyValuePair<string, string>> extraHeaders = null)
-        {
-            HttpClient client = new HttpClient(new HttpClientHandler
-            {
-                AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip
-            });
-            client.DefaultRequestHeaders.Add(accept, type_json);
-            client.DefaultRequestHeaders.UserAgent.Add(UserAgent);
-            client.Timeout = timeout;
-            if (extraHeaders != null)
-            {
-                foreach (var header in extraHeaders)
-                {
-                    client.DefaultRequestHeaders.Add(header.Key, header.Value);
-                }
-            }
-            return client;
-        }
+        /// <param name="timeout">Timeout TimeSpan</param>
+        /// <returns>Http Client</returns>
+        private static HttpClient CreateClient(TimeSpan timeout) => HttpClient 
+            ?? new HttpClient(new HttpClientHandler()) { Timeout = timeout };
 
         /// <summary>
         /// Get Json Content
@@ -123,6 +103,8 @@ namespace Spotify.NetStandard.Client.Internal
             Dictionary<string, string> extraHeaders)
         {
             HttpRequestMessage message = new HttpRequestMessage(method, uri);
+            message.Headers.Add(accept, type_json);
+            message.Headers.UserAgent.Add(UserAgent);
             if (content != null)
                 message.Content = content;
             if (extraHeaders != null)
