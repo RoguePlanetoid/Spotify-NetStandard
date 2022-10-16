@@ -1,21 +1,18 @@
-﻿using System;
+﻿namespace Spotify.NetStandard.Client.Exceptions;
 
-namespace Spotify.NetStandard.Client.Exceptions
+/// <summary>
+/// Auth Exception
+/// </summary>
+public class AuthException : Exception
 {
     /// <summary>
-    /// Auth Exception
+    /// Constructor
     /// </summary>
-    public class AuthException : Exception
-    {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public AuthException() : base() { }
+    public AuthException() : base() { }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="message">Error Message</param>
-        public AuthException(string message) : base(message) { }
-    }
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="message">Error Message</param>
+    public AuthException(string message) : base(message) { }
 }

@@ -1,0 +1,9 @@
+﻿global using Microsoft.Extensions.Configuration;
+global using Microsoft.VisualStudio.TestTools.UnitTesting;
+global using Spotify.NetStandard.Client;
+global using Spotify.NetStandard.Client.Authentication;
+global using Spotify.NetStandard.Client.Authentication.Enums;
+global using Spotify.NetStandard.Client.Interfaces;
+global using Spotify.NetStandard.Enums;
+global using Spotify.NetStandard.Requests;
+global using Spotify.NetStandard.Responses;

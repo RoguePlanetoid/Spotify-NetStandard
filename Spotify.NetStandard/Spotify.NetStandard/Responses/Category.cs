@@ -1,18 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Responses;
 
-namespace Spotify.NetStandard.Responses
+/// <summary>
+/// Category Object
+/// </summary>
+[DataContract]
+public class Category : Content
 {
     /// <summary>
-    /// Category Object
+    /// The category icon, in various sizes.
     /// </summary>
-    [DataContract]
-    public class Category : Content
-    {
-        /// <summary>
-        /// The category icon, in various sizes.
-        /// </summary>
-        [DataMember(Name = "icons")]
-        public List<Image> Images { get; set; }
-    }
+    [DataMember(Name = "icons")]
+    public List<Image> Images { get; set; }
 }

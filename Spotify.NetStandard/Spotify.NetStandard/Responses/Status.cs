@@ -1,27 +1,23 @@
-﻿using System.Net;
-using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Responses;
 
-namespace Spotify.NetStandard.Responses
+/// <summary>
+/// Status Response
+/// </summary>
+[DataContract]
+public class Status : BaseResponse
 {
     /// <summary>
-    /// Status Response
+    /// Status Code
     /// </summary>
-    [DataContract]
-    public class Status : BaseResponse
-    {
-        /// <summary>
-        /// Status Code
-        /// </summary>
-        public HttpStatusCode StatusCode { get; set; }
+    public HttpStatusCode StatusCode { get; set; }
 
-        /// <summary>
-        /// Code
-        /// </summary>
-        public int Code => (int)StatusCode;
+    /// <summary>
+    /// Code
+    /// </summary>
+    public int Code => (int)StatusCode;
 
-        /// <summary>
-        /// Success
-        /// </summary>
-        public bool Success { get; set; }
-    }
+    /// <summary>
+    /// Success
+    /// </summary>
+    public bool Success { get; set; }
 }

@@ -1,21 +1,18 @@
-﻿using System.ComponentModel;
+﻿namespace Spotify.NetStandard.Enums;
 
-namespace Spotify.NetStandard.Enums
+/// <summary>
+/// Follow Type
+/// </summary>
+public enum FollowType : byte
 {
     /// <summary>
-    /// Follow Type
+    /// User
     /// </summary>
-    public enum FollowType : byte
-    {
-        /// <summary>
-        /// User
-        /// </summary>
-        [Description("user")]
-        User,
-        /// <summary>
-        /// Artist
-        /// </summary>
-        [Description("artist")]
-        Artist
-    }
+    [Description("user")]
+    User,
+    /// <summary>
+    /// Artist
+    /// </summary>
+    [Description("artist")]
+    Artist
 }

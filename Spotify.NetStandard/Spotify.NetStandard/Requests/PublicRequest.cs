@@ -1,17 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Requests;
 
-namespace Spotify.NetStandard.Requests
+/// <summary>
+/// Public Request Object
+/// </summary>
+[DataContract]
+class PublicRequest
 {
     /// <summary>
-    /// Public Request Object
+    /// Is Public
     /// </summary>
-    [DataContract]
-    class PublicRequest
-    {
-        /// <summary>
-        /// Is Public
-        /// </summary>
-        [DataMember(Name = "public")]
-        public bool? IsPublic { get; set; }
-    }
+    [DataMember(Name = "public")]
+    public bool? IsPublic { get; set; }
 }

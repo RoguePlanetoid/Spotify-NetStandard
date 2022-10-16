@@ -1,17 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Requests;
 
-namespace Spotify.NetStandard.Requests
+/// <summary>
+/// Position Request Object
+/// </summary>
+[DataContract]
+public class PositionRequest
 {
     /// <summary>
-    /// Position Request Object
+    /// Position
     /// </summary>
-    [DataContract]
-    public class PositionRequest
-    {
-        /// <summary>
-        /// Position
-        /// </summary>
-        [DataMember(Name = "position")]
-        public int? Position { get; set; }
-    }
+    [DataMember(Name = "position")]
+    public int? Position { get; set; }
 }

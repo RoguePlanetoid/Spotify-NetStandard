@@ -1,4 +1,6 @@
-﻿namespace Spotify.NetStandard.Responses.Internal
-{
-    internal class InternalResponse : BaseResponse { }
-}
+﻿namespace Spotify.NetStandard.Responses.Internal;
+
+/// <summary>
+/// Internal Response
+/// </summary>
+internal class InternalResponse : BaseResponse { }

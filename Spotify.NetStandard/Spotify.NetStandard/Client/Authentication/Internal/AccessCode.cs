@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Spotify.NetStandard.Client.Authentication.Internal
+﻿namespace Spotify.NetStandard.Client.Authentication.Internal
 {
     /// <summary>
     /// Access Code

@@ -1,17 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Requests;
 
-namespace Spotify.NetStandard.Requests
+/// <summary>
+/// URI Request Object
+/// </summary>
+[DataContract]
+public class UriRequest
 {
     /// <summary>
-    /// URI Request Object
+    /// Spotify URI
     /// </summary>
-    [DataContract]
-    public class UriRequest
-    {
-        /// <summary>
-        /// Spotify URI
-        /// </summary>
-        [DataMember(Name = "uri")]
-        public string Uri { get; set; }
-    }
+    [DataMember(Name = "uri")]
+    public string Uri { get; set; }
 }

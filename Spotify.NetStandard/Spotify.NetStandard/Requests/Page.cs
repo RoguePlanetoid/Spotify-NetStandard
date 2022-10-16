@@ -1,57 +1,53 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Requests;
 
-namespace Spotify.NetStandard.Requests
+/// <summary>
+/// Page
+/// </summary>
+[DataContract]
+public class Page
 {
+    private int _page;
+
     /// <summary>
-    /// Page
+    /// The total number of items available to return.
     /// </summary>
-    [DataContract]
-    public class Page
+    [DataMember(Name = "total")]
+    public int Total { get; set; }
+
+    /// <summary>
+    /// The offset of the items returned (as set in the query or by default).
+    /// </summary>
+    [DataMember(Name = "offset")]
+    public int Offset { get; set; }
+
+    /// <summary>
+    /// The maximum number of items in the response (as set in the query or by default).
+    /// </summary>
+    [DataMember(Name = "limit")]
+    public int Limit { get; set; }
+
+    /// <summary>
+    /// Page Count
+    /// </summary>
+    public int Count
     {
-        private int _page;
+        get { return (int)Math.Ceiling((double)Total / Limit); }
+    }
 
-        /// <summary>
-        /// The total number of items available to return.
-        /// </summary>
-        [DataMember(Name = "total")]
-        public int Total { get; set; }
-
-        /// <summary>
-        /// The offset of the items returned (as set in the query or by default).
-        /// </summary>
-        [DataMember(Name = "offset")]
-        public int Offset { get; set; }
-
-        /// <summary>
-        /// The maximum number of items in the response (as set in the query or by default).
-        /// </summary>
-        [DataMember(Name = "limit")]
-        public int Limit { get; set; }
-
-        /// <summary>
-        /// Page Count
-        /// </summary>
-        public int Count
+    /// <summary>
+    /// Get / Set Current Page
+    /// </summary>
+    public int Current
+    {
+        get
         {
-            get { return (int)Math.Ceiling((double)Total / Limit); }
+            _page = (int)Math.Ceiling((double)Total / Offset);
+            return _page <= 0 ? 1 : _page;
         }
-
-        /// <summary>
-        /// Get / Set Current Page
-        /// </summary>
-        public int Current
+        set
         {
-            get
-            {
-                _page = (int)Math.Ceiling((double)Total / Offset);
-                return _page <= 0 ? 1 : _page;
-            }
-            set
-            {
-                _page = (value < 1) ? 1 : (value > Count) ? Count : value;
-                Offset = (_page - 1) * Limit;
-            }
+            _page = (value < 1) ? 1 : (value > Count) ? Count : value;
+            Offset = (_page - 1) * Limit;
         }
     }
 }

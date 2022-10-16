@@ -1,21 +1,20 @@
-﻿namespace Spotify.NetStandard.Enums
+﻿namespace Spotify.NetStandard.Enums;
+
+/// <summary>
+/// Navigate Type
+/// </summary>
+public enum NavigateType
 {
     /// <summary>
-    /// Navigate Type
+    /// None
     /// </summary>
-    public enum NavigateType
-    {
-        /// <summary>
-        /// None
-        /// </summary>
-        None = 0,
-        /// <summary>
-        /// Navigate Previous
-        /// </summary>
-        Previous = 1,
-        /// <summary>
-        /// Navigate Next
-        /// </summary>
-        Next = 2
-    }
+    None = 0,
+    /// <summary>
+    /// Navigate Previous
+    /// </summary>
+    Previous = 1,
+    /// <summary>
+    /// Navigate Next
+    /// </summary>
+    Next = 2
 }
