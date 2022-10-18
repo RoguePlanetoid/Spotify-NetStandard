@@ -227,7 +227,7 @@ public class Scope
     /// Returns a new Scope object with all scopes set to false
     /// Usage: Scope.None
     /// </summary>
-    public static Scope None = new();
+    public static Scope None = new Scope().AddNone();
 
     /// <summary>
     /// Returns a new Scope object with all "read" scopes set to true

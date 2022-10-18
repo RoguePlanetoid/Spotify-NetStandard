@@ -6,6 +6,59 @@
 public static class ScopeExtensions
 {
     /// <summary>
+    /// Extension method to add no scopes
+    /// </summary>
+    /// <param name="scope">Scope</param>
+    /// <returns>Scope</returns>
+    public static Scope AddNone(this Scope scope)
+    {
+        scope.PlaylistReadCollaborative = false;
+        scope.PlaylistReadPrivate = false;
+        scope.ConnectReadCurrentlyPlaying = false;
+        scope.ConnectReadPlaybackState = false;
+        scope.ListeningTopRead = false;
+        scope.PlaybackPositionRead = false;
+        scope.ListeningRecentlyPlayed = false;
+        scope.UserReadEmail = false;
+        scope.UserReadPrivate = false;
+        scope.FollowRead = false;
+        scope.LibraryRead = false;
+
+        scope.PlaylistModifyPrivate = false;
+        scope.PlaylistModifyPublic = false;
+        scope.ConnectModifyPlaybackState = false;
+        scope.FollowModify = false;
+        scope.LibraryModify = false;
+
+        scope.PlaylistReadPrivate = false;
+        scope.PlaylistModifyPrivate = false;
+        scope.PlaylistModifyPublic = false;
+        scope.PlaylistReadCollaborative = false;
+
+        scope.ConnectModifyPlaybackState = false;
+        scope.ConnectReadCurrentlyPlaying = false;
+        scope.ConnectReadPlaybackState = false;
+
+        scope.ListeningTopRead = false;
+        scope.PlaybackPositionRead = false;
+        scope.ListeningRecentlyPlayed = false;
+
+        scope.PlaybackAppRemoteControl = false;
+        scope.PlaybackStreaming = false;
+
+        scope.UserReadEmail = false;
+        scope.UserReadPrivate = false;
+        scope.UserGeneratedContentImageUpload = false;
+
+        scope.FollowRead = false;
+        scope.FollowModify = false;
+
+        scope.LibraryModify = false;
+        scope.LibraryRead = false;
+        return scope;
+    }
+
+    /// <summary>
     /// Extension method to add all scopes with "read" in their scope string
     /// </summary>
     /// <param name="scope">Scope</param>

@@ -5161,6 +5161,13 @@
             Extension Methods for Scope Class to allow fluent additions of scopes for the API
             </summary>
         </member>
+        <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddNone(Spotify.NetStandard.Requests.Scope)">
+            <summary>
+            Extension method to add no scopes
+            </summary>
+            <param name="scope">Scope</param>
+            <returns>Scope</returns>
+        </member>
         <member name="M:Spotify.NetStandard.Requests.ScopeExtensions.AddReadAllAccess(Spotify.NetStandard.Requests.Scope)">
             <summary>
             Extension method to add all scopes with "read" in their scope string

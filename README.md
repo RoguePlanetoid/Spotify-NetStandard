@@ -3651,6 +3651,18 @@ Extension method to add all scopes with "modify" in their scope string
 
 Scope
 
+### AddNone(scope)
+
+Extension method to add no scopes
+
+| Name | Description |
+| ---- | ----------- |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Scope |
+
+#### Returns
+
+Scope
+
 ### AddPlaybackAll(scope)
 
 Adds all scopes to a scope within the Playback section of the defined Scopes
