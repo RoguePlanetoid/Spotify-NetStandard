@@ -1,17 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Responses;
 
-namespace Spotify.NetStandard.Responses
+/// <summary>
+/// Base Response Object
+/// </summary>
+[DataContract]
+public abstract class BaseResponse
 {
     /// <summary>
-    /// Base Response Object
+    /// Error Object
     /// </summary>
-    [DataContract]
-    public abstract class BaseResponse
-    {
-        /// <summary>
-        /// Error Object
-        /// </summary>
-        [DataMember(Name = "error")]
-        public ErrorResponse Error { get; set; }
-    }
+    [DataMember(Name = "error")]
+    public ErrorResponse Error { get; set; }
 }

@@ -1,10 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Responses;
 
-namespace Spotify.NetStandard.Responses
-{
-    /// <summary>
-    /// Linked Track Object
-    /// </summary>
-    [DataContract]
-    public class LinkedTrack : Content { }
-}
+/// <summary>
+/// Linked Track Object
+/// </summary>
+[DataContract]
+public class LinkedTrack : Content { }

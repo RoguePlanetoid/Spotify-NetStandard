@@ -1,21 +1,12 @@
-﻿using Spotify.NetStandard.Client.Internal;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
-
-namespace Spotify.NetStandard.Client.Authentication.Internal
+﻿namespace Spotify.NetStandard.Client.Authentication.Internal
 {
     /// <summary>
     /// Authentication Client
     /// </summary>
     internal class AuthenticationClient : SimpleServiceClient
     {
-        #region Private Members
         // Endpoint
-        private readonly Uri host_name = new Uri("https://accounts.spotify.com");
+        private readonly Uri host_name = new("https://accounts.spotify.com");
         // Token Auth
         private const string auth_header = "Authorization";
         private const string auth_basic = "Basic";
@@ -40,9 +31,7 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         private const string code_challenge_method = "code_challenge_method";
         private const string code_challenge = "code_challenge";
         private const string code_verifier = "code_verifier";
-        #endregion Private Members
 
-        #region Private Methods
         /// <summary>
         /// Get Headers
         /// </summary>
@@ -54,16 +43,14 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             string clientSecret)
         {
             string auth = Convert.ToBase64String(
-            Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
-            Dictionary<string, string> headers = new Dictionary<string, string>()
+                Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
+            Dictionary<string, string> headers = new()
             {
                 { auth_header, $"{auth_basic} {auth}"}
             };
             return headers;
         }
-        #endregion Private Methods
 
-        #region Public Methods
         /// <summary>
         /// Client Credentials - Client Credentials Flow
         /// </summary>
@@ -77,72 +64,9 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
             CancellationToken cancellationToken)
         {
             var headers = GetHeaders(clientId, clientSecret);
-            var request = new Dictionary<string, string>()
+            Dictionary<string, string> request = new()
             {
                 { grant_type, client_credentials }
-            };
-            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
-                host_name,
-                token_uri, 
-                null, 
-                cancellationToken, 
-                request, 
-                null, 
-                headers, 
-                true);
-        }
-
-        /// <summary>
-        /// Authorisation Code - Authorisation Code Flow
-        /// </summary>
-        /// <param name="clientId">Client Id</param>
-        /// <param name="clientSecret">Client Secret</param>
-        /// <param name="accessCode">Access Code</param>
-        /// <param name="cancellationToken">Cancellation Token</param>
-        /// <returns>Authentication Response</returns>
-        public Task<AuthenticationResponse> AuthorisationCodeAsync(
-            string clientId, 
-            string clientSecret, 
-            AccessCode accessCode, 
-            CancellationToken cancellationToken)
-        {
-            var headers = GetHeaders(clientId, clientSecret);
-            var request = new Dictionary<string, string>()
-            {
-                { grant_type, authorization_code },
-                { code_value, accessCode.Code },
-                { redirect_uri, $"{accessCode.RedirectUri}" }
-            };
-            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
-                host_name,
-                token_uri, 
-                null, 
-                cancellationToken, 
-                request, 
-                null, 
-                headers, 
-                true);
-        }
-
-        /// <summary>
-        /// Refresh Token - Authorization Code Flow
-        /// </summary>
-        /// <param name="clientId">Client Id</param>
-        /// <param name="clientSecret">Client Secret</param>
-        /// <param name="refreshToken">Refresh Token</param>
-        /// <param name="cancellationToken">Cancellation Token</param>
-        /// <returns>Authentication Response</returns>
-        public Task<AuthenticationResponse> RefreshTokenAsync(
-            string clientId,
-            string clientSecret,
-            string refreshToken,
-            CancellationToken cancellationToken)
-        {
-            var headers = GetHeaders(clientId, clientSecret);
-            var request = new Dictionary<string, string>()
-            {
-                { grant_type, refresh_token },
-                { refresh_token, refreshToken }
             };
             return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
                 host_name,
@@ -185,34 +109,6 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         }
 
         /// <summary>
-        /// Access Code Request - Authorization Code Flow
-        /// </summary>
-        /// <param name="clientId">Client Id</param>
-        /// <param name="scopes">Comma delimited scopes</param>
-        /// <param name="state">State</param>
-        /// <param name="redirectUrl">Redirect Url</param>
-        /// <param name="showDialog">Show Dialog</param>
-        /// <returns>Url</returns>
-        public Uri GetAccessCodeRequest(
-            string clientId, 
-            string scopes, 
-            string state, 
-            string redirectUrl,
-            bool showDialog)
-        {
-            var request = new Dictionary<string, string>()
-            {
-                { response_type, code_value },
-                { client_id, clientId },
-                { scope_value, scopes },
-                { state_value, HttpUtility.UrlEncode(state) },
-                { redirect_uri, HttpUtility.UrlEncode(redirectUrl) },
-                { show_dialog, $"{showDialog}".ToLower() }
-            };
-            return GetUri(host_name, auth_uri, request);
-        }
-
-        /// <summary>
         /// Implicit Grant Request - Implicit Grant Flow
         /// </summary>
         /// <param name="clientId">Client Id</param>
@@ -248,13 +144,15 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
         /// <param name="scopes">Scopes</param>
         /// <param name="state">State</param>
         /// <param name="redirectUrl">Redirect Uri</param>
+        /// <param name="showDialog">Show Dialog</param>
         /// <returns>Uri</returns>
         public Uri GetAuthorisationCodeUri(
             string clientId,
             string challenge,
             string scopes,
             string state,
-            string redirectUrl)
+            string redirectUrl,
+            bool showDialog)
         {
             var request = new Dictionary<string, string>()
             {
@@ -264,7 +162,8 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 { code_challenge_method, code_challenge_method_type },
                 { code_challenge, challenge },
                 { scope_value, scopes },
-                { state_value, HttpUtility.UrlEncode(state) }
+                { state_value, HttpUtility.UrlEncode(state) },
+                { show_dialog, $"{showDialog}".ToLower() }
             };
             return GetUri(host_name, auth_uri, request);
         }
@@ -301,6 +200,5 @@ namespace Spotify.NetStandard.Client.Authentication.Internal
                 null,
                 true);
         }
-        #endregion Public Methods
     }
 }

@@ -1,29 +1,26 @@
-﻿using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Responses;
 
-namespace Spotify.NetStandard.Responses
+/// <summary>
+/// Currently Playing Object
+/// </summary>
+[DataContract]
+public class CurrentlyPlaying : SimplifiedCurrentlyPlaying
 {
     /// <summary>
-    /// Currently Playing Object
+    /// The device that is currently active
     /// </summary>
-    [DataContract]
-    public class CurrentlyPlaying : SimplifiedCurrentlyPlaying
-    {
-        /// <summary>
-        /// The device that is currently active
-        /// </summary>
-        [DataMember(Name = "device")]
-        public Device Device { get; set; }
+    [DataMember(Name = "device")]
+    public Device Device { get; set; }
 
-        /// <summary>
-        /// off, track, context
-        /// </summary>
-        [DataMember(Name = "repeat_state")]
-        public string RepeatState { get; set; }
+    /// <summary>
+    /// off, track, context
+    /// </summary>
+    [DataMember(Name = "repeat_state")]
+    public string RepeatState { get; set; }
 
-        /// <summary>
-        /// If shuffle is on or off
-        /// </summary>
-        [DataMember(Name = "shuffle_state")]
-        public bool ShuffleState { get; set; }
-    }
+    /// <summary>
+    /// If shuffle is on or off
+    /// </summary>
+    [DataMember(Name = "shuffle_state")]
+    public bool ShuffleState { get; set; }
 }

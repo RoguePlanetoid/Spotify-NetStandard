@@ -1,17 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿namespace Spotify.NetStandard.Responses;
 
-namespace Spotify.NetStandard.Responses
+/// <summary>
+/// Track Restriction Object
+/// </summary>
+[DataContract]
+public class TrackRestriction
 {
     /// <summary>
-    /// Track Restriction Object
+    /// Contains the reason why the track is not available e.g. market
     /// </summary>
-    [DataContract]
-    public class TrackRestriction
-    {
-        /// <summary>
-        /// Contains the reason why the track is not available e.g. market
-        /// </summary>
-        [DataMember(Name = "reason")]
-        public string Reason { get; set; }
-    }
+    [DataMember(Name = "reason")]
+    public string Reason { get; set; }
 }
