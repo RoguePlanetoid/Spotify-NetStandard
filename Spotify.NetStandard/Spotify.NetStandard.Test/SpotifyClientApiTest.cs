@@ -380,6 +380,59 @@ public class SpotifyClientApiTest
         Assert.IsNotNull(result);
         Assert.IsTrue(result.Count == ids.Count);
     }
+
+    /// <summary>
+    /// Get User's Saved Episodes
+    /// </summary>
+    [TestMethod]
+    public async Task Test_GetUserSavedEpisodes()
+    {
+        var result = await _client.Api.GetUserSavedEpisodesAsync();
+        Assert.IsNotNull(result?.Items);
+        Assert.IsTrue(result.Items.Count > 0);
+    }
+
+    /// <summary>
+    /// Save Episodes for User
+    /// </summary>
+    /// <returns></returns>
+    [TestMethod]
+    public async Task Test_SaveUserEpisodes()
+    {
+        var result = await _client.Api.SaveUserEpisodesAsync(new List<string>
+        {
+            "2lcKMfx0roA16OBqqanI5R"
+        });
+        Assert.IsTrue(result.Success);
+    }
+
+    /// <summary>
+    /// Check User's Saved Episodes
+    /// </summary>
+    [TestMethod]
+    public async Task Test_CheckUserSavedEpisodes()
+    {
+        var result = await _client.Api.CheckUserSavedEpisodesAsync(
+            new List<string>
+            {
+                "2lcKMfx0roA16OBqqanI5R"
+            });
+        Assert.IsNotNull(result);
+    }
+
+    /// <summary>
+    /// Remove User's Saved Episodes
+    /// </summary>
+    /// <returns></returns>
+    [TestMethod]
+    public async Task Test_RemoveUserEpisodes()
+    {
+        var result = await _client.Api.RemoveUserEpisodesAsync(new List<string>
+        {
+            "2lcKMfx0roA16OBqqanI5R"
+        });
+        Assert.IsTrue(result.Success);
+    }
     #endregion Episodes
 
     #region Audiobooks

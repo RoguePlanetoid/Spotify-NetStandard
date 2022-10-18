@@ -2,6 +2,10 @@
 
 ## Change Log
 
+### Version 2.0.0
+
+- Refactored Code, Added User Episodes, Audiobook, Chapter and Queue, Updated Authorisation Code Flow with Code Verifier using Proof Key for Code Exchange (PKCE), Removed Authorisation Code Flow without Code Verifier and Original Proof Key for Code Exchange (PKCE) Flow
+
 ### Version 1.9.0
 
 - Added External HttpClient Support and Uno Platform Compatibility

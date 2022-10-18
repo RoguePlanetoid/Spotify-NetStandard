@@ -726,6 +726,47 @@ public interface ISpotifyClient : IDisposable
     /// <exception cref="AuthUserTokenRequiredException"></exception>
     Task<Status> AuthRemoveUserShowsAsync(
         List<string> itemIds, string market = null);
+
+    /// <summary>
+    /// Get User's Saved Episodes
+    /// <para>Scopes: LibraryRead</para>
+    /// </summary>
+    /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+    /// <returns>Cursor Paging of Saved Episode Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    Task<CursorPaging<SavedEpisode>> AuthLookupUserSavedEpisodesAsync(
+        Cursor cursor = null);
+
+    /// <summary>
+    /// Save Episodes for User
+    /// <para>Scopes: LibraryModify</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <returns>Status Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    Task<Status> AuthSaveUserEpisodesAsync(
+        List<string> itemIds);
+
+    /// <summary>
+    /// Remove User's Saved Episodes
+    /// <para>Scopes: LibraryModify</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only episodes that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+    /// <returns>Status Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    Task<Status> AuthRemoveUserEpisodesAsync(
+        List<string> itemIds, string market = null);
+
+    /// <summary>
+    /// Check User's Saved Episodes
+    /// <para>Scopes: LibraryRead</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <returns>List of true or false values</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    Task<Bools> AuthLookupCheckUserSavedEpisodesAsync(
+        List<string> itemIds);
     #endregion Authenticated Library API
 
     #region Authenticated Player API

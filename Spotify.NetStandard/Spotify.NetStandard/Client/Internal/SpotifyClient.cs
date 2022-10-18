@@ -1667,6 +1667,69 @@ internal class SpotifyClient : SimpleServiceClient, ISpotifyClient
             requestType: "me/shows",
             tokenType: TokenType.User);
     }
+
+    /// <summary>
+    /// Get User's Saved Episodes
+    /// <para>Scopes: LibraryRead</para>
+    /// </summary>
+    /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+    /// <returns>Cursor Paging of Saved Episode Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    public async Task<CursorPaging<SavedEpisode>> AuthLookupUserSavedEpisodesAsync(
+        Cursor cursor = null) =>
+            await LookupCursorApiAsync<CursorPaging<SavedEpisode>>(
+                lookupType: "me/episodes",
+                cursor: cursor,
+                tokenType: TokenType.User);
+
+    /// <summary>
+    /// Save Episodes for User
+    /// <para>Scopes: LibraryModify</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <returns>Status Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    public async Task<Status> AuthSaveUserEpisodesAsync(
+        List<string> itemIds) =>
+            await PutApiAsync<Status, Status>(
+                itemIds: itemIds,
+                requestType: "me/episodes",
+                tokenType: TokenType.User);
+
+    /// <summary>
+    /// Remove User's Saved Episodes
+    /// <para>Scopes: LibraryModify</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only episodes that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+    /// <returns>Status Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    public async Task<Status> AuthRemoveUserEpisodesAsync(
+        List<string> itemIds, string market = null)
+    {
+        var parameters = new Dictionary<string, string>();
+        if (market != null)
+            parameters.Add(nameof(market), market);
+        return await DeleteApiAsync<Status, Status>(
+            itemIds: itemIds,
+            parameters: parameters,
+            requestType: "me/episodes",
+            tokenType: TokenType.User);
+    }
+
+    /// <summary>
+    /// Check User's Saved Episodes
+    /// <para>Scopes: LibraryRead</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <returns>List of true or false values</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    public async Task<Bools> AuthLookupCheckUserSavedEpisodesAsync(
+        List<string> itemIds) =>
+        await GetBoolsAsync(
+            itemIds: itemIds,
+            requestType: "me/episodes/contains",
+            tokenType: TokenType.User);
     #endregion Authenticated Library API
 
     #region Authenticated Player API
@@ -2055,8 +2118,4 @@ internal class SpotifyClient : SimpleServiceClient, ISpotifyClient
             requestType: "me", 
             tokenType: TokenType.User);
     #endregion Authenticated User Profile API
-
-    #region Audiobooks
-
-    #endregion Audiobooks
 }

@@ -57,17 +57,6 @@ public class SpotifyClientAuthTest
     }
 
     /// <summary>
-    /// Authenticate User
-    /// </summary>
-    [TestMethod]
-    public async Task Test_AuthUser_Response()
-    {
-        var codeVerifier = "PPSqkIY6w_cTQJu.b5FafTDM-8L8KlEobrKOI2CDWn8IeJcpW4AGRAX-MFtq-evL715n_f2m2BE5Y9v1fklTk.WbTNBDIaH66xOqS3q5CbSP-fmRX6KZ6bo-eeTzezdb";
-        var responseUri = new Uri("https://www.example.org/spotify?code=AQBb5MglEoObprBtnFTJwGhk6fo8dTnp_8N6JFxo_gG24W7-kjDJpTrolUUzs4OzyEdFcFCVdXbq40rNPDmq22byPBTsvAYycspzw9B3PCyezt37dKg1BumbIyhaLFlCla1PzyFgrjIV0xtGjt_Mlg7pZjJMpWTbDDoM0PfajN-VyI63spaz5pi1UuOheQK9_1rXKDEXyMjIrcig648IZndI7AQP24qUtw-JGQnRia5emN0WcYntPSe20GMyYOfVG1Zh0hrFPGOOgUyNkKBXwBDiiniv0Bnt_Sxs5kubN1fBHpAElWzM6lmyN8OU8U2sKuNPGk4b-edwBdqtjn2TlRg95cBHQtSiczC6yldlngwc9vYxhYhgy9hgc58XlnsNLLzZNnzrrxBYIZSM6OAGp7rA51ipPfMcspvDeWtWUwctsal5FSBLD7VlLiX-HrVylVEmv4MFaj42eWmVNNRqhux8cETu03l3CrWAFR7a_wKo8-I034mkaAcPw_Sx0eazpbxk6ALi5v6j7gOzu94KtaMgyYWee7J_AwprxAZyb-n4aPv2cMNwI95bQ1wVNWvw8h9ok12ROP7C3zHLt9dpZquZ_ZuYDExBNQoorLmoM5kb1a881-mAIIT4EDqaL8xLh3SwdbAKHOqgufbM6fIPVk0znijJ7lNy-CrCGYxYVyR6e7YsehTf52GDxbyWFSWg6foM8ySCAtkozXgafaVEQxrI1067D5wTTM91pzb8tbkJ6QLVWbyNqcGjC-2XW9Thl5gjkbXnkEY8fcVM1XQyL6a3fPzLfEen&state=spotify.state");
-        var token = await _client.AuthUserAsync(responseUri, redirect_url, state, codeVerifier);
-    }
-
-    /// <summary>
     /// Refresh Token
     /// </summary>
     [TestMethod]
@@ -538,6 +527,59 @@ public class SpotifyClientAuthTest
         var result = await _client.AuthRemoveUserShowsAsync(new List<string>
         {
             "5tz9eGgXtNHmq3WVD3EwYx"
+        });
+        Assert.IsTrue(result.Success);
+    }
+
+    /// <summary>
+    /// Get User's Saved Episodes
+    /// </summary>
+    [TestMethod]
+    public async Task Test_AuthLookupUserSavedEpisodes()
+    {
+        var result = await _client.AuthLookupUserSavedEpisodesAsync();
+        Assert.IsNotNull(result?.Items);
+        Assert.IsTrue(result.Items.Count > 0);
+    }
+
+    /// <summary>
+    /// Save Episodes for User
+    /// </summary>
+    /// <returns></returns>
+    [TestMethod]
+    public async Task Test_AuthSaveUserEpisodes()
+    {
+        var result = await _client.AuthSaveUserEpisodesAsync(new List<string>
+        {
+            "2lcKMfx0roA16OBqqanI5R"
+        });
+        Assert.IsTrue(result.Success);
+    }
+
+    /// <summary>
+    /// Check User's Saved Episodes
+    /// </summary>
+    [TestMethod]
+    public async Task Test_AuthLookupCheckUserSavedEpisodes()
+    {
+        var result = await _client.AuthLookupCheckUserSavedEpisodesAsync(
+            new List<string>
+            {
+                "2lcKMfx0roA16OBqqanI5R"
+            });
+        Assert.IsNotNull(result);
+    }
+
+    /// <summary>
+    /// Remove User's Saved Episodes
+    /// </summary>
+    /// <returns></returns>
+    [TestMethod]
+    public async Task Test_AuthRemoveUserEpisodes()
+    {
+        var result = await _client.AuthRemoveUserEpisodesAsync(new List<string>
+        {
+            "2lcKMfx0roA16OBqqanI5R"
         });
         Assert.IsTrue(result.Success);
     }

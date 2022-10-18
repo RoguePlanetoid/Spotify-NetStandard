@@ -391,13 +391,50 @@ internal class SpotifyApi : ISpotifyApi
             (await _client.LookupAsync(
                 ids, LookupType.Episodes, market))?.Episodes;
 
-    // Get Users Save Episodes (BETA)
+    /// <summary>
+    /// Get User's Saved Episodes
+    /// <para>Scopes: LibraryRead</para>
+    /// </summary>
+    /// <param name="cursor">(Optional) Limit: The maximum number of objects to return. Default: 20. Minimum: 1. Maximum: 50. - Offset: The index of the first object to return. Default: 0 (i.e., the first object). Use with limit to get the next set of objects.</param>
+    /// <returns>Cursor Paging of Saved Episode Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    public async Task<CursorPaging<SavedEpisode>> GetUserSavedEpisodesAsync(
+        Cursor cursor = null) =>
+            await _client.AuthLookupUserSavedEpisodesAsync(cursor);
 
-    // Save Episodes for User (BETA)
+    /// <summary>
+    /// Save Episodes for User
+    /// <para>Scopes: LibraryModify</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <returns>Status Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    public async Task<Status> SaveUserEpisodesAsync(
+        List<string> itemIds) =>
+            await _client.AuthSaveUserEpisodesAsync(itemIds);
 
-    // Remove User's Saved Episodes (BETA)
+    /// <summary>
+    /// Remove User's Saved Episodes
+    /// <para>Scopes: LibraryModify</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <param name="market">(Optional) An ISO 3166-1 alpha-2 country code. If a country code is specified, only episodes that are available in that market will be removed. If a valid user access token is specified in the request header, the country associated with the user account will take priority over this parameter</param>
+    /// <returns>Status Object</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    public async Task<Status> RemoveUserEpisodesAsync(
+        List<string> itemIds, string market = null) => 
+        await _client.AuthRemoveUserEpisodesAsync(itemIds, market);
 
-    // Check User's Saved Episodes (BETA)
+    /// <summary>
+    /// Check User's Saved Episodes
+    /// <para>Scopes: LibraryRead</para>
+    /// </summary>
+    /// <param name="itemIds">(Required) List of the Spotify IDs for the episodes</param>
+    /// <returns>List of true or false values</returns>
+    /// <exception cref="AuthUserTokenRequiredException"></exception>
+    public async Task<Bools> CheckUserSavedEpisodesAsync(
+        List<string> itemIds) =>
+        await _client.AuthLookupCheckUserSavedEpisodesAsync(itemIds);
     #endregion Episodes
 
     #region Audiobooks
