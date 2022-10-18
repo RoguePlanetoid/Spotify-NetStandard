@@ -58,5 +58,5 @@ public class ContentResponse : BaseResponse
     /// Paging Object of Simplified Audiobook Objects
     /// </summary>
     [DataMember(Name = "audiobooks")]
-    public Paging<Audiobook> Audiobooks { get; set; }
+    public Paging<SimplifiedAudiobook> Audiobooks { get; set; }
 }
