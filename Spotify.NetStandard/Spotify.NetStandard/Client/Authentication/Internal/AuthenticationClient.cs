@@ -200,5 +200,96 @@
                 null,
                 true);
         }
+
+        /// <summary>
+        /// Authorisation Code - Authorisation Code Flow
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="clientSecret">Client Secret</param>
+        /// <param name="accessCode">Access Code</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>Authentication Response</returns>
+        public Task<AuthenticationResponse> GetAuthorisationCodeWithSecretAsync(
+            string clientId,
+            string clientSecret,
+            AccessCode accessCode,
+            CancellationToken cancellationToken)
+        {
+            var headers = GetHeaders(clientId, clientSecret);
+            var request = new Dictionary<string, string>()
+            {
+                { grant_type, authorization_code },
+                { code_value, accessCode.Code },
+                { redirect_uri, $"{accessCode.RedirectUri}" }
+            };
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
+                host_name,
+                token_uri,
+                null,
+                cancellationToken,
+                request,
+                null,
+                headers,
+                true);
+        }
+
+        /// <summary>
+        /// Refresh Token - Authorization Code Flow
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="clientSecret">Client Secret</param>
+        /// <param name="refreshToken">Refresh Token</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
+        /// <returns>Authentication Response</returns>
+        public Task<AuthenticationResponse> RefreshTokenAsync(
+            string clientId,
+            string clientSecret,
+            string refreshToken,
+            CancellationToken cancellationToken)
+        {
+            var headers = GetHeaders(clientId, clientSecret);
+            var request = new Dictionary<string, string>()
+            {
+                { grant_type, refresh_token },
+                { refresh_token, refreshToken }
+            };
+            return PostRequestAsync<Dictionary<string, string>, AuthenticationResponse>(
+                host_name,
+                token_uri,
+                null,
+                cancellationToken,
+                request,
+                null,
+                headers,
+                true);
+        }
+
+        /// <summary>
+        /// Access Code Request - Authorization Code Flow
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="scopes">Comma delimited scopes</param>
+        /// <param name="state">State</param>
+        /// <param name="redirectUrl">Redirect Url</param>
+        /// <param name="showDialog">Show Dialog</param>
+        /// <returns>Url</returns>
+        public Uri GetAccessCodeRequest(
+            string clientId,
+            string scopes,
+            string state,
+            string redirectUrl,
+            bool showDialog)
+        {
+            var request = new Dictionary<string, string>()
+            {
+                { response_type, code_value },
+                { client_id, clientId },
+                { scope_value, scopes },
+                { state_value, HttpUtility.UrlEncode(state) },
+                { redirect_uri, HttpUtility.UrlEncode(redirectUrl) },
+                { show_dialog, $"{showDialog}".ToLower() }
+            };
+            return GetUri(host_name, auth_uri, request);
+        }
     }
 }

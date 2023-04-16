@@ -4,6 +4,10 @@ Spotify API .NET Standard Library
 
 ## Change Log
 
+### Version 2.1.0
+
+- Restored Authorisation Code Flow
+
 ### Version 2.0.0
 
 - Refactored Code, Added User Episodes, Audiobook, Chapter and Queue, Updated Authorisation Code Flow with Code Verifier using Proof Key for Code Exchange (PKCE), Removed Authorisation Code Flow without Code Verifier and Original Proof Key for Code Exchange (PKCE) Flow
@@ -575,6 +579,24 @@ Paging of Chapter Object
 
 *Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException:* 
 
+### GetAuthorisationCodeAuthTokenAsync(responseUri, redirectUri, state)
+
+Get Authorisation Code Auth Token - Authorization Code Flow
+
+| Name | Description |
+| ---- | ----------- |
+| responseUri | *System.Uri*<br>Response Uri |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State used to mitigate cross-site request forgery attacks |
+
+#### Returns
+
+AccessToken on Success, Null if Not
+
+*Spotify.NetStandard.Client.Exceptions.AuthCodeValueException:* AuthCodeValueException
+
+*Spotify.NetStandard.Client.Exceptions.AuthCodeStateException:* AuthCodeStateException
+
 ### GetAuthorisationCodeAuthTokenAsync(responseUri, redirectUri, state, codeVerifier)
 
 Get Authorisation Code Auth Token - Authorization Code Flow with Proof Key For Code Exchange (PKCE)
@@ -595,6 +617,21 @@ AccessToken on Success, Null if Not
 *Spotify.NetStandard.Client.Exceptions.AuthCodeValueException:* AuthCodeValueException
 
 *Spotify.NetStandard.Client.Exceptions.AuthCodeStateException:* AuthCodeStateException
+
+### GetAuthorisationCodeAuthUri(redirectUri, state, scope, showDialog)
+
+Get Authorisation Code Auth Uri - Authorisation Code Flow
+
+| Name | Description |
+| ---- | ----------- |
+| redirectUri | *System.Uri*<br>Redirect Uri |
+| state | *System.String*<br>State used to mitigate cross-site request forgery attacks |
+| scope | *Spotify.NetStandard.Requests.Scope*<br>Authorisation Scopes |
+| showDialog | *System.Boolean*<br>(Optional) Whether or not to force the user to approve the app again if they’ve already done so. |
+
+#### Returns
+
+Uri
 
 ### GetAuthorisationCodeAuthUri(redirectUri, state, scope, codeVerifier, showDialog)
 

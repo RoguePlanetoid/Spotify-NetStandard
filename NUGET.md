@@ -36,6 +36,10 @@ You can get a "client-id" and "client-secret" from [developer.spotify.com/dashbo
 
 ## Change Log
 
+### Version 2.1.0
+
+- Restored Authorisation Code Flow
+
 ### Version 2.0.0
 
 - Refactored Code, Added User Episodes, Audiobook, Chapter and Queue, Updated Authorisation Code Flow with Code Verifier using Proof Key for Code Exchange (PKCE), Removed Authorisation Code Flow without Code Verifier and Original Proof Key for Code Exchange (PKCE) Flow

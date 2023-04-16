@@ -205,6 +205,35 @@
             <param name="codeVerifier">Code Verifier</param>
             <returns>Access Token</returns>
         </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAuthorisationCodeTokenAsync(Spotify.NetStandard.Client.Authentication.Internal.AccessCode,System.Threading.CancellationToken)">
+            <summary>
+            Get Authorisation Code Token - Authorisation Code Flow
+            </summary>
+            <param name="accessCode">Access Code</param>
+            <param name="cancellationToken">Cancellation Token</param>
+            <returns>Access Token</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAccessCodeUri(System.Uri,System.String,System.String,System.Boolean)">
+            <summary>
+            Get Access Code Auth - Authorisation Code Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State</param>
+            <param name="scopes">Scope</param>
+            <param name="showDialog">Show Dialog</param>
+            <returns>Authentication Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.GetAccessCodeAuthAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Access Code Auth - Authorisation Code Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State Value</param>
+            <returns>Access Token</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
         <member name="P:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationCache.AccessToken">
             <summary>
             Access Token
@@ -273,6 +302,37 @@
             <param name="accessCode">Access Code</param>
             <param name="cancellationToken">Cancellation Token</param>
             <returns>Authentication Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.GetAuthorisationCodeWithSecretAsync(System.String,System.String,Spotify.NetStandard.Client.Authentication.Internal.AccessCode,System.Threading.CancellationToken)">
+            <summary>
+            Authorisation Code - Authorisation Code Flow
+            </summary>
+            <param name="clientId">Client Id</param>
+            <param name="clientSecret">Client Secret</param>
+            <param name="accessCode">Access Code</param>
+            <param name="cancellationToken">Cancellation Token</param>
+            <returns>Authentication Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.RefreshTokenAsync(System.String,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Refresh Token - Authorization Code Flow
+            </summary>
+            <param name="clientId">Client Id</param>
+            <param name="clientSecret">Client Secret</param>
+            <param name="refreshToken">Refresh Token</param>
+            <param name="cancellationToken">Cancellation Token</param>
+            <returns>Authentication Response</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationClient.GetAccessCodeRequest(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Access Code Request - Authorization Code Flow
+            </summary>
+            <param name="clientId">Client Id</param>
+            <param name="scopes">Comma delimited scopes</param>
+            <param name="state">State</param>
+            <param name="redirectUrl">Redirect Url</param>
+            <param name="showDialog">Show Dialog</param>
+            <returns>Url</returns>
         </member>
         <member name="T:Spotify.NetStandard.Client.Authentication.Internal.AuthenticationResponse">
             <summary>
@@ -485,6 +545,27 @@
             <summary>
             Spotify Client
             </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetAuthorisationCodeAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
+            <summary>
+            Get Authorisation Code Auth Uri - Authorisation Code Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">Authorisation Scopes</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetAuthorisationCodeAuthTokenAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Authorisation Code Auth Token - Authorization Code Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State used to mitigate cross-site request forgery attacks</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyApi.GetAuthorisationCodeAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.String@,System.Boolean)">
             <summary>
@@ -1626,9 +1707,30 @@
             <returns>List of Markets where Spotify is available</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.String@,System.Boolean)">
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
             <summary>
             Auth User - Authorisation Code Flow
+            </summary>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">(Optional) Authorisation Scopes</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Auth User - Authorisation Code Flow
+            </summary>
+            <param name="responseUri">(Required) Response Uri</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.String@,System.Boolean)">
+            <summary>
+            Auth User - Authorisation Code Flow with PKCE
             </summary>
             <param name="redirectUri">(Required) Redirect Uri</param>
             <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
@@ -1639,7 +1741,7 @@
         </member>
         <member name="M:Spotify.NetStandard.Client.Interfaces.ISpotifyClient.AuthUserAsync(System.Uri,System.Uri,System.String,System.String)">
             <summary>
-            Auth User - Authorisation Code Flow
+            Auth User - Authorisation Code Flow with PKCE
             </summary>
             <param name="responseUri">(Required) Response Uri</param>
             <param name="redirectUri">(Required) Redirect Uri</param>
@@ -2611,6 +2713,27 @@
             <summary>
             Spotify Client
             </summary>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetAuthorisationCodeAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
+            <summary>
+            Get Authorisation Code Auth Uri - Authorisation Code Flow
+            </summary>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">Authorisation Scopes</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetAuthorisationCodeAuthTokenAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Get Authorisation Code Auth Token - Authorization Code Flow
+            </summary>
+            <param name="responseUri">Response Uri</param>
+            <param name="redirectUri">Redirect Uri</param>
+            <param name="state">State used to mitigate cross-site request forgery attacks</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyApi.GetAuthorisationCodeAuthUri(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.String@,System.Boolean)">
             <summary>
@@ -3959,9 +4082,30 @@
             <returns>List of Markets where Spotify is available</returns>
             <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthAccessTokenRequiredException"></exception>
         </member>
-        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.String@,System.Boolean)">
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.Boolean)">
             <summary>
             Auth User - Authorisation Code Flow
+            </summary>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <param name="scope">(Optional) Authorisation Scopes</param>
+            <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+            <returns>Uri</returns>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserAsync(System.Uri,System.Uri,System.String)">
+            <summary>
+            Auth User - Authorisation Code Flow
+            </summary>
+            <param name="responseUri">(Required) Response Uri</param>
+            <param name="redirectUri">(Required) Redirect Uri</param>
+            <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+            <returns>AccessToken on Success, Null if Not</returns>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeValueException">AuthCodeValueException</exception>
+            <exception cref="T:Spotify.NetStandard.Client.Exceptions.AuthCodeStateException">AuthCodeStateException</exception>
+        </member>
+        <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUser(System.Uri,System.String,Spotify.NetStandard.Requests.Scope,System.String@,System.Boolean)">
+            <summary>
+            Auth User - Authorisation Code Flow with PKCE 
             </summary>
             <param name="redirectUri">(Required) Redirect Uri</param>
             <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
@@ -3972,7 +4116,7 @@
         </member>
         <member name="M:Spotify.NetStandard.Client.Internal.SpotifyClient.AuthUserAsync(System.Uri,System.Uri,System.String,System.String)">
             <summary>
-            Auth User - Authorisation Code Flow
+            Auth User - Authorisation Code Flow with PKCE 
             </summary>
             <param name="responseUri">(Required) Response Uri</param>
             <param name="redirectUri">(Required) Redirect Uri</param>

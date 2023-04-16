@@ -14,6 +14,34 @@ public interface ISpotifyApi
 
     #region Authentication
     /// <summary>
+    /// Get Authorisation Code Auth Uri - Authorisation Code Flow
+    /// </summary>
+    /// <param name="redirectUri">Redirect Uri</param>
+    /// <param name="state">State used to mitigate cross-site request forgery attacks</param>
+    /// <param name="scope">Authorisation Scopes</param>
+    /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+    /// <returns>Uri</returns>
+    Uri GetAuthorisationCodeAuthUri(
+        Uri redirectUri,
+        string state,
+        Scope scope,
+        bool showDialog = false);
+
+    /// <summary>
+    /// Get Authorisation Code Auth Token - Authorization Code Flow
+    /// </summary>
+    /// <param name="responseUri">Response Uri</param>
+    /// <param name="redirectUri">Redirect Uri</param>
+    /// <param name="state">State used to mitigate cross-site request forgery attacks</param>
+    /// <returns>AccessToken on Success, Null if Not</returns>
+    /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+    /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+    Task<AccessToken> GetAuthorisationCodeAuthTokenAsync(
+        Uri responseUri,
+        Uri redirectUri,
+        string state);
+
+    /// <summary>
     /// Get Authorisation Code Auth Uri - Authorisation Code Flow  with Proof Key For Code Exchange (PKCE)
     /// </summary>
     /// <param name="redirectUri">Redirect Uri</param>

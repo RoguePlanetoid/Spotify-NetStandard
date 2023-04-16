@@ -55,6 +55,25 @@ public class SpotifyClientApiTest
             PlaylistModifyPrivate = true,
             UserGeneratedContentImageUpload = true,
             PlaybackPositionRead = true,
+        });
+        Assert.IsNotNull(uri);
+    }
+
+    /// <summary>
+    /// Get Authorisation Code Auth Uri - Authorisation Code Flow with Proof Key For Code Exchange (PKCE)
+    /// </summary>
+    [TestMethod]
+    public void Test_GetAuthorisationCodeWithPkceAuthUri()
+    {
+        var uri = _client.Api.GetAuthorisationCodeAuthUri(redirect_url, state, new Scope
+        {
+            UserReadPrivate = true,
+            FollowRead = true,
+            FollowModify = true,
+            PlaylistModifyPublic = true,
+            PlaylistModifyPrivate = true,
+            UserGeneratedContentImageUpload = true,
+            PlaybackPositionRead = true,
         }, out string codeVerifier);
         Assert.IsNotNull(uri);
     }

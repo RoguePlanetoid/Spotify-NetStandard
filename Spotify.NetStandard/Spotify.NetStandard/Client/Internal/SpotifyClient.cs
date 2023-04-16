@@ -1106,6 +1106,38 @@ internal class SpotifyClient : SimpleServiceClient, ISpotifyClient
     /// <param name="redirectUri">(Required) Redirect Uri</param>
     /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
     /// <param name="scope">(Optional) Authorisation Scopes</param>
+    /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+    /// <returns>Uri</returns>
+    public Uri AuthUser(
+        Uri redirectUri,
+        string state,
+        Scope scope,
+        bool showDialog = false) =>
+            _authenticationCache.GetAccessCodeUri(
+                redirectUri, state, scope.Get(), showDialog);
+
+    /// <summary>
+    /// Auth User - Authorisation Code Flow
+    /// </summary>
+    /// <param name="responseUri">(Required) Response Uri</param>
+    /// <param name="redirectUri">(Required) Redirect Uri</param>
+    /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+    /// <returns>AccessToken on Success, Null if Not</returns>
+    /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+    /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+    public async Task<AccessToken> AuthUserAsync(
+        Uri responseUri,
+        Uri redirectUri,
+        string state) =>
+            await _authenticationCache.GetAccessCodeAuthAsync(
+                responseUri, redirectUri, state);
+
+    /// <summary>
+    /// Auth User - Authorisation Code Flow with PKCE 
+    /// </summary>
+    /// <param name="redirectUri">(Required) Redirect Uri</param>
+    /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+    /// <param name="scope">(Optional) Authorisation Scopes</param>
     /// <param name="codeVerifier">Generated Code Verifier for Proof Key For Code Exchange</param>
     /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
     /// <returns>Uri</returns>
@@ -1119,7 +1151,7 @@ internal class SpotifyClient : SimpleServiceClient, ISpotifyClient
                 redirectUri, state, scope.Get(), showDialog, out codeVerifier);
 
     /// <summary>
-    /// Auth User - Authorisation Code Flow
+    /// Auth User - Authorisation Code Flow with PKCE 
     /// </summary>
     /// <param name="responseUri">(Required) Response Uri</param>
     /// <param name="redirectUri">(Required) Redirect Uri</param>
