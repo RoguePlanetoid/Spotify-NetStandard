@@ -31,11 +31,12 @@
 		1.8.0 Updated Authentication Flow with PKCE for Refresh Token
 		1.9.0 Added External HttpClient Support and Uno Platform Compatibility
 		2.0.0 Refactored Code, Added User Episodes, Audiobook, Chapter and Queue, Updated Authorisation Code Flow with Code Verifier using Proof Key for Code Exchange (PKCE), Removed Authorisation Code Flow without Code Verifier and Original Proof Key for Code Exchange (PKCE) Flow
+		2.1.0 Restored Authorisation Code Flow
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <FileVersion>2.0.0.0</FileVersion>
+    <FileVersion>2.1.0.0</FileVersion>
 	<LangVersion>10.0</LangVersion>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<PackageIcon>spotify.netstandard.png</PackageIcon>

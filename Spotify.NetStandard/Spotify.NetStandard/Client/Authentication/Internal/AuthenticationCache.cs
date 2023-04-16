@@ -28,9 +28,7 @@ internal class AuthenticationCache
             TokenType = tokenType,
             Token = response.AccessToken,
             Refresh = refreshToken ?? response.RefreshToken,
-            Expiration = DateTime.UtcNow.Add(
-                TimeSpan.FromSeconds(
-                    Convert.ToDouble(response.ExpiresIn))),
+            Expiration = DateTime.UtcNow.Add(TimeSpan.FromSeconds(Convert.ToDouble(response.ExpiresIn))),
             Scopes = response.Scope,
             Error = response.Error
         };
@@ -45,9 +43,7 @@ internal class AuthenticationCache
         {
             TokenType = TokenType.User,
             Token = response.AccessToken,
-            Expiration = DateTime.UtcNow.Add(
-                TimeSpan.FromSeconds(
-                    Convert.ToDouble(response.ExpiresIn))),
+            Expiration = DateTime.UtcNow.Add(TimeSpan.FromSeconds(Convert.ToDouble(response.ExpiresIn))),
             Error = response.Error
         };
 
@@ -127,9 +123,15 @@ internal class AuthenticationCache
         CancellationToken cancellationToken)
     {
         var authenticationResponse =
-            await _client.RefreshTokenAsync(
+           string.IsNullOrEmpty(_clientSecret) ?  
+                await _client.RefreshTokenAsync(
                 _clientId,
                 refreshToken,
+                cancellationToken) :
+                await _client.RefreshTokenAsync(
+                _clientId, 
+                _clientSecret, 
+                refreshToken, 
                 cancellationToken);
         if (authenticationResponse != null)
             AccessToken = Map(tokenType, 
@@ -296,6 +298,86 @@ internal class AuthenticationCache
                                 codeVerifier,
                                 _accessCode, 
                                 new CancellationToken(false));
+                            return AccessToken;
+                        }
+                    }
+                    else
+                        throw new AuthCodeStateException(_accessCode.State);
+                }
+            }
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Get Authorisation Code Token - Authorisation Code Flow
+    /// </summary>
+    /// <param name="accessCode">Access Code</param>
+    /// <param name="cancellationToken">Cancellation Token</param>
+    /// <returns>Access Token</returns>
+    public async Task<AccessToken> GetAuthorisationCodeTokenAsync(
+        AccessCode accessCode,
+        CancellationToken cancellationToken)
+    {
+        var authenticationResponse =
+            await _client.GetAuthorisationCodeWithSecretAsync(
+            _clientId,
+            _clientSecret,
+            accessCode,
+            cancellationToken);
+        if (authenticationResponse != null)
+            AccessToken = Map(TokenType.User,
+            authenticationResponse);
+        return AccessToken;
+    }
+
+    /// <summary>
+    /// Get Access Code Auth - Authorisation Code Flow
+    /// </summary>
+    /// <param name="redirectUri">Redirect Uri</param>
+    /// <param name="state">State</param>
+    /// <param name="scopes">Scope</param>
+    /// <param name="showDialog">Show Dialog</param>
+    /// <returns>Authentication Uri</returns>
+    public Uri GetAccessCodeUri(
+        Uri redirectUri,
+        string state,
+        string scopes,
+        bool showDialog) =>
+        _client.GetAccessCodeRequest(_clientId, scopes,
+            state, redirectUri.ToString(), showDialog);
+
+    /// <summary>
+    /// Get Access Code Auth - Authorisation Code Flow
+    /// </summary>
+    /// <param name="responseUri">Response Uri</param>
+    /// <param name="redirectUri">Redirect Uri</param>
+    /// <param name="state">State Value</param>
+    /// <returns>Access Token</returns>
+    /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+    /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+    public async Task<AccessToken> GetAccessCodeAuthAsync(
+        Uri responseUri,
+        Uri redirectUri,
+        string state)
+    {
+        if (responseUri != null)
+        {
+            if (responseUri.ToString().Contains(redirectUri.ToString()))
+            {
+                if (_accessCode?.ResponseUri == null || (_accessCode.ResponseUri.ToString() != responseUri.ToString()))
+                {
+                    _accessCode = new AccessCode(
+                        responseUri, redirectUri,
+                        responseUri.Query.QueryStringAsDictionary());
+                    if (state == null || _accessCode.State == state)
+                    {
+                        if (string.IsNullOrEmpty(_accessCode.Code))
+                            throw new AuthCodeValueException(_accessCode.Error);
+                        else
+                        {
+                            AccessToken = await GetAuthorisationCodeTokenAsync(
+                                _accessCode, new CancellationToken(false));
                             return AccessToken;
                         }
                     }

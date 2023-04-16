@@ -339,6 +339,34 @@ public interface ISpotifyClient : IDisposable
     /// <param name="redirectUri">(Required) Redirect Uri</param>
     /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
     /// <param name="scope">(Optional) Authorisation Scopes</param>
+    /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
+    /// <returns>Uri</returns>
+    Uri AuthUser(
+        Uri redirectUri,
+        string state,
+        Scope scope,
+        bool showDialog = false);
+
+    /// <summary>
+    /// Auth User - Authorisation Code Flow
+    /// </summary>
+    /// <param name="responseUri">(Required) Response Uri</param>
+    /// <param name="redirectUri">(Required) Redirect Uri</param>
+    /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+    /// <returns>AccessToken on Success, Null if Not</returns>
+    /// <exception cref="AuthCodeValueException">AuthCodeValueException</exception>
+    /// <exception cref="AuthCodeStateException">AuthCodeStateException</exception>
+    Task<AccessToken> AuthUserAsync(
+        Uri responseUri,
+        Uri redirectUri,
+        string state);
+
+    /// <summary>
+    /// Auth User - Authorisation Code Flow with PKCE
+    /// </summary>
+    /// <param name="redirectUri">(Required) Redirect Uri</param>
+    /// <param name="state">(Recommended) State used to mitigate cross-site request forgery attacks</param>
+    /// <param name="scope">(Optional) Authorisation Scopes</param>
     /// <param name="codeVerifier">Generated Code Verifier for Proof Key For Code Exchange</param>
     /// <param name="showDialog">(Optional) Whether or not to force the user to approve the app again if they’ve already done so.</param>
     /// <returns>Uri</returns>
@@ -350,7 +378,7 @@ public interface ISpotifyClient : IDisposable
         bool showDialog = false);
 
     /// <summary>
-    /// Auth User - Authorisation Code Flow
+    /// Auth User - Authorisation Code Flow with PKCE
     /// </summary>
     /// <param name="responseUri">(Required) Response Uri</param>
     /// <param name="redirectUri">(Required) Redirect Uri</param>
